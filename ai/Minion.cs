@@ -298,7 +298,7 @@
                     if (p.anzOwnAnimatedArmor > 0 && dmg > 0) dmg = 1;
                     if (p.anzOwnBolfRamshield > 0 && dmg > 0)
                     {
-                        int rest = this.armor - dmg;
+                        int rest = - dmg;
                         this.armor = Math.Max(0, rest);
                         if (rest < 0)
                         {
@@ -321,7 +321,7 @@
                     if (p.enemyWeaponCard.name == CardDB.cardName.cursedblade) dmg += dmg;
                     if (p.anzEnemyBolfRamshield > 0 && dmg > 0)
                     {
-                        int rest = this.armor - dmg;
+                        int rest = - dmg;
                         this.armor = Math.Max(0, rest);
                         if (rest < 0)
                         {

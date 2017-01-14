@@ -1,40 +1,40 @@
 #######################################################################test
-start calculations, current time: 22:56:06:4042 V125.2SE + redfish aggrowarlock 5000 face 15 twoturnsim 256 ntss 6 16 160 ets 16 secret weight 0 plcmnt
+start calculations, current time: 14:56:15:2321 V125.2SE + redfish aggrowarlock 5000 face 15 twoturnsim 256 ntss 6 16 160 ets 16 secret weight 0 plcmnt
 #######################################################################
-mana 6/6
-emana 5
+mana 8/10
+emana 10
 own secretsCount: 0
-enemy secretsCount: 0 ;
+enemy secretsCount: 1 ;23.00000111101000000000000,
 player:
-0 0 0 2 0 0 0 0 0
+0 0 0 2 1 0 0 1 0
 0 0 0 0 0 0 0 0 0 0 0
 ownhero:
-shaman 28 30 0 False False 66 True 0 False 2 0
-weapon: 2 1 jadeclaws
-ability: True CS2_049 1
+shaman 27 30 0 False False 66 True 0 False 0 0
+weapon: 0 0 unknown
+ability: False CS2_049 5
 osecrets: 
 cthunbonus: 0 0 0
-jadegolems: 1 1
+jadegolems: 5 0
 enemyhero:
-shaman 17 30 0 False False 64
-weapon: 2 1 jadeclaws
-ability: True CS2_049 0
-fatigue: 20 0 21 0
+mage 12 30 0 False False 64
+weapon: 0 0 unknown
+ability: True CS2_034 0
+fatigue: 9 0 11 0
 OwnMinions:
-thingfrombelow OG_028 zp:1 e:53 A:5 H:5 mH:5 rdy:True natt:0 tnt
-jadegolem CFM_712_t01 zp:2 e:73 A:1 H:1 mH:1 rdy:True natt:0
-healingtotem NEW1_009 zp:3 e:75 A:0 H:2 mH:2 rdy:True natt:0
+jadechieftain CFM_312 zp:1 e:55 A:5 H:5 mH:5 rdy:True natt:0
+jadegolem CFM_712_t04 zp:2 e:97 A:6 H:3 mH:4 rdy:False natt:1 ex adjaattk(2)
+flametonguetotem EX1_565 zp:3 e:36 A:0 H:2 mH:3 rdy:True natt:0
+tunneltrogg LOE_018 zp:4 e:42 A:3 H:2 mH:3 rdy:False natt:1 ex adjaattk(2)
+searingtotem CS2_050 zp:5 e:107 A:1 H:1 mH:1 rdy:False natt:0 ex ptt
 EnemyMinions:
-jadegolem CFM_712_t01 zp:1 e:77 A:1 H:1 mH:1 rdy:True natt:0 ex
-searingtotem CS2_050 zp:2 e:78 A:1 H:1 mH:1 rdy:True natt:0 ex
+bolframshield AT_124 zp:1 e:71 A:3 H:3 mH:9 rdy:True natt:0 ex
+princemalchezaar KAR_096 zp:2 e:27 A:5 H:1 mH:6 rdy:True natt:0 ex
 Own Handcards: 
-pos 1 maelstromportal 2 entity 37 KAR_073 0 0
-pos 2 flametonguetotem 2 entity 48 EX1_565 0 0
-pos 3 maelstromportal 2 entity 63 KAR_073 0 0
-Enemy cards: 4
-ownDiedMinions: 
-enemyDiedMinions: 
-og: 592,1;1703,1;501,2;1089,1;1985,1;1548,1;
-eg: 1985,1;1098,1;1298,2;1089,1;1095,1;
-td: EX1_238;CFM_637;CFM_325;KAR_063;LOE_018;EX1_012;EX1_565;CFM_717;AT_052,2;EX1_248,2;EX1_241,2;OG_024,2;CFM_707,2;EX1_284,2;CFM_902;
-tdc: 21 tdc mismatch 20
+pos 1 spiritclaws 1 entity 58 KAR_063 0 0
+Enemy cards: 2
+ownDiedMinions: CFM_715,59;CFM_712_t03,84;CFM_061,52;CS2_050,91;CS2_tk1,101;EX1_284,39;EX1_284,51;LOE_018,38;CS2_052,98;CFM_712_t05,106;
+enemyDiedMinions: LOE_011,6;CFM_660,95;EX1_587,102;EX1_066,11;KAR_030a,103;
+og: 2012,1;821,1;1095,2;646,1;84,1;647,1;1234,7;820,2;648,1;680,2;471,2;1707,1;972,1;127,1;1233,1;678,1;649,1;935,1;1112,2;1985,1;822,1;651,1;
+eg: 792,1;1108,1;1022,1;1112,1;1548,2;1709,1;2392,1;1701,1;797,1;795,1;1272,1;934,2;796,1;1116,1;1117,1;791,1;1979,1;616,1;789,1;794,1;1721,1;793,1;1254,1;1007,1;1690,1;
+td: EX1_248;EX1_259;AT_052;OG_028;KAR_073;CFM_312;CFM_707;CFM_715;CFM_902;
+tdc: 9

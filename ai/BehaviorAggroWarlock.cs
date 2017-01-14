@@ -31,7 +31,7 @@
 
             //retval -= p.enemyspellpower * 5;
 
-            retval += p.spellpower * 3 ;
+            if (p.enemyMinions.Count == 0) retval += p.spellpower * 3 ;
 
             //card counts
             retval += - (p.enemyDeckSize * 3);
@@ -566,7 +566,7 @@
                     //if (p.ownHeroName == HeroEnum.warlock && m.name == CardDB.cardName.darkshirecouncilman) retval += 1.5f;
 
                     if (p.ownHeroName == HeroEnum.hunter && (TAG_RACE)m.handcard.card.race == TAG_RACE.PET) retval += 0.1f;
-                    if (p.ownHeroName == HeroEnum.shaman && (TAG_RACE)m.handcard.card.race == TAG_RACE.TOTEM) retval += 0.5f;
+                    if (p.ownHeroName == HeroEnum.shaman && (TAG_RACE)m.handcard.card.race == TAG_RACE.TOTEM) retval += 0.2f;
                     if (p.ownHeroName == HeroEnum.pala && m.name == CardDB.cardName.silverhandrecruit) retval += 0.1f; ;
                     if (p.ownHeroName == HeroEnum.mage && (TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL) retval += 0.1f;
                     if (p.ownHeroName == HeroEnum.mage && m.name == CardDB.cardName.flamewaker) retval += 5;
@@ -699,6 +699,8 @@
                         //Helpfunctions.Instance.ErrorLog("destroyOnEnemyTurnEnd: " + m.name);
                     }
 
+                    //m.shadowmadnessed
+                    if (m.shadowmadnessed) retval -= m.Hp - 2 * m.Angr - 5;
 
                     //zonepos
                     if (m.name == CardDB.cardName.knifejuggler)
@@ -1351,6 +1353,7 @@
                 int Small_Time_Buccanee = 0;
                 int Patches_the_Pirate = 0;
                 int Dread_Corsair = 0;
+                int Alexstraszas_Champion = 0;
                 foreach (KeyValuePair<CardDB.cardIDEnum, int> e in Probabilitymaker.Instance.enemyGraveyard)
                 {
                     if (e.Key == CardDB.cardIDEnum.EX1_409) upgrade = e.Value;//upgrade EX1_409
@@ -1360,8 +1363,25 @@
                     if (e.Key == CardDB.cardIDEnum.CFM_325) Small_Time_Buccanee = e.Value;//Small-Time Buccanee
                     if (e.Key == CardDB.cardIDEnum.CFM_637) Patches_the_Pirate = e.Value;//Patches the Pirate
                     if (e.Key == CardDB.cardIDEnum.NEW1_022) Dread_Corsair = e.Value;//Dread Corsair
+                    if (e.Key == CardDB.cardIDEnum.AT_071) Alexstraszas_Champion = e.Value;//Alexstrasza's Champion AT_071
                 }
-                if (upgrade >= 1 || bloodsail_raider >= 1 || Bloodsail_Cultist >= 1 || southseadeckhand >= 1 || Small_Time_Buccanee >= 1 || Patches_the_Pirate >= 1 || Dread_Corsair >= 1) retval += 2 * m.Angr; //pirate warrior
+
+                bool aggrodeck = false;
+                foreach (Minion mm in p.enemyMinions)
+                {
+                    if (mm.name == CardDB.cardName.bloodsailraider || 
+                        mm.name == CardDB.cardName.bloodsailcultist || 
+                        mm.name == CardDB.cardName.southseadeckhand || 
+                        mm.name == CardDB.cardName.smalltimebuccaneer || 
+                        mm.name == CardDB.cardName.patchesthepirate ||
+                        mm.name == CardDB.cardName.dreadcorsair ||
+                        mm.name == CardDB.cardName.alexstraszaschampion)
+                    {
+                        aggrodeck = true;
+                    }
+                }
+
+                if (aggrodeck || upgrade >= 1 || bloodsail_raider >= 1 || Bloodsail_Cultist >= 1 || southseadeckhand >= 1 || Small_Time_Buccanee >= 1 || Patches_the_Pirate >= 1 || Dread_Corsair >= 1 || Alexstraszas_Champion >= 1) retval += 2 * m.Angr; //pirate warrior
             }
 
             if (p.enemyHeroName == HeroEnum.priest)

@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{5ACB8AA2-AB48-402C-9C54-D8034B6BB519}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Redfish</RootNamespace>
     <AssemblyName>Redfish</AssemblyName>
@@ -2338,7 +2338,7 @@
     <Compile Include="Penalties\Pen_tt_004.cs" />
     <Compile Include="Penalties\Pen_tt_010.cs" />
     <Compile Include="Penalties\Pen_tt_010a.cs" />
-    <Compile Include="Programdll.cs" />
+    <Compile Include="Programexe.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

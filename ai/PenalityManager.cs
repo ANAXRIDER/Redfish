@@ -505,6 +505,37 @@ namespace HREngine.Bots
                 return retval + jugglerpen;
             }
 
+            if (p.ownWeaponName == CardDB.cardName.jadeclaws)
+            {
+                if (target.isHero && p.ownWeaponAttack == 1 && target.Hp >= 3 && !AttacksEnemyHeroCanTrigger) return 5 + jugglerpen;
+
+                if (target.isHero)
+                {
+                    if (p.enemyMinions.Find(a => a.taunt) == null)
+                    {
+                        if (p.enemyMinions.Find(a => a.Hp <= p.ownHero.Angr) != null) return 5 + jugglerpen;
+                    }
+                    if (p.ownWeaponDurability == 1 && p.owncards.Find(hc => hc.card.type == CardDB.cardtype.WEAPON) == null && p.ownHero.Hp >= 10 && p.enemyHero.Hp > 5) return 5 + jugglerpen;
+                }
+                if (p.ownWeaponDurability >= 1)
+                {
+                    bool hasweapon = false;
+                    foreach (Handmanager.Handcard c in p.owncards)
+                    {
+                        if (c.card.type == CardDB.cardtype.WEAPON || alsoEquipsWeaponDB.ContainsKey(c.card.name)) hasweapon = true;
+                    }
+                    if (hasweapon) retval = 0;
+                }
+                //if (target.Hp <= p.ownHero.Angr || target.divineshild) retval--;
+
+                if (p.ownHero.Angr >= 2 && target.name == CardDB.cardName.frog && p.ownMinions.Find(a => (a.Ready || !a.playedThisTurn) && a.Angr == 1) != null) retval += 5;
+
+                //healing totem
+                if (p.enemyMinions.Find(a => a.name == CardDB.cardName.healingtotem && !a.silenced) != null && target.Hp > p.ownHero.Angr && !target.isHero) retval += 3;
+                if (target.Hp > p.ownHero.Angr && !target.isHero && !(target.name == CardDB.cardName.frothingberserker && !target.silenced) && (!target.taunt || (target.taunt && target.Angr >= 1 && !target.handcard.card.Enrage))) retval += 2;
+                return retval + jugglerpen;
+            }
+
 
             //no penalty, but a bonus, if he has weapon on hand!
             if (target.isHero && !target.own && p.ownWeaponName == CardDB.cardName.gorehowl && p.ownWeaponAttack >= 3)
@@ -2655,6 +2686,7 @@ namespace HREngine.Bots
                 bool hasabusive = false;
                 bool hastotemgolem = false;
                 bool has1costSpellAndEnemyMinion = false;
+                bool hasMaelstrom = false;
                 foreach (Handmanager.Handcard hcc in p.owncards)
                 {
                     if (hcc.card.name == CardDB.cardName.abusivesergeant) hasabusive = true;
@@ -2671,6 +2703,7 @@ namespace HREngine.Bots
                     //Helpfunctions.Instance.ErrorLog("" + hcc.manacost + hcc.card.name);
                     //spell 1cost - and enemyminion
                     if (p.enemyMinions.Count >= 1 && hcc.manacost == 1 && hcc.card.type == CardDB.cardtype.SPELL && p.mana == 0) has1costSpellAndEnemyMinion = true;
+                    if (hcc.card.name == CardDB.cardName.maelstromportal) hasMaelstrom = true;
                 }
                 //Helpfunctions.Instance.ErrorLog(has1manacard +" " + has2manacard + " " +has3manacard);
                 bool hassecretkepper = false;
@@ -2687,14 +2720,18 @@ namespace HREngine.Bots
                 if (has2manacard >= 2 && p.ownMaxMana == 1) return 0;
                 if (hastotemgolem && p.ownMaxMana == 1) return 0;
                 if (has3manacard >= 2 && p.ownMaxMana == 2) return 0;
+                
                 if ((has3manacard == 2 || (has1manacard == 1 && has2manacard == 1)) && p.ownMaxMana == 2) return 0;
                 
                 if (hasPalSecret && hassecretkepper && (p.enemyMinions.Count >= 1 || p.enemyWeaponAttack >= 2)) return 0;
+
+                if (hasMaelstrom && p.enemyMinions.Count >= 2) return 0;
                 if (has1costSpellAndEnemyMinion) return 2;
                 if (hasweapon) return 3;
                 if (hasvaluable3costminion && p.ownMaxMana == 2) return 5;
                 if (hasownready && hasabusive && p.enemyMinions.Count >= 1) return 5;
 
+                
                 // if (!WGON || (has2manamob <= 1 && p.ownMaxMana == 1) || (has2manamob+has3manamob <= 1 && p.ownMaxMana == 2)) return 500;   //몹없고, 무기있고 적몹있는경우 아니거나, 급속성장 없으면 페널티.
                 return 20;
             }
@@ -3402,6 +3439,8 @@ namespace HREngine.Bots
                     else if (target.Angr >= 5) hexpen -= 15;
                     else if (anti_aoe_minion.ContainsKey(target.name)) hexpen -= 15;
                     else if (target.Angr >= 3 && target.divineshild) hexpen -= 15;
+
+                    if (priorityTargets.ContainsKey(target.name) && priorityTargets[target.name] >= 11) hexpen = 5;
                     return hexpen;
                 }
             }
@@ -3802,6 +3841,46 @@ namespace HREngine.Bots
                 return p.owncards.Count * 10;
             }
 
+            if (name == CardDB.cardName.potionofmadness)
+            {
+                return 10;
+            }
+
+            if (name == CardDB.cardName.netherspitehistorian)
+            {
+                bool hasdragon = false;
+                foreach (Handmanager.Handcard hc in p.owncards)
+                {
+                    if (hc.card.race == TAG_RACE.DRAGON) hasdragon = true;
+                }
+                if (!hasdragon) return 5;
+                //if (Hrtprozis.Instance.startDeck.ContainsKey(CardDB.cardIDEnum.NEW1_030) //Deathwing NEW1_030
+                //    || Hrtprozis.Instance.startDeck.ContainsKey(CardDB.cardIDEnum.OG_317)//Deathwing, Dragonlord OG_317
+                //                                                                           //Alexstrasza EX1_561
+                //                                                                           //Malygos EX1_563
+                //                                                                           //Nefarian BRM_030
+                //                                                                           //
+                //                                                                           //
+                //                                                                           //
+                //                                                                           //
+                //                                                                           //
+                //                                                                           //
+                //                                                                           //
+                //                                                                           //
+                //                                                                           //
+                //                                                                           //
+                //                                                                           //
+                //                                                                           //
+                //                                                                           //
+                //                                                                           //
+                //                                                                           //
+                //    )
+                //{
+                //    if (!hasdragon) return 5;
+                //}
+
+            }
+
             return pen;
         }
 
@@ -4188,8 +4267,12 @@ namespace HREngine.Bots
                 case CardDB.cardName.thunderbluffvaliant:
                     return 0;
                 case CardDB.cardName.jadeidol:
-                    if (choice == 1 && !Hrtprozis.Instance.turnDeck.ContainsKey(CardDB.cardIDEnum.CFM_602)) return 50; //don't waste our last copy
-                    if (choice == 2 && Hrtprozis.Instance.turnDeck.ContainsKey(CardDB.cardIDEnum.CFM_602)) return 50; //don't shuffle more in if some still in deck
+                    if (p.ownHeroName == HeroEnum.druid && p.anzOwnJadeGolem >= 1)
+                    {
+                        if (choice == 1 && !Hrtprozis.Instance.turnDeck.ContainsKey(CardDB.cardIDEnum.CFM_602)) return 50; //don't waste our last copy
+                        if (choice == 2 && Hrtprozis.Instance.turnDeck.ContainsKey(CardDB.cardIDEnum.CFM_602)) return 50; //don't shuffle more in if some still in deck
+                    }
+                   
                     return 0;
                 default:
                     return 0;

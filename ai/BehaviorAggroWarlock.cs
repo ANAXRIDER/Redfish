@@ -526,25 +526,25 @@
                     if (p.ownMinions.Count >= 3 && p.anzOwnLoatheb == 0 && p.enemyMinions.Count == 0)
                     {
                         //unleash
-                        if (p.enemyHeroName == HeroEnum.hunter && p.enemyMaxMana >= 3 && Unleash_the_Hounds == 0 && (m.Hp >= 2 || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
+                        if (p.enemyHeroName == HeroEnum.hunter && p.enemyMaxMana >= 3 && Unleash_the_Hounds == 0 && (m.Hp >= 3 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
                         //swipe hp1 minion
-                        if (p.enemyHeroName == HeroEnum.druid && p.enemyMaxMana >= 4 && Swipe == 0 && (m.Hp >= 2 || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
+                        if (p.enemyHeroName == HeroEnum.druid && p.enemyMaxMana >= 4 && Swipe == 0 && (m.Hp >= 2 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
                         //holynova
-                        if (p.enemyHeroName == HeroEnum.priest && p.enemyMaxMana >= 4 && Holy_Nova == 0 && (m.Hp >= 3 || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
+                        if (p.enemyHeroName == HeroEnum.priest && p.enemyMaxMana >= 4 && Holy_Nova == 0 && (m.Hp >= 3 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
                         //Lightbomb
                         //if (p.enemyHeroName == HeroEnum.priest && p.enemyMaxMana >= 8 && Lightbomb == 0 && m.Hp <= m.Angr) retval -= m.Hp + m.Angr * 2;
                         //Lightning Storm EX1_259
-                        if (p.enemyHeroName == HeroEnum.shaman && p.enemyMaxMana - p.enemyRecall >= 3 && Lightning_Storm == 0 && (m.Hp >= 3 || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
-                        else if (p.enemyHeroName == HeroEnum.shaman && p.enemyMaxMana - p.enemyRecall >= 2 && Maelstrom_Portal == 0 && (m.Hp >= 2 || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
+                        if (p.enemyHeroName == HeroEnum.shaman && p.enemyMaxMana - p.enemyRecall >= 3 && Lightning_Storm == 0 && (m.Hp >= 3 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
+                        else if (p.enemyHeroName == HeroEnum.shaman && p.enemyMaxMana - p.enemyRecall >= 2 && Maelstrom_Portal == 0 && (m.Hp >= 2 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
                         //Flamestrike CS2_032
-                        if (p.enemyHeroName == HeroEnum.mage && p.enemyMaxMana >= 6 && Flamestrike == 0 && (m.Hp >= 5 || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
+                        if (p.enemyHeroName == HeroEnum.mage && p.enemyMaxMana >= 6 && Flamestrike == 0 && (m.Hp >= 5 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
                         //Consecration CS2_093
-                        if (p.enemyHeroName == HeroEnum.pala && p.enemyMaxMana >= 3 && Consecration == 0 && (m.Hp >= 3 || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
+                        if (p.enemyHeroName == HeroEnum.pala && p.enemyMaxMana >= 3 && Consecration == 0 && (m.Hp >= 3 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
                         //Hellfire CS2_062
                         //if (p.enemyHeroName == HeroEnum.warlock && p.enemyMaxMana >= 6 && Hellfire == 0 && m.Hp <= 3) retval -= m.Hp + m.Angr * 2;
                         //Blade Flurry CS2_233
                         //if (p.enemyHeroName == HeroEnum.thief && p.enemyMaxMana >= 5 && Blade_Flurry == 0 && m.Hp <= p.enemyWeaponAttack) retval -= m.Hp + m.Angr * 2;
-                        if (p.enemyHeroName == HeroEnum.thief && p.enemyMaxMana >= 3 && Fan_of_Knives == 0 && (m.Hp >= 2 || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
+                        if (p.enemyHeroName == HeroEnum.thief && p.enemyMaxMana >= 3 && Fan_of_Knives == 0 && (m.Hp >= 2 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
 
                     }
 

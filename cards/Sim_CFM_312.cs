@@ -11,22 +11,37 @@ namespace HREngine.Bots
         public override void getBattlecryEffect(Playfield p, Minion m, Minion target, int choice)
         {
             p.callKid(p.getNextJadeGolem(m.own), m.zonepos, m.own, true);
-
             List<Minion> tmp = m.own ? p.ownMinions : p.enemyMinions;
-            int pos = m.own ? p.ownMinions.Count : p.enemyMinions.Count;
-            pos--;
+            int pos = m.zonepos;
             Minion mnn;
-            for (; pos > -1; pos--)
+            mnn = tmp[pos - 1];
+
+            //Helpfunctions.Instance.ErrorLog("&&&" + mnn.name);
+
+            if (mnn.playedThisTurn && !mnn.taunt)
             {
-                mnn = tmp[pos];
-                if (mnn.playedThisTurn && !mnn.taunt)
-                {
-                    mnn.taunt = true;
-                    if (mnn.own) p.anzOwnTaunt++;
-                    else p.anzEnemyTaunt++;
-                    break;
-                }
+                mnn.taunt = true;
+                if (mnn.own) p.anzOwnTaunt++;
+                else p.anzEnemyTaunt++;
             }
+
+
+            //List<Minion> tmp = m.own ? p.ownMinions : p.enemyMinions;
+            //int pos = m.own ? p.ownMinions.Count : p.enemyMinions.Count;
+            //pos--;
+            //Minion mnn;
+            //for (; pos > -1; pos--)
+            //{
+            //    mnn = tmp[pos];
+            //    if (mnn.playedThisTurn && !mnn.taunt)
+            //    {
+            //        mnn.taunt = true;
+            //        if (mnn.own) p.anzOwnTaunt++;
+            //        else p.anzEnemyTaunt++;
+            //        break;
+            //    }
+            //}
+
         }
     }
 }

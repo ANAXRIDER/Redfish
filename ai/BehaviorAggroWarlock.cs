@@ -93,10 +93,14 @@
             //else { Helpfunctions.Instance.ErrorLog("aggrodeck : " + Aggrodeck); }
 
             bool hastaunt = false;
-
+            int tauntcount = 0;
             foreach (Minion mnn in p.enemyMinions)
             {
-                if (mnn.taunt) hastaunt = true;
+                if (mnn.taunt)
+                {
+                    hastaunt = true;
+                    tauntcount++;
+                }
             }
 
 
@@ -138,6 +142,16 @@
             //Helpfunctions.Instance.ErrorLog("phase : " + phase);
             //Helpfunctions.Instance.ErrorLog("hpvalue : " + hpvalue);
 
+
+
+            if (phase == 3) // additional value when hero hp under 10
+            {
+                foreach(Minion m in p.ownMinions)
+                {
+                    if (m.taunt) retval += m.Hp * m.Hp;
+                }
+                if (tauntcount == 0) retval -= 15;
+            }
 
 
 
@@ -572,7 +586,7 @@
                     if (p.ownHeroName == HeroEnum.mage && m.name == CardDB.cardName.flamewaker) retval += 5;
 
                     
-                    if (!hasenemytaunt && !p.enemyHero.immune && m.Ready) retval -= 10 * m.Angr;
+                    if (!hasenemytaunt && !p.enemyHero.immune && m.Ready && m.enemyBlessingOfWisdom == 0 && m.enemyPowerWordGlory == 0) retval -= 10 * m.Angr;
 
                     //minion each
                     if (impgangbossgoodposition && m.handcard.card.name == CardDB.cardName.impgangboss && m.Hp == 4 && p.ownMaxMana <= 3 && m.playedThisTurn) retval += 5;
@@ -640,7 +654,7 @@
                     //retval += m.handcard.card.rarity;
                     retval -= m.AdjacentAngr * 2;
 
-                    if (m.Angr == 1 && m.Hp == 1 && !m.divineshild) retval -= 1;
+                    if (m.Angr == 1 && m.Hp == 1 && !m.divineshild) retval -= 0.5f;
 
 
 

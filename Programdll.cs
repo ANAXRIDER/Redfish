@@ -1853,7 +1853,7 @@ namespace HREngine.Bots
                             }
                             else if (daum.bestmove.card.card.Charge)
                             {
-                                System.Threading.Thread.Sleep(1200);
+                                System.Threading.Thread.Sleep(2200);
                             }
 
                             if (daum.bestmove.card.card.type == CardDB.cardtype.MOB || PenalityManager.Instance.summonMinionSpellsDatabase.ContainsKey(daum.bestmove.card.card.name))

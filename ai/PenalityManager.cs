@@ -418,11 +418,11 @@ namespace HREngine.Bots
 
 
 
-                if (p.ownSecretsIDList.Count >= 1 && p.ownWeaponDurability == 1) return 20 + jugglerpen;
+                if (p.ownSecretsIDList.Count >= 1 && p.ownWeaponDurability == 1) return 3 + jugglerpen;
 
                 foreach (Handmanager.Handcard hc in p.owncards)
                 {
-                    if (hc.card.Secret) return 20 + jugglerpen;
+                    if (hc.card.Secret) return 3 + jugglerpen;
                     if (hc.card.type == CardDB.cardtype.WEAPON)
                     {
                         hasanotherweapon = true;
@@ -3817,6 +3817,18 @@ namespace HREngine.Bots
                 if (target.Hp >= 4 && !target.isHero) ret += 0.5f;
                 return ret;
             }
+
+            if (name == CardDB.cardName.dispatchkodo)
+            {
+                float ret = 0;
+                if (target.isHero) ret += 4;
+                if (target.isHero && p.enemyMinions.Count >= 1) ret += 2;
+
+                if (target.Angr == 0 && target.Hp <= 2 && p.ownMinions.Find(a => a.Ready && a.Angr <= 2) != null) ret += 5;
+                if (target.Hp >= 4 && !target.isHero) ret += 0.5f;
+                return ret;
+            }
+
 
             if (card.type == CardDB.cardtype.WEAPON)
             {

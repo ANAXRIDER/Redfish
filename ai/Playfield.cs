@@ -4940,7 +4940,7 @@ namespace HREngine.Bots
                 int summonstones = 0;
                 Minion summoningStone = null;
 
-                foreach (Minion m in this.ownMinions)
+                foreach (Minion m in this.ownMinions.ToArray())
                 {
                     if (m.silenced) continue;
 
@@ -5750,6 +5750,7 @@ namespace HREngine.Bots
                             {
                                 sii.canBe_icebarrier = false;
                             }
+                            this.evaluatePenality -= triggered * 5;
                         }
 
                         if (si.canBe_beartrap)
@@ -7605,8 +7606,8 @@ namespace HREngine.Bots
         public Minion searchRandomMinion(List<Minion> minions, searchmode mode)
         {
             if (minions.Count == 0) return null;
-            Minion ret = null;
-            double value = 0;
+            Minion ret = minions[0];
+            int value = 0;
             switch (mode)
             {
                 case searchmode.searchLowestHP: value = 1000; break;
@@ -7693,7 +7694,7 @@ namespace HREngine.Bots
             if (maxHP < 1) return null;
             if (minions.Count == 0) return null;
 
-            Minion ret = null;
+            Minion ret = minions[0];
 
             double value = 0;
             int retVal = 0;

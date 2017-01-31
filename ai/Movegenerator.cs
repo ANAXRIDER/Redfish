@@ -958,8 +958,20 @@
                 if (m.Angr > strongestAttack) strongestAttack = m.Angr;
                 if (m.taunt) return true;
                 if (m.name == CardDB.cardName.dancingswords || m.name == CardDB.cardName.deathlord) return true;
+                //buff
                 if (!m.silenced && (m.name == CardDB.cardName.flametonguetotem || m.name == CardDB.cardName.direwolfalpha) && enemyhastaunt) return true;
-                if (!m.silenced && m.name == CardDB.cardName.leokk || m.name == CardDB.cardName.raidleader) return true;
+                if (!m.silenced && (m.name == CardDB.cardName.leokk || m.name == CardDB.cardName.raidleader)) return true;
+                if (!m.silenced && 
+                    (m.name == CardDB.cardName.southseacaptain || 
+                    m.name == CardDB.cardName.murlocwarleader ||
+                    m.name == CardDB.cardName.grimscaleoracle ||
+                    m.name == CardDB.cardName.stormwindchampion ||
+                    m.name == CardDB.cardName.timberwolf ||
+                    m.name == CardDB.cardName.flesheatingghoul ||
+                    m.name == CardDB.cardName.malganis ||
+                    m.name == CardDB.cardName.oldmurkeye)) return true;
+
+
                 if (m.souloftheforest >= 1 || m.ancestralspirit >= 1) spawnMinions = true;
                 if (m.name == CardDB.cardName.frothingberserker && !m.silenced) return true;
                 switch (m.name)
@@ -1011,6 +1023,16 @@
                 if (!m.silenced && m.name == CardDB.cardName.tundrarhino) hasTundraRhino = true;
                 if (!m.silenced && (m.name == CardDB.cardName.flametonguetotem || m.name == CardDB.cardName.direwolfalpha)) return true;
                 if (!m.silenced && (m.name == CardDB.cardName.leokk || m.name == CardDB.cardName.raidleader)) return true;
+                if (!m.silenced &&
+                    (m.name == CardDB.cardName.southseacaptain ||
+                    m.name == CardDB.cardName.murlocwarleader ||
+                    m.name == CardDB.cardName.grimscaleoracle ||
+                    m.name == CardDB.cardName.stormwindchampion ||
+                    m.name == CardDB.cardName.timberwolf ||
+                    m.name == CardDB.cardName.flesheatingghoul ||
+                    m.name == CardDB.cardName.malganis ||
+                    m.name == CardDB.cardName.oldmurkeye)) return true;
+
                 if (!m.silenced && (m.name == CardDB.cardName.impgangboss || m.name == CardDB.cardName.dragonegg || m.name == CardDB.cardName.hoggerdoomofelwynn || m.name == CardDB.cardName.grimpatron) && p.ownMinions.Count == 7) return true;
 
                 if ((m.name == CardDB.cardName.hugetoad || m.name == CardDB.cardName.fierybat) && !m.silenced && p.enemyMinions.Count >= 1) return true;

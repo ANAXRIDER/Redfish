@@ -285,7 +285,7 @@
 
             retval += p.ownMaxMana * 15 - p.enemyMaxMana * 15;
 
-            if (p.ownMaxMana <= 6) retval -= p.manaTurnEnd * 3;
+            if (p.ownMaxMana <= 6 && p.owncards.Count >= 4) retval -= p.manaTurnEnd * 3;
             else retval -= p.manaTurnEnd;
 
 
@@ -527,7 +527,7 @@
                 {
                     if (mmnn.Hp == 1)
                     {
-                        if (mmnn.Angr >= strongesthp1minion) strongesthp1minion = mmnn.Angr * 2 + mmnn.Hp;
+                        if (mmnn.Angr >= strongesthp1minion) strongesthp1minion = mmnn.Angr + mmnn.Hp;
                     }
                 }
 

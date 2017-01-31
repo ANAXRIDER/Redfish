@@ -532,7 +532,7 @@ namespace HREngine.Bots
 
                 //healing totem
                 if (p.enemyMinions.Find(a => a.name == CardDB.cardName.healingtotem && !a.silenced) != null && target.Hp > p.ownHero.Angr && !target.isHero) retval += 3;
-                if (target.Hp > p.ownHero.Angr && !target.isHero && !(target.name == CardDB.cardName.frothingberserker && !target.silenced) && (!target.taunt || (target.taunt && target.Angr >= 1 && !target.handcard.card.Enrage))) retval += 2;
+                if (target.Hp > p.ownHero.Angr && !target.isHero && !(target.name == CardDB.cardName.frothingberserker && !target.silenced) && (!target.taunt || (target.taunt && target.Angr >= 1 && !target.handcard.card.Enrage))) retval += 4;
                 return retval + jugglerpen;
             }
 
@@ -551,7 +551,7 @@ namespace HREngine.Bots
                 }
                 if (p.ownWeaponAttack == 1 && p.ownHeroName == HeroEnum.thief) hasweapon = true;
                 //if (hasweapon && target.name != CardDB.cardName.doomsayer) retval = -p.ownWeaponAttack - 1; // so he doesnt "lose" the weapon in evaluation :D
-                if (!hasweapon && target.isHero) retval += 10;
+                if (!hasweapon && target.isHero && p.ownWeaponDurability == 1) retval += p.ownWeaponAttack;
                 if (p.ownWeaponAttack == 1 && !hasweapon)
                 {
                     if (p.ownHeroAblility.card.name != CardDB.cardName.daggermastery && p.ownHeroAblility.card.name != CardDB.cardName.poisoneddaggers)
@@ -599,6 +599,10 @@ namespace HREngine.Bots
             }*/
             if (alsoEquipsWeaponDB.ContainsKey(card.name) && alsoEquipsWeaponDB[card.name] < p.ownWeaponAttack)
             {
+                if (card.name == CardDB.cardName.upgrade)
+                {
+                    if (p.ownWeaponAttack >= 3 || p.ownWeaponDurability >= 3) return 0; 
+                } 
                 return 25 * ((p.ownWeaponAttack * p.ownWeaponDurability) - (2 * alsoEquipsWeaponDB[card.name]));
             }
             return 0;
@@ -1161,7 +1165,7 @@ namespace HREngine.Bots
                     pen = 10;
                 }
 
-                else if (name == CardDB.cardName.mortalstrike && p.ownHero.Hp > 12) pen = 20;
+                else if (name == CardDB.cardName.mortalstrike && p.ownHero.Hp > 12) pen = 30;
 
                 else if (name == CardDB.cardName.soulfire)
                 {
@@ -1296,7 +1300,7 @@ namespace HREngine.Bots
 
                     if (name == CardDB.cardName.fireblast && !lethal && m.Hp == 1) pen = -4;
 
-                    if (name == CardDB.cardName.mortalstrike && p.ownHero.Hp > 12) pen = 20;
+                    if (name == CardDB.cardName.mortalstrike && p.ownHero.Hp > 12) pen = 10;
 
                     if (name == CardDB.cardName.quickshot && p.owncards.Count == 1) return p.playactions.Count * 0.1f;
 
@@ -2659,10 +2663,8 @@ namespace HREngine.Bots
 
             if (card.name == CardDB.cardName.upgrade)
             {
-                if (p.ownWeaponDurability == 0)
-                {
-                    return 16;
-                }
+                if (p.playactions.Find(a => a.actionType == actionEnum.attackWithHero) != null) return 5;
+                if (p.ownWeaponDurability == 0) return 5;
             }
 
             if (card.name == CardDB.cardName.baronrivendare)
@@ -3258,16 +3260,9 @@ namespace HREngine.Bots
 
 
 
-            if (name == CardDB.cardName.bite)
+            if (heroAttackBuffDatabase.ContainsKey(name))
             {
-                if ((p.ownHero.numAttacksThisTurn == 0 || (p.ownHero.windfury && p.ownHero.numAttacksThisTurn == 1)) && !p.ownHero.frozen)
-                {
-                    return 0;
-                }
-                else
-                {
-                    return 20;
-                }
+                return ((p.ownHero.numAttacksThisTurn == 0) && !p.ownHero.frozen) ? 0 : 20;
             }
 
             if (name == CardDB.cardName.deadlypoison)
@@ -3833,7 +3828,7 @@ namespace HREngine.Bots
             if (card.type == CardDB.cardtype.WEAPON)
             {
                 float ret = card.Attack;
-                if (card.Attack <= p.ownWeaponAttack)
+                if (card.Attack <= p.ownWeaponAttack || p.ownWeaponDurability >= 2)
                 {
                     ret += p.ownWeaponAttack * p.ownWeaponDurability;
                     if (card.Attack == p.ownWeaponAttack && p.ownHero.Ready) ret += card.Attack;
@@ -3891,6 +3886,13 @@ namespace HREngine.Bots
                 //    if (!hasdragon) return 5;
                 //}
 
+            }
+
+            if (name == CardDB.cardName.dreadcorsair)
+            {
+                float penalty = 0;
+                penalty = - p.ownWeaponAttack;
+                return penalty;
             }
 
             return pen;

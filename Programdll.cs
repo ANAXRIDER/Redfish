@@ -1268,7 +1268,7 @@ namespace HREngine.Bots
 
     public sealed class Silverfish
     {
-        public string versionnumber = "125.2SE + redfish";
+        public string versionnumber = "125.3SE + redfish";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1854,6 +1854,20 @@ namespace HREngine.Bots
                             else if (daum.bestmove.card.card.Charge)
                             {
                                 System.Threading.Thread.Sleep(2200);
+                            }
+                            else
+                            {
+                                switch (daum.bestmove.card.card.name)
+                                {
+                                    case CardDB.cardName.southseadeckhand:
+                                        if (this.heroWeaponAttack >= 1)
+                                        {
+                                            System.Threading.Thread.Sleep(2200);
+                                        }
+                                        break;
+                                    //case CardDB.cardName.: System.Threading.Thread.Sleep(2200); break;
+                                    default: break;
+                                }
                             }
 
                             if (daum.bestmove.card.card.type == CardDB.cardtype.MOB || PenalityManager.Instance.summonMinionSpellsDatabase.ContainsKey(daum.bestmove.card.card.name))

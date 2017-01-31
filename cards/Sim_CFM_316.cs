@@ -10,22 +10,17 @@ namespace HREngine.Bots
 
         CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CFM_316t); //1/1 Rat
 
-        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        public override void onDeathrattle(Playfield p, Minion m)
         {
-            List<Minion> temp = (own.own) ? p.ownMinions : p.enemyMinions;
-            foreach (Minion m in (own.own) ? p.ownMinions.ToArray() : p.enemyMinions.ToArray())
+            int pos = (m.own) ? p.ownMinions.Count : p.enemyMinions.Count;
+            int anz = m.Angr;
+            if (anz > 0)
             {
-                if (m.entityID == own.entityID) continue;
-                int pos = (own.own) ? p.ownMinions.Count : p.enemyMinions.Count;
-                p.callKid(m.handcard.card, pos, own.own, true);
-                if (pos < 6)
+                p.callKid(kid, pos, m.own, false);
+                anz--;                
+                for (int i = 0; i < anz; i++)
                 {
-                    Minion kidminion = temp[own.zonepos - 1]; //volazj isn't on the playfield yet but the kid is where volazj will be
-
-                    int angr = 1 - kidminion.Angr;
-                    int hp = 1 - kidminion.maxHp;
-
-                    p.minionGetBuffed(kidminion, angr, hp);
+                    p.callKid(kid, pos, m.own);
                 }
             }
         }

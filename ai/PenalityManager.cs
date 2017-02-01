@@ -273,11 +273,11 @@ namespace HREngine.Bots
 
             if (m.tempAttack >= 1 && target.isHero && target.Hp >= 10 && p.enemyMinions.Count >= 1) pen += m.tempAttack;
             
-            if (target.name == CardDB.cardName.acolyteofpain && !target.silenced && target.Hp >= 2)
-            {
-                //Helpfunctions.Instance.ErrorLog("(((((((((((((((((((((((((((((((((((((((");
-                if (m.Angr >= target.Hp) pen -= 10;
-            }
+            //if (target.name == CardDB.cardName.acolyteofpain && !target.silenced && target.Hp >= 2)
+            //{
+            //    //Helpfunctions.Instance.ErrorLog("(((((((((((((((((((((((((((((((((((((((");
+            //    //if (m.Angr >= target.Hp) pen -= 5;
+            //}
 
             return pen;
         }
@@ -2311,6 +2311,13 @@ namespace HREngine.Bots
             {
                 return p.playactions.Count * 0.5f;
             }
+
+            if (name == CardDB.cardName.armorup || name == CardDB.cardName.tankup)
+            {
+                if (name == CardDB.cardName.armorup) return 2;
+                if (name == CardDB.cardName.tankup) return 4;
+            }
+
 			bool juggleron = false;
             foreach (Minion mnn in p.ownMinions)
             {
@@ -2663,8 +2670,21 @@ namespace HREngine.Bots
 
             if (card.name == CardDB.cardName.upgrade)
             {
-                if (p.playactions.Find(a => a.actionType == actionEnum.attackWithHero) != null) return 5;
-                if (p.ownWeaponDurability == 0) return 5;
+                int ret = 0;
+
+                bool canplayweapon = false;
+                foreach (Handmanager.Handcard hc in p.owncards)
+                {
+                    if (hc.card.type == CardDB.cardtype.WEAPON) canplayweapon = true;
+                    if (hc.card.name == CardDB.cardName.nzothsfirstmate) canplayweapon = true;
+                }
+
+                if (p.playactions.Find(a => a.actionType == actionEnum.attackWithHero) != null) ret = 5;
+                if (p.ownWeaponDurability == 0) ret = 5;
+
+                if (canplayweapon) ret += 5;
+
+                return ret;   
             }
 
             if (card.name == CardDB.cardName.baronrivendare)
@@ -3262,7 +3282,7 @@ namespace HREngine.Bots
 
             if (heroAttackBuffDatabase.ContainsKey(name))
             {
-                return ((p.ownHero.numAttacksThisTurn == 0) && !p.ownHero.frozen) ? 0 : 20;
+                return ((p.ownHero.numAttacksThisTurn == 0) && !p.ownHero.frozen) ? heroAttackBuffDatabase[name] : 20;
             }
 
             if (name == CardDB.cardName.deadlypoison)
@@ -3497,11 +3517,13 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.bloodsailraider && p.ownWeaponDurability == 0)
             {
+                int ret = 0;
                 //if you have bloodsailraider and no weapon equiped, but own a weapon:
                 foreach (Handmanager.Handcard hc in p.owncards)
                 {
-                    if (hc.card.type == CardDB.cardtype.WEAPON) return 10;
+                    if (hc.card.type == CardDB.cardtype.WEAPON) ret = hc.card.Attack;
                 }
+                return ret;
             }
 
 
@@ -3827,8 +3849,8 @@ namespace HREngine.Bots
 
             if (card.type == CardDB.cardtype.WEAPON)
             {
-                float ret = card.Attack;
-                if (card.Attack <= p.ownWeaponAttack || p.ownWeaponDurability >= 2)
+                float ret = 0;
+                if (card.Attack <= p.ownWeaponAttack || (p.ownWeaponDurability >= 2 && !p.ownHero.allreadyAttacked))
                 {
                     ret += p.ownWeaponAttack * p.ownWeaponDurability;
                     if (card.Attack == p.ownWeaponAttack && p.ownHero.Ready) ret += card.Attack;
@@ -3893,6 +3915,25 @@ namespace HREngine.Bots
                 float penalty = 0;
                 penalty = - p.ownWeaponAttack;
                 return penalty;
+            }
+
+            if (name == CardDB.cardName.smalltimebuccaneer && p.ownMaxMana <= 1)
+            {
+                bool canplayweapon = false;
+                foreach (Handmanager.Handcard hc in p.owncards)
+                {
+                    if (hc.card.type == CardDB.cardtype.WEAPON && p.ownMaxMana <= 2) canplayweapon = true;
+                    if (hc.card.name == CardDB.cardName.nzothsfirstmate) canplayweapon = true;
+                }
+                if (canplayweapon && p.enemyMinions.Count == 0) return -2;
+            }
+
+            if (name == CardDB.cardName.southseadeckhand)
+            {
+                if (p.ownWeaponAttack <= 0)
+                {
+                    return 3;
+                }
             }
 
             return pen;

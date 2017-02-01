@@ -11,11 +11,15 @@ namespace HREngine.Bots
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             int damage = 0;
-            if (choice == 1 || (p.anzOwnFandralStaghelm > 0 && ownplay))
+
+            bool hasfandral = false;
+            if (p.ownMinions.Find(a => a.name == CardDB.cardName.fandralstaghelm && !a.silenced) != null) hasfandral = true;
+
+            if (choice == 1 || (hasfandral && ownplay))
             {
                 damage += (ownplay) ? p.getSpellDamageDamage(3) : p.getEnemySpellDamageDamage(3);
             }
-            if (choice == 2 || (p.anzOwnFandralStaghelm > 0 && ownplay))
+            if (choice == 2 || (hasfandral && ownplay))
             {
                 damage += (ownplay) ? p.getSpellDamageDamage(1) : p.getEnemySpellDamageDamage(1);
                 p.drawACard(CardDB.cardName.unknown, ownplay);

@@ -494,12 +494,12 @@ namespace HREngine.Bots
                             case CardDB.cardName.barnes:
                             case CardDB.cardName.tuskarrtotemic:
                             case CardDB.cardName.flametonguetotem:
+                            case CardDB.cardName.leeroyjenkins:
                                 //Helpfunctions.Instance.logg("찾는거 " + daum.bestmove.card.card.name + " 드로우카드 찾는거");
                                 //Helpfunctions.Instance.ErrorLog("찾는거 " + daum.bestmove.card.card.name + " 드로우카드 찾는거");
                                 //case CardDB.cardName.defenderofargus:
                                 this.doMultipleThingsAtATime = false;
                                 this.dontmultiactioncount++; break;
-                                
                             default: break;
                         }
 
@@ -652,6 +652,17 @@ namespace HREngine.Bots
                 case actionEnum.attackWithHero:
                     ranger_action.Actor = base.FriendHero;
                     System.Threading.Thread.Sleep(1100);
+
+                    foreach (Minion m in Playfield.Instance.ownMinions)
+                    {
+                        if (m.name == CardDB.cardName.southseadeckhand && m.playedThisTurn)
+                        {
+                            this.doMultipleThingsAtATime = false;
+                            this.dontmultiactioncount++;
+                            this.attackdeathrattlebefore++;
+                        }
+                    }
+
                     break;
                 case actionEnum.useHeroPower:
                     ranger_action.Actor = base.FriendHeroPower;
@@ -727,6 +738,12 @@ namespace HREngine.Bots
 
                     //Helpfunctions.Instance.ErrorLog("doMultipleThingsAtATime attackWithMinion " + doMultipleThingsAtATime + " because " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(ranger_action.Target.CardId));
                 }
+                //else if (daum.bestmove != null && daum.bestmove.actionType == actionEnum.attackWithMinion && daum.bestmove.card.card.name == CardDB.cardName.southseadeckhand && daum.bestmove.target != null && Playfield.Instance.ownWeaponAttack >= 1)
+                //{
+                //    this.doMultipleThingsAtATime = false;
+                //    this.dontmultiactioncount++;
+                //    this.attackdeathrattlebefore++;
+                //}
                 else if (attackdeathrattlebefore >= 1)
                 {
                     this.doMultipleThingsAtATime = false;
@@ -1988,6 +2005,12 @@ namespace HREngine.Bots
                                 if (daum.bestmove.card.card.name == CardDB.cardName.hex)
                                 {
                                     System.Threading.Thread.Sleep(1500);
+                                }
+
+                                switch (daum.bestmove.card.card.name)
+                                {
+                                    case CardDB.cardName.upgrade: System.Threading.Thread.Sleep(1500); break;
+                                    default: break;
                                 }
                             }
 

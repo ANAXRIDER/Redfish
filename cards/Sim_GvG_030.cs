@@ -11,11 +11,13 @@ namespace HREngine.Bots
 
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            if (choice == 1 || (p.anzOwnFandralStaghelm > 0 && own.own))
+            bool hasfandral = false;
+            if (p.ownMinions.Find(a => a.name == CardDB.cardName.fandralstaghelm && !a.silenced) != null) hasfandral = true;
+            if (choice == 1 || (hasfandral && own.own))
             {
                 p.minionGetBuffed(own, 1, 0);
             }
-            if (choice == 2 || (p.anzOwnFandralStaghelm > 0 && own.own))
+            if (choice == 2 || (hasfandral && own.own))
             {
                 p.minionGetBuffed(own, 0, 1);
             }

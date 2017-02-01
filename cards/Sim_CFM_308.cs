@@ -10,12 +10,14 @@ namespace HREngine.Bots
 
         public override void getBattlecryEffect(Playfield p, Minion m, Minion target, int choice)
         {
-            if (choice == 1 || (p.anzOwnFandralStaghelm > 0 && m.own))
+            bool hasfandral = false;
+            if (p.ownMinions.Find(a => a.name == CardDB.cardName.fandralstaghelm && !a.silenced) != null) hasfandral = true;
+            if (choice == 1 || (hasfandral && m.own))
             {
                 p.minionGetArmor(m.own ? p.ownHero : p.enemyHero, 10);
             }
 
-            if (choice == 2 || (p.anzOwnFandralStaghelm > 0 && m.own))
+            if (choice == 2 || (hasfandral && m.own))
             {
                 if (m.own) p.mana = p.ownMaxMana;
                 else p.mana = p.enemyMaxMana;

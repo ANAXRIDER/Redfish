@@ -377,8 +377,8 @@
                 {
                     this.anzGotDmg++;
                     this.GotDmgValue += dmg;
-                    if (this.own) p.tempTrigger.ownMinionsGotDmg++;
-                    else p.tempTrigger.enemyMinionsGotDmg++;
+                    if (this.own && !this.isHero) p.tempTrigger.ownMinionsGotDmg++;
+                    else if (!this.own && !this.isHero) p.tempTrigger.enemyMinionsGotDmg++;
                 }
                 return;
             }

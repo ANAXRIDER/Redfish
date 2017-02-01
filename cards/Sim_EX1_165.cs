@@ -14,7 +14,9 @@ namespace HREngine.Bots
 
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            if (p.anzOwnFandralStaghelm > 0 && own.own)
+            bool hasfandral = false;
+            if (p.ownMinions.Find(a => a.name == CardDB.cardName.fandralstaghelm && !a.silenced) != null) hasfandral = true;
+            if (hasfandral && own.own)
             {
                 p.minionTransform(own, bearcat);
             }

@@ -12,7 +12,9 @@ namespace HREngine.Bots
 
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            if (choice == 1 || (p.anzOwnFandralStaghelm > 0 && own.own))
+            bool hasfandral = false;
+            if (p.ownMinions.Find(a => a.name == CardDB.cardName.fandralstaghelm && !a.silenced) != null) hasfandral = true;
+            if (choice == 1 || (hasfandral && own.own))
             {
                 List<Minion> temp = (own.own) ? p.ownMinions : p.enemyMinions;
                 foreach (Minion m in temp)
@@ -20,7 +22,7 @@ namespace HREngine.Bots
                     if (own.entityID != m.entityID) p.minionGetBuffed(m, 2, 2);
                 }
             }
-            if (choice == 2 || (p.anzOwnFandralStaghelm > 0 && own.own))
+            if (choice == 2 || (hasfandral && own.own))
             {
                 p.callKid(kid, own.zonepos, own.own, false);
                 p.callKid(kid, own.zonepos - 1, own.own);

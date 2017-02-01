@@ -11,7 +11,9 @@ namespace HREngine.Bots
 
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            if (choice == 1 || (p.anzOwnFandralStaghelm > 0 && ownplay))
+            bool hasfandral = false;
+            if (p.ownMinions.Find(a => a.name == CardDB.cardName.fandralstaghelm && !a.silenced) != null) hasfandral = true;
+            if (choice == 1 || (hasfandral && ownplay))
             {
                 if (ownplay)
                 {
@@ -24,7 +26,7 @@ namespace HREngine.Bots
                     p.enemyMaxMana = Math.Min(10, p.enemyMaxMana + 2);
                 }
             }
-            if (choice == 2 || (p.anzOwnFandralStaghelm > 0 && ownplay))
+            if (choice == 2 || (hasfandral && ownplay))
             {
                 //this.owncarddraw+=3;
                 p.drawACard(CardDB.cardName.unknown, ownplay);

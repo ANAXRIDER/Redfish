@@ -2748,6 +2748,7 @@ namespace HREngine.Bots
                 if (hasPalSecret && hassecretkepper && (p.enemyMinions.Count >= 1 || p.enemyWeaponAttack >= 2)) return 0;
 
                 if (hasMaelstrom && p.enemyMinions.Count >= 2) return 0;
+                if (has1manacard >= 1) return 2;
                 if (has1costSpellAndEnemyMinion) return 2;
                 if (hasweapon) return 3;
                 if (hasvaluable3costminion && p.ownMaxMana == 2) return 5;
@@ -3936,6 +3937,18 @@ namespace HREngine.Bots
                 }
             }
 
+            if (name == CardDB.cardName.markofyshaarj)
+            {
+                if ((TAG_RACE)target.handcard.card.race != TAG_RACE.PET) 
+                {
+                    return 4;
+                }
+            }
+            if (name == CardDB.cardName.livingroots)
+            {
+                if (choice == 1) return 2;
+                if (choice == 2) return 4;
+            }
             return pen;
         }
 

@@ -825,7 +825,7 @@
             //retval -= p.lostWeaponDamage;
             //if (p.ownMinions.Count == 0) retval -= 5;
 
-            //if (p.enemyMinions.Count == 0 && p.ownMinions.Count >= 1) retval += 5;
+            if (p.enemyMinions.Count == 0 && p.ownMinions.Count >= 1) retval += 2;
             //if (p.enemyMinions.Count == 0 && p.ownMaxMana <= 4) retval += 5;
             //if (Settings.Instance.savecardswhencontrol)
             //{

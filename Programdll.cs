@@ -462,6 +462,9 @@ namespace HREngine.Bots
         {
             HSRangerLib.BotAction ranger_action = new HSRangerLib.BotAction();
             Ai daum = Ai.Instance;
+
+
+
             switch (moveTodo.actionType)
             {
                 case actionEnum.endturn:
@@ -533,6 +536,10 @@ namespace HREngine.Bots
                             Helpfunctions.Instance.ErrorLog("찾는거 저글러 몹" + daum.bestmove.card.card.name);
                         }
 
+                        
+                        
+
+
                         if (daum.bestmove.card.card.type == CardDB.cardtype.SPELL)
                         {
                             this.doMultipleThingsAtATime = false;
@@ -602,7 +609,18 @@ namespace HREngine.Bots
                             {
                                 this.attackdeathrattlebefore++;
                             }                                                      
-                        }                
+                        }
+
+                        foreach (Minion m in Playfield.Instance.ownMinions)
+                        {
+                            if (m.name == CardDB.cardName.fandralstaghelm && !m.silenced)
+                            {
+                                this.doMultipleThingsAtATime = false;
+                                this.dontmultiactioncount++;
+                                this.attackdeathrattlebefore++;
+                            }
+                        }
+
                     }
 
                     //if (moveTodo.card.card.type == CardDB.cardtype.MOB || moveTodo.card.card.name == CardDB.cardName.forbiddenritual)
@@ -669,7 +687,17 @@ namespace HREngine.Bots
                     break;
                 case actionEnum.attackWithMinion:
                     ranger_action.Actor = getEntityWithNumber(moveTodo.own.entityID);
-                    
+
+                    foreach (Minion m in Playfield.Instance.ownMinions)
+                    {
+                        if (m.name == CardDB.cardName.flametonguetotem || m.name == CardDB.cardName.direwolfalpha)
+                        {
+                            this.doMultipleThingsAtATime = false;
+                            this.dontmultiactioncount++;
+                            this.attackdeathrattlebefore++;
+                        }
+                    }
+
                     if (ranger_action.Actor == null) return null;  // missing entity likely because new spawned minion
                     break;
                 default:

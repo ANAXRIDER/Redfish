@@ -12,6 +12,7 @@ namespace HREngine.Bots
         {
             bool hasfandral = false;
             if (p.ownMinions.Find(a => a.name == CardDB.cardName.fandralstaghelm && !a.silenced) != null) hasfandral = true;
+            //Helpfunctions.Instance.ErrorLog(" hasfandral  =  " + hasfandral);
             if (choice == 1 || (hasfandral && m.own))
             {
                 p.minionGetArmor(m.own ? p.ownHero : p.enemyHero, 10);

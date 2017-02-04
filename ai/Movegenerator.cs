@@ -65,116 +65,158 @@
                 //  18. wispsoftheoldgods
                 //  19. anodizedrobocub
                 // missing: cenarius
-                if (c.name == CardDB.cardName.darkwispers)
+
+                bool hasfandral = false;
+                if (p.ownMinions.Find(a => a.name == CardDB.cardName.fandralstaghelm && !a.silenced) != null) hasfandral = true;
+                if (c.name == CardDB.cardName.fandralstaghelm) i = 0; // fandral correction Not fundamental
+                if (!hasfandral)
                 {
-                    if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.GVG_041a);
-                    if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.GVG_041b);
+                    if (c.name == CardDB.cardName.darkwispers)
+                    {
+                        if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.GVG_041a);
+                        if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.GVG_041b);
+                    }
+
+                    if (c.name == CardDB.cardName.starfall)
+                    {
+                        if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.NEW1_007b);
+                        if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.NEW1_007a);
+                    }
+
+                    if (c.name == CardDB.cardName.ancientoflore)
+                    {
+                        if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.NEW1_008a);
+                        if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.NEW1_008b);
+                    }
+
+                    if (c.name == CardDB.cardName.powerofthewild)
+                    {
+                        if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_160b);
+                        if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_160a);
+                    }
+                    if (c.name == CardDB.cardName.ancientofwar)
+                    {
+
+                        if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_178b);
+                        if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_178a);
+                    }
+                    if (c.name == CardDB.cardName.druidoftheclaw)
+                    {
+                        if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_165t1);
+                        if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_165t2);
+                    }
+                    if (c.name == CardDB.cardName.druidoftheflame)
+                    {
+                        if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.BRM_010t);
+                        if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.BRM_010t2);
+                    }
+                    //cenarius dont need
+                    if (c.name == CardDB.cardName.keeperofthegrove)//keeper of the grove
+                    {
+                        if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_166a);
+                        if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_166b);
+                    }
+                    if (c.name == CardDB.cardName.markofnature)
+                    {
+                        if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_155a);
+                        if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_155b);
+                    }
+                    if (c.name == CardDB.cardName.nourish)
+                    {
+                        if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_164a);
+                        if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_164b);
+                    }
+                    if (c.name == CardDB.cardName.wrath)
+                    {
+                        if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_154a);
+                        if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_154b);
+                    }
+                    if (c.name == CardDB.cardName.livingroots)
+                    {
+                        if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.AT_037a);
+                        if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.AT_037b);
+                    }
+                    if (c.name == CardDB.cardName.druidofthesaber)
+                    {
+                        if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.AT_042a);
+                        if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.AT_042b);
+                    }
+                    if (c.name == CardDB.cardName.feralrage)
+                    {
+                        if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.OG_047a);
+                        if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.OG_047b);
+                    }
+                    if (c.name == CardDB.cardName.grovetender)
+                    {
+                        if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.GVG_032a);
+                        if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.GVG_032b);
+                    }
+                    if (c.name == CardDB.cardName.mirekeeper)
+                    {
+                        if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.OG_202a);
+                        if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.OG_202b);
+                    }
+                    if (c.name == CardDB.cardName.ravenidol)
+                    {
+                        if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.LOE_115a);
+                        if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.LOE_115b);
+                    }
+                    if (c.name == CardDB.cardName.wispsoftheoldgods)
+                    {
+                        if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.OG_195a);
+                        if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.OG_195b);
+                    }
+                    if (c.name == CardDB.cardName.anodizedrobocub)
+                    {
+                        if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.GVG_030a);
+                        if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.GVG_030b);
+                    }
+                    if (c.name == CardDB.cardName.kuntheforgottenking)
+                    {
+                        if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CFM_308a);
+                        if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CFM_308b);
+                    }
+                    if (c.name == CardDB.cardName.jadeidol)
+                    {
+                        if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CFM_602a);
+                        if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CFM_602b);
+                    }
+                    
+
+                }
+                else if (hasfandral)
+                {
+                    switch(c.name)
+                    {
+                        case CardDB.cardName.darkwispers:
+                        case CardDB.cardName.starfall:
+                        case CardDB.cardName.ancientoflore:
+                        case CardDB.cardName.powerofthewild:
+                        case CardDB.cardName.ancientofwar:
+                        case CardDB.cardName.druidoftheclaw:
+                        case CardDB.cardName.druidoftheflame:
+                        case CardDB.cardName.cenarius:
+                        case CardDB.cardName.keeperofthegrove:
+                        case CardDB.cardName.markofnature:
+                        case CardDB.cardName.nourish:
+                        case CardDB.cardName.wrath:
+                        case CardDB.cardName.livingroots:
+                        case CardDB.cardName.druidofthesaber:
+                        case CardDB.cardName.feralrage:
+                        case CardDB.cardName.grovetender:
+                        case CardDB.cardName.mirekeeper:
+                        case CardDB.cardName.ravenidol:
+                        case CardDB.cardName.wispsoftheoldgods:
+                        case CardDB.cardName.anodizedrobocub:
+                        case CardDB.cardName.kuntheforgottenking:
+                        case CardDB.cardName.jadeidol:
+                            i = 0;
+                            break;
+                        default: break;
+                    }                      
                 }
 
-                if (c.name == CardDB.cardName.starfall)
-                {
-                    if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.NEW1_007b);
-                    if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.NEW1_007a);
-                }
-
-                if (c.name == CardDB.cardName.ancientoflore)
-                {
-                    if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.NEW1_008a);
-                    if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.NEW1_008b);
-                }
-
-                if (c.name == CardDB.cardName.powerofthewild)
-                {
-                    if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_160b);
-                    if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_160a);
-                }
-                if (c.name == CardDB.cardName.ancientofwar)
-                {
-
-                    if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_178b);
-                    if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_178a);
-                }
-                if (c.name == CardDB.cardName.druidoftheclaw)
-                {
-                    if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_165t1);
-                    if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_165t2);
-                }
-                if (c.name == CardDB.cardName.druidoftheflame)
-                {
-                    if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.BRM_010t);
-                    if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.BRM_010t2);
-                }
-                //cenarius dont need
-                if (c.name == CardDB.cardName.keeperofthegrove)//keeper of the grove
-                {
-                    if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_166a);
-                    if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_166b);
-                }
-                if (c.name == CardDB.cardName.markofnature)
-                {
-                    if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_155a);
-                    if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_155b);
-                }
-                if (c.name == CardDB.cardName.nourish)
-                {
-                    if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_164a);
-                    if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_164b);
-                }
-                if (c.name == CardDB.cardName.wrath)
-                {
-                    if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_154a);
-                    if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_154b);
-                }
-                if (c.name == CardDB.cardName.livingroots)
-                {
-                    if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.AT_037a);
-                    if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.AT_037b);
-                }
-                if (c.name == CardDB.cardName.druidofthesaber)
-                {
-                    if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.AT_042a);
-                    if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.AT_042b);
-                }
-                if (c.name == CardDB.cardName.feralrage)
-                {
-                    if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.OG_047a);
-                    if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.OG_047b);
-                }
-                if (c.name == CardDB.cardName.grovetender)
-                {
-                    if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.GVG_032a);
-                    if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.GVG_032b);
-                }
-                if (c.name == CardDB.cardName.mirekeeper)
-                {
-                    if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.OG_202a);
-                    if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.OG_202b);
-                }
-                if (c.name == CardDB.cardName.ravenidol)
-                {
-                    if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.LOE_115a);
-                    if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.LOE_115b);
-                }
-                if (c.name == CardDB.cardName.wispsoftheoldgods)
-                {
-                    if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.OG_195a);
-                    if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.OG_195b);
-                }
-                if (c.name == CardDB.cardName.anodizedrobocub)
-                {
-                    if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.GVG_030a);
-                    if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.GVG_030b);
-                }
-                if (c.name == CardDB.cardName.kuntheforgottenking)
-                {
-                    if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CFM_308a);
-                    if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CFM_308b);
-                }
-                if (c.name == CardDB.cardName.jadeidol)
-                {
-                    if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CFM_602a);
-                    if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CFM_602b);
-                }
+                
 
                 if (hcc.isChoiceTemp)
                 {

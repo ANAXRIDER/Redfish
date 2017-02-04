@@ -286,7 +286,7 @@
             retval += p.ownMaxMana * 15 - p.enemyMaxMana * 15;
 
             if (p.ownMaxMana <= 6 && p.owncards.Count >= 4) retval -= p.manaTurnEnd * 3;
-            else retval -= p.manaTurnEnd;
+            else if (p.owncards.Count >= 4) retval -= p.manaTurnEnd;
 
 
             if (!p.ownHero.frozen)

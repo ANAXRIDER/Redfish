@@ -14,7 +14,17 @@ namespace HREngine.Bots
         {
             bool hasfandral = false;
             if (p.ownMinions.Find(a => a.name == CardDB.cardName.fandralstaghelm && !a.silenced) != null) hasfandral = true;
-            if (choice == 1 || (hasfandral && ownplay))
+            if (hasfandral && ownplay)
+            {
+                int pos = (ownplay) ? p.ownMinions.Count : p.enemyMinions.Count;
+                p.callKid(kid, pos, ownplay, false);
+                List<Minion> temp = (ownplay) ? p.ownMinions : p.enemyMinions;
+                foreach (Minion m in temp)
+                {
+                    p.minionGetBuffed(m, 1, 1);
+                }
+            }
+            else if (choice == 1)
             {
                 List<Minion> temp = (ownplay) ? p.ownMinions : p.enemyMinions;
                 foreach (Minion m in temp)
@@ -22,7 +32,7 @@ namespace HREngine.Bots
                     p.minionGetBuffed(m, 1, 1);
                 }
             }
-            if (choice == 2 || (hasfandral && ownplay))
+            else if (choice == 2)
             {
                 int pos = (ownplay) ? p.ownMinions.Count : p.enemyMinions.Count;
                 p.callKid(kid, pos, ownplay, false);

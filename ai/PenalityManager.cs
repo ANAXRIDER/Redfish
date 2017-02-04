@@ -474,6 +474,7 @@ namespace HREngine.Bots
 
                 if (target.isHero)
                 {
+                    if (AttacksEnemyHeroCanTrigger) return jugglerpen;
                     if (p.enemyMinions.Find (a => a.taunt) == null)
                     {
                         if (p.enemyMinions.Find(a => a.Hp <= p.ownHero.Angr) != null) return 5 + jugglerpen;
@@ -485,7 +486,7 @@ namespace HREngine.Bots
                     bool hasweapon = false;
                     foreach (Handmanager.Handcard c in p.owncards)
                     {
-                        if (c.card.type == CardDB.cardtype.WEAPON || alsoEquipsWeaponDB.ContainsKey(c.card.name)) hasweapon = true;
+                        if (c.card.type == CardDB.cardtype.WEAPON || (alsoEquipsWeaponDB.ContainsKey(c.card.name) && c.card.name != CardDB.cardName.upgrade)) hasweapon = true;
                     }
                     if (hasweapon) retval = 0;
                 }
@@ -511,6 +512,7 @@ namespace HREngine.Bots
 
                 if (target.isHero)
                 {
+                    if (AttacksEnemyHeroCanTrigger) return jugglerpen;
                     if (p.enemyMinions.Find(a => a.taunt) == null)
                     {
                         if (p.enemyMinions.Find(a => a.Hp <= p.ownHero.Angr) != null) return 5 + jugglerpen;
@@ -542,6 +544,8 @@ namespace HREngine.Bots
             {
                 return 10 +jugglerpen;
             }
+
+            //general weapon
             if (p.ownWeaponDurability >= 1)
             {
                 bool hasweapon = false;
@@ -712,7 +716,7 @@ namespace HREngine.Bots
                     return 4 * attackBuffDatabase[name];
                 }
 
-                return 60;
+                return 10;
             }
 
             if (target.own && name == CardDB.cardName.rockbiterweapon)
@@ -1202,6 +1206,7 @@ namespace HREngine.Bots
                 if (name == CardDB.cardName.lavaburst) pen += 30;
                 if (name == CardDB.cardName.lightningbolt) pen += 30;
                 if (name == CardDB.cardName.jadelightning) pen += 10;
+                if (name == CardDB.cardName.eviscerate) pen += 20;
 
             }
 
@@ -1345,6 +1350,11 @@ namespace HREngine.Bots
                         pen += 6;
                         if (target.Angr == 0) pen += 2;
                         if (p.spellpower + 4 >= target.Hp && target.Hp >= 4 && target.Angr >= 2) pen = 0;
+                    }
+
+                    if (name == CardDB.cardName.eviscerate)
+                    {
+                        pen += 8;
                     }
 
                     if (target.name == CardDB.cardName.doomsayer && pen >= 5) pen = 2;
@@ -1993,7 +2003,8 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.brawl || name == CardDB.cardName.deathwing || name == CardDB.cardName.twistingnether || name == CardDB.cardName.doomsayer || name == CardDB.cardName.doom)
             {
-                if (p.mobsPlayedThisTurn >= 1) return 500;
+                int penalty = 0;
+                if (p.mobsPlayedThisTurn >= 1) return 20;
                 if (name == CardDB.cardName.brawl && p.ownMinions.Count + p.enemyMinions.Count <= 1) return 500;
                 int highminion = 0;
                 int veryhighminion = 0;
@@ -2015,17 +2026,21 @@ namespace HREngine.Bots
                     else return 0;
                 }
                 
-                if (highminion >= 2 || veryhighminion >= 1)
-                {
-                    return 0;
-                }
+
 
                 if (p.enemyMinions.Count <= 2 || p.enemyMinions.Count + 2 <= p.ownMinions.Count || p.ownMinions.Count >= 3)
                 {
-                    return 30;
+                    penalty = 30;
                 }
 
-                return 0;
+                if (highminion >= 2 || veryhighminion >= 1 || p.enemyMinions.Count >= 3)
+                {
+                    penalty = 0;
+                }
+
+                if (name == CardDB.cardName.brawl) penalty -= p.ownMinions.Count;
+
+                return penalty;
             }
             if (target == null) return 0;
             if (target.own && !target.isHero)
@@ -2306,11 +2321,11 @@ namespace HREngine.Bots
 
                 return pen + p.playactions.Count * 0.5f;
             }
-            // penalize playing shapeshift after other moves
-            if (name == CardDB.cardName.shapeshift || name == CardDB.cardName.direshapeshift)
-            {
-                return p.playactions.Count * 0.5f;
-            }
+            //// penalize playing shapeshift after other moves
+            //if (name == CardDB.cardName.shapeshift || name == CardDB.cardName.direshapeshift)
+            //{
+            //    return p.playactions.Count * 0.5f;
+            //}
 
             if (name == CardDB.cardName.armorup || name == CardDB.cardName.tankup)
             {
@@ -4291,7 +4306,7 @@ namespace HREngine.Bots
                 {
                     if (si.canBe_noblesacrifice)
                     {
-                        if (!target.own && !m.isHero && m.Hp <= 2 && !m.divineshild)
+                        if (!target.own && !m.isHero && m.Hp <= 2 && !m.divineshild && m.Angr >= 3)
                         {
                             pen += 5;
                         }

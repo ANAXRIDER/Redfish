@@ -14,7 +14,19 @@ namespace HREngine.Bots
         {
             bool hasfandral = false;
             if (p.ownMinions.Find(a => a.name == CardDB.cardName.fandralstaghelm && !a.silenced) != null) hasfandral = true;
-            if (choice == 1 || (hasfandral && own.own))
+
+            if (hasfandral && own.own)
+            {
+                p.callKid(kid, own.zonepos - 1, own.own);
+                p.callKid(kid, own.zonepos, own.own);
+                own.zonepos++; 
+                List<Minion> temp = (own.own) ? p.ownMinions : p.enemyMinions;
+                foreach (Minion m in temp)
+                {
+                    if (own.entityID != m.entityID) p.minionGetBuffed(m, 2, 2);
+                }
+            }
+            else if (choice == 1)
             {
                 List<Minion> temp = (own.own) ? p.ownMinions : p.enemyMinions;
                 foreach (Minion m in temp)
@@ -22,11 +34,13 @@ namespace HREngine.Bots
                     if (own.entityID != m.entityID) p.minionGetBuffed(m, 2, 2);
                 }
             }
-            if (choice == 2 || (hasfandral && own.own))
+            else if (choice == 2)
             {
-                p.callKid(kid, own.zonepos, own.own, false);
                 p.callKid(kid, own.zonepos - 1, own.own);
+                p.callKid(kid, own.zonepos, own.own);
+                own.zonepos++;
             }
+
         }
     }
 }

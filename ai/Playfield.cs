@@ -3340,7 +3340,7 @@ namespace HREngine.Bots
                     }
                     if (this.ownHero.entityID == newTarget) target = this.ownHero;
                     if (this.enemyHero.entityID == newTarget) target = this.enemyHero;
-                    Helpfunctions.Instance.ErrorLog("missdirection target = " + target.name);
+                    //Helpfunctions.Instance.ErrorLog("missdirection target = " + target.name);
                 }
                 if (a.own.Hp >= 1) minionAttacksMinion(a.own, target);
             }
@@ -7845,7 +7845,7 @@ namespace HREngine.Bots
 
             if (justactions)
             {
-                Helpfunctions.Instance.logg("Enemy HP: " + this.enemyHero.Hp + "  Armor: " +this.enemyHero.armor + "  E. Minion Count: " + this.enemyMinions.Count);
+                Helpfunctions.Instance.logg("HP + Armor: " + this.ownHero.Hp + "+" + this.ownHero.armor + " VS " + this.enemyHero.Hp + "+" + this.enemyHero.armor + "  Minion Count: " + this.ownMinions.Count + " VS " + this.enemyMinions.Count);
                 foreach (Action a in this.playactions)
                 {
                     a.print();

@@ -66,6 +66,65 @@ LOE_076,-10;all;all
 
 
 
+
+//Dragon 
+
+//Drakonid Operative
+CFM_605,44;all;all
+//Twilight Guardian
+AT_017,42;all;all
+//Book Wyrm
+KAR_033,40;all;all
+//Azure Drake
+EX1_284,38;all;all
+//Drakonid Crusher
+BRM_024,36;all;all
+//Alexstrasza
+EX1_561,34;all;all
+//Onyxia
+EX1_562,32;all;all
+//Ysera
+EX1_572,30;all;all
+//Nefarian
+BRM_030,28;all;all
+//Chillmaw
+AT_123,26;all;all
+//Dragon Consort
+BRM_018,24;all;all
+//Chromaggus
+BRM_031,22;all;all
+//Malygos
+EX1_563,20;all;all
+//Scaled Nightmare
+OG_271,18;all;all
+//Coldarra Drake
+AT_008,16;all;all
+//Volcanic Drake
+BRM_025,14;all;all
+//Faerie Dragon
+NEW1_023,12;all;all
+//Deathwing, Dragonlord
+OG_317,10;all;all
+//Deathwing
+NEW1_030,8;all;all
+//Dragonkin Sorcerer
+BRM_020,6;all;all
+//Twilight Whelp
+BRM_004,4;all;all
+//Hungry Dragon
+BRM_026,3;all;all
+//Twilight Drake
+EX1_043,2;all;all
+//Midnight Drake
+OG_320,1;all;all
+//Nozdormu
+EX1_560,0;all;all
+
+
+
+
+
+
 //Sir Finley hero powers
 
 //aggroshaman
@@ -77,35 +136,55 @@ CS2_056,8;shaman;all
 CS2_017,7;shaman;all
 //Fireblast
 CS2_034,6;shaman;all
-//Reinforce
-CS2_101,5;shaman;all
-//Totemic Call
-CS2_049,4;shaman;all
-//Lesser Heal
-CS1h_001,3;shaman;all
-//Armor Up!
-CS2_102,2;shaman;all
 //Dagger Mastery
-CS2_083b,1;shaman;all
+CS2_083b,5;shaman;all
+//Reinforce
+CS2_101,4;shaman;all
+//Totemic Call
+CS2_049,3;shaman;all
+//Lesser Heal
+CS1h_001,2;shaman;all
+//Armor Up!
+CS2_102,1;shaman;all
 
-//dragon warrior
+//pirate warrior
 //Life Tap
 CS2_056,9;warrior;all
 //Fireblast
 CS2_034,8;warrior;all
 //Shapeshift
 CS2_017,7;warrior;all
-//Lesser Heal
-CS1h_001,6;warrior;all
 //Steady Shot
-DS1h_292,5;warrior;all
+DS1h_292,6;warrior;all
 //Reinforce
-CS2_101,4;warrior;all
+CS2_101,5;warrior;all
+//Dagger Mastery
+CS2_083b,4;warrior;all
 //Totemic Call
 CS2_049,3;warrior;all
+//Lesser Heal
+CS1h_001,2;warrior;all
 //Armor Up!
-CS2_102,2;warrior;all
+CS2_102,1;warrior;all
+
+
+
+//Druid 
+//Fireblast
+CS2_034,9;druid;all
+//Steady Shot
+DS1h_292,8;druid;al
+//Life Tap
+CS2_056,7;druid;all
+//Shapeshift
+CS2_017,6;druid;all
+//Lesser Heal
+CS1h_001,5;druid;all
+//Reinforce
+CS2_101,4;druid;all
+//Totemic Call
+CS2_049,3;druid;all
+//Armor Up!
+CS2_102,2;druid;all
 //Dagger Mastery
 CS2_083b,1;warrior;all
-
-

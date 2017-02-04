@@ -611,13 +611,37 @@ hold;hunter;all;NEW1_031:1:OG_179+LOE_046/OG_179+AT_058/OG_179+AT_094/OG_179+EX1
 // 1-DROP
 // 1X Sir Finley Mrrgglton
 hold;shaman;all;LOE_076
+// discard when has 1mana minion.
+discard;shaman;all;LOE_076:2:LOE_018/CFM_325
+
 // 2X Tunnel Trog
 hold;shaman;all;LOE_018
+
 // 1x Argent Squire
 hold;shaman;all;EX1_008
+
 // Spirit Claws KAR_063
 hold;shaman;all;KAR_063:1;coin
+//holld when has totem golem or thalnos
 hold;shaman;all;KAR_063:1:AT_052/EX1_012;nocoin
+
+//Mistress of Mixtures CFM_120
+hold;shaman;all;CFM_120:2;coin
+hold;shaman;all;CFM_120:1;nocoin
+
+// DISCARD Patches the Pirate (CFM_637)
+discard;shaman;all;CFM_637
+
+// Small-Time Buccaneer (CFM_325)
+hold;shaman;all;CFM_325
+
+
+
+// Southsea Deckhand (CS2_146)
+hold;shaman;all;CS2_146:1
+//discard when has trogg or buccaneer or mrrglton
+discard;shaman;all;CS2_146:2:LOE_018/CFM_325/LOE_076
+
 
 // 2-DROP
 // 1x Totem Golem
@@ -629,6 +653,14 @@ hold;shaman;all;EX1_565:1:EX1_008,2,2;coin
 
 //EX1_012 1x thalnos + spirit claw KAR_063
 hold;shaman;all;EX1_012:1:KAR_063
+
+
+//Loot Hoarder EX1_096
+hold;shaman;all;EX1_096:2
+
+//Acidic Swamp Ooze  EX1_066
+hold;shaman;all;EX1_066:2
+
 
 // 3-DROP
 // 1x Feral Spirit + Tunnel Trog + coin
@@ -793,10 +825,24 @@ hold;warrior;all;OG_312:1;
 // 1 x Sir Finley Mrrgglton // discard when has 1mana minion.
 hold;warrior;all;LOE_076:1;
 
-discard;warrior;all;LOE_076:2:OG_312;
+discard;warrior;all;LOE_076:2:OG_312/CFM_325;
+
+
+// DISCARD Patches the Pirate (CFM_637)
+discard;warrior;all;CFM_637
+
+// Small-Time Buccaneer (CFM_325)
+hold;warrior;all;CFM_325
+
+
+// Southsea Deckhand (CS2_146) + N'Zoth's First Mate (OG_312)
+hold;warrior;all;CS2_146:2:OG_312
 
 // 1 x Fiery War Axe
 hold;warrior;all;CS2_106:1;
+
+// Ship's Cannon (GVG_075)
+hold;warrior;all;GVG_075:1
 
 // 1 x Alexstrasza's Champion
 hold;warrior;all;AT_071:1;
@@ -809,6 +855,13 @@ hold;warrior;all;EX1_604:1:OG_312+CS2_106/OG_312+AT_071/OG_312+NEW1_023/LOE_076+
 
 // 1 x Twilight Guardian when has alexcham
 hold;warrior;all;AT_017:1:AT_071;
+
+
+// Bloodsail Cultist (OG_315) + N'Zoth's First Mate (OG_312) + Coin
+hold;warrior;all;OG_315:1:OG_312;coin
+
+// Dread Corsair (NEW1_022) + Fiery War Axe (CS2_106)
+hold;warrior;all;NEW1_022:1:CS2_106
 
 //DRUID ---------------------
 
@@ -825,9 +878,75 @@ hold;warrior;all;AT_017:1:AT_071;
 // - SHAMAN --------------------------------------
 //Blood To Ichor
 hold;warrior;shaman;OG_314:1:CS2_106/AT_071;coin
+// Acid Swamp Ooze (EX1_066)
+hold;warrior;shaman;EX1_066:1
 
 
 // - WARLOCK --------------------------------------
 
 // - WARRIOR --------------------------------------
+// Acid Swamp Ooze (EX1_066)
+hold;warrior;warrior;EX1_066:1
+
+
+
+
+
+
+
+
+
+
+// - D E C K ------------------------------------
+
+
+
+// - A L L --------------------------------------
+// Enchanted Raven(KAR_300)
+hold;druid;all;KAR_300
+
+//Mark of Y'Shaarj (OG_048) when has raven + nocoin
+hold;druid;all;OG_048:1:KAR_300;nocoin
+
+//Living Roots AT_037 discard when has raven
+hold;druid;all;AT_037:1;
+discard;druid;all;AT_037:2:KAR_300
+
+// 1 x Sir Finley Mrrgglton // discard when has 1mana minion. raven or mrrgglton
+hold;druid;all;LOE_076:1;
+discard;druid;all;LOE_076:2:KAR_300/LOE_076
+
+
+
+//Saber
+//Druid of the saber
+hold;druid;all;AT_042
+
+//Innervate (EX1_169)
+hold;druid;all;EX1_169
+
+//Faerie Dragon NEW1_023
+hold;druid;all;NEW1_023:1;nocoin
+hold;druid;all;NEW1_023:2;coin
+//discard when has another 2-mana minion huge toad
+discard;druid;all;NEW1_023:2:LOE_046;coin
+
+
+//Huge Toad LOE_046
+hold;druid;all;LOE_046:1;nocoin
+hold;druid;all;LOE_046:2;coin
+
+//Darnassus
+hold;druid;all;AT_038:2;nocoin
+hold;druid;all;AT_038:2;coin
+
+
+// 3 DROP
+//Druid of the Flame BRM_010 // when has 1+2mana
+hold;druid;all;BRM_010:1:KAR_300+NEW1_023/KAR_300+LOE_046/KAR_300+AT_038/KAR_300+OG_048  /AT_037+NEW1_023/AT_037+LOE_046/AT_037+AT_038   /LOE_076+NEW1_023/LOE_076+LOE_046/LOE_076+AT_038;nocoin
+hold;druid;all;BRM_010:1;nocoin
+
+//Mounted Raptor LOE_050 // when has 1+2mana
+hold;druid;all;LOE_050:1:KAR_300+NEW1_023/KAR_300+LOE_046/KAR_300+AT_038/KAR_300+OG_048  /AT_037+NEW1_023/AT_037+LOE_046/AT_037+AT_038   /LOE_076+NEW1_023/LOE_076+LOE_046/LOE_076+AT_038;nocoin
+hold;druid;all;LOE_050:1;nocoin
 

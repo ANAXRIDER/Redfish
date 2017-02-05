@@ -1012,7 +1012,7 @@ namespace HREngine.Bots
             if (name == CardDB.cardName.savagery && p.ownHero.Angr == 0) return 500;
             if (name == CardDB.cardName.keeperofthegrove && choice != 1) return 0; // look at silence penality
             if (name == CardDB.cardName.livingroots && choice != 1) return 0; // look at silence penality
-            if (name == CardDB.cardName.swipe && !target.own) return -p.enemyMinions.Count; // treat it as single target spell with bonus for aoe
+            //if (name == CardDB.cardName.swipe && !target.own) return -p.enemyMinions.Count; // treat it as single target spell with bonus for aoe
 
             if (this.DamageAllDatabase.ContainsKey(name) || (p.anzOwnAuchenaiSoulpriest >= 1 && HealAllDatabase.ContainsKey(name))) // aoe penality
             {
@@ -1476,6 +1476,7 @@ namespace HREngine.Bots
                 //Helpfunctions.Instance.ErrorLog("pencheck for " + name + " " + target.entitiyID + " " + target.isHero + " " + target.own);
                 if ((target.isHero && target.own) && p.ownHero.Hp == 30) return 150 + offset;
                 if ((target.isHero && target.own) && p.ownHero.Hp + heal > 30) pen = p.ownHero.Hp + heal - 30;
+                if (name == CardDB.cardName.lesserheal || name == CardDB.cardName.heal) pen = 0;
                 Minion m = new Minion();
 
                 if (!target.isHero && target.own)
@@ -1699,8 +1700,8 @@ namespace HREngine.Bots
             if (carddraw == 0) return 0;
 
             if (p.owncards.Count >= 5) return 0;
-            pen = -carddraw + p.ownMaxMana - p.mana + 0.3f * p.optionsPlayedThisTurn;
-
+            //pen = -carddraw + p.ownMaxMana - p.mana + 0.3f * p.optionsPlayedThisTurn;
+            pen -= carddraw;
             return pen;
         }
 
@@ -2354,6 +2355,14 @@ namespace HREngine.Bots
                 return 8;
             }
 
+            if (name == CardDB.cardName.lesserheal || name == CardDB.cardName.heal)
+            {
+                if (p.ownMinions.Find(m => m.name == CardDB.cardName.northshirecleric && !m.silenced) != null)
+                {
+                    return p.playactions.Count * 0.5f;
+                }
+            }
+
 
             return -p.playactions.Count * 0.0003f;
             //return 0;
@@ -2776,13 +2785,22 @@ namespace HREngine.Bots
 
             if (card.name == CardDB.cardName.thecoin)
             {
+                if (p.ownMinions.Find(a => a.name == CardDB.cardName.gadgetzanauctioneer && !a.silenced) != null)
+                {
+                    return 0;
+                }
                 return 10 - p.playactions.Count * 0.3f;
             }
 
 
             if (card.name == CardDB.cardName.innervate)
             {
+                if (p.ownMinions.Find(a => a.name == CardDB.cardName.gadgetzanauctioneer && !a.silenced) != null)
+                {
+                    return 0;
+                }
                 if (p.mana >= 9) return 100;
+                return 10;
             }
 
 
@@ -2894,11 +2912,23 @@ namespace HREngine.Bots
                 if (p.enemyMinions.Count == 0 && choice == 2) return 50;
             }
 
-            if (name == CardDB.cardName.druidoftheflame)
+            if (name == CardDB.cardName.druidoftheflame) //choice1 -> 5/2 choice2 -> 2/5
             {
+                if (choice == 1)//5/2
+                {
+                    if (p.enemyMinions.Find(a => a.Angr >= 2) != null) return 10;
+                    if (p.enemyWeaponAttack >= 5) return 0;
+                    if (p.enemyWeaponAttack >= 2) return 15;
+                }
 
-                if (p.enemyMinions.Count > 0 && choice == 2) return 40;
-                if (p.enemyMinions.Count == 0 && choice == 1) return 40;
+                if (choice == 2)
+                {
+                    if (p.enemyMinions.Find(a => a.Angr >= 5 && a.Hp >= 3) != null) return 4;
+                    if (p.enemyWeaponAttack >= 5) return 15;
+                }
+
+                //if (p.enemyMinions.Count > 0 && choice == 2) return 40;
+                //if ((p.enemyMinions.Count == 0 || p.enemyWeaponAttack >= 2) && choice == 1 ) return 40;
 
             }
 
@@ -3261,7 +3291,11 @@ namespace HREngine.Bots
 
             if (card.name == CardDB.cardName.excessmana && card.getManaCost(p, 0) == 0)
             {
-                return -10;
+                if (p.ownMinions.Find(a => a.name == CardDB.cardName.gadgetzanauctioneer && !a.silenced) != null)
+                {
+                    return -10;
+                }
+                return -4;
             }
 
             if (name == CardDB.cardName.ancestralspirit)
@@ -3298,7 +3332,7 @@ namespace HREngine.Bots
 
             if (heroAttackBuffDatabase.ContainsKey(name))
             {
-                return ((p.ownHero.numAttacksThisTurn == 0) && !p.ownHero.frozen) ? heroAttackBuffDatabase[name] : 20;
+                return ((p.ownHero.numAttacksThisTurn == 0) && !p.ownHero.frozen) ? heroAttackBuffDatabase[name] * 2.5f : 20;
             }
 
             if (name == CardDB.cardName.deadlypoison)
@@ -3891,40 +3925,6 @@ namespace HREngine.Bots
                 return 10;
             }
 
-            if (name == CardDB.cardName.netherspitehistorian)
-            {
-                bool hasdragon = false;
-                foreach (Handmanager.Handcard hc in p.owncards)
-                {
-                    if (hc.card.race == TAG_RACE.DRAGON) hasdragon = true;
-                }
-                if (!hasdragon) return 5;
-                //if (Hrtprozis.Instance.startDeck.ContainsKey(CardDB.cardIDEnum.NEW1_030) //Deathwing NEW1_030
-                //    || Hrtprozis.Instance.startDeck.ContainsKey(CardDB.cardIDEnum.OG_317)//Deathwing, Dragonlord OG_317
-                //                                                                           //Alexstrasza EX1_561
-                //                                                                           //Malygos EX1_563
-                //                                                                           //Nefarian BRM_030
-                //                                                                           //
-                //                                                                           //
-                //                                                                           //
-                //                                                                           //
-                //                                                                           //
-                //                                                                           //
-                //                                                                           //
-                //                                                                           //
-                //                                                                           //
-                //                                                                           //
-                //                                                                           //
-                //                                                                           //
-                //                                                                           //
-                //                                                                           //
-                //                                                                           //
-                //    )
-                //{
-                //    if (!hasdragon) return 5;
-                //}
-
-            }
 
             if (name == CardDB.cardName.dreadcorsair)
             {
@@ -3964,6 +3964,7 @@ namespace HREngine.Bots
                 if (choice == 1) return 2;
                 if (choice == 2) return 4;
             }
+
             return pen;
         }
 
@@ -4320,6 +4321,54 @@ namespace HREngine.Bots
 
         private int getPlayPenalty(CardDB.cardName name, Playfield p, int choice)
         {
+            bool hasdragon = false;
+            bool hasdragonIndecks = false;
+            foreach (Handmanager.Handcard hc in p.owncards)
+            {
+                if (hc.card.race == TAG_RACE.DRAGON) hasdragon = true;
+            }
+            if (!hasdragon)
+            {
+                foreach (Handmanager.Handcard hc in Hrtprozis.Instance.deckCard)
+                {
+                    if ((TAG_RACE)hc.card.race == TAG_RACE.DRAGON) hasdragonIndecks = true;
+                }
+            }
+
+            //Dragon - Hand - synergy cards
+            if (hasdragonIndecks)
+            {
+                int dragonPen = 0;
+                switch (name)
+                {
+                    case CardDB.cardName.blackwingtechnician:
+                        dragonPen = 2; break;
+                    case CardDB.cardName.blackwingcorruptor:
+                        dragonPen = 6; break;
+                    case CardDB.cardName.bookwyrm:
+                        dragonPen = 8; break;
+                    case CardDB.cardName.wyrmrestagent:
+                        dragonPen = 4; break;
+                    case CardDB.cardName.rendblackhand:
+                        dragonPen = 8; break;
+                    case CardDB.cardName.alexstraszaschampion:
+                        dragonPen = 2; break;
+                    case CardDB.cardName.drakonidoperative:
+                        dragonPen = 6; break;
+                    case CardDB.cardName.nightbanetemplar:
+                        dragonPen = 4; break;
+                    case CardDB.cardName.netherspitehistorian:
+                        dragonPen = 10; break;
+                    case CardDB.cardName.twilightwhelp:
+                        dragonPen = 5; break;
+                    case CardDB.cardName.twilightguardian:
+                        dragonPen = 4; break;
+                    default:
+                        break;
+                }
+                if (dragonPen >= 1) return dragonPen;
+            }
+
             switch (name)
             {
                 case CardDB.cardName.brannbronzebeard: //play brann before good battlecries
@@ -4355,7 +4404,6 @@ namespace HREngine.Bots
                         if (choice == 1 && !Hrtprozis.Instance.turnDeck.ContainsKey(CardDB.cardIDEnum.CFM_602)) return 50; //don't waste our last copy
                         if (choice == 2 && Hrtprozis.Instance.turnDeck.ContainsKey(CardDB.cardIDEnum.CFM_602)) return 50; //don't shuffle more in if some still in deck
                     }
-                   
                     return 0;
                 default:
                     return 0;
@@ -6043,18 +6091,18 @@ namespace HREngine.Bots
         {
             strongInspireEffectMinions.Add(CardDB.cardName.boneguardlieutenant, 0);
             strongInspireEffectMinions.Add(CardDB.cardName.confessorpaletress, 10);
-            strongInspireEffectMinions.Add(CardDB.cardName.dalaranaspirant, 1);
+            strongInspireEffectMinions.Add(CardDB.cardName.dalaranaspirant, 0);
             strongInspireEffectMinions.Add(CardDB.cardName.kodorider, 10);
             strongInspireEffectMinions.Add(CardDB.cardName.kvaldirraider, 10);
             strongInspireEffectMinions.Add(CardDB.cardName.lowlysquire, 0);
             strongInspireEffectMinions.Add(CardDB.cardName.muklaschampion, 10);
             strongInspireEffectMinions.Add(CardDB.cardName.murlocknight, 10);
             strongInspireEffectMinions.Add(CardDB.cardName.nexuschampionsaraad, 10);
-            strongInspireEffectMinions.Add(CardDB.cardName.recruiter, 3);
+            strongInspireEffectMinions.Add(CardDB.cardName.recruiter, 1);
             strongInspireEffectMinions.Add(CardDB.cardName.thunderbluffvaliant, 0);
             strongInspireEffectMinions.Add(CardDB.cardName.tournamentmedic, 1);
-            strongInspireEffectMinions.Add(CardDB.cardName.savagecombatant, 4);
-            strongInspireEffectMinions.Add(CardDB.cardName.silverhandregent, 3);
+            strongInspireEffectMinions.Add(CardDB.cardName.savagecombatant, 0);
+            strongInspireEffectMinions.Add(CardDB.cardName.silverhandregent, 0);
         }
 
 		private void anti_aoe()

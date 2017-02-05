@@ -418,7 +418,11 @@
                 if (p.ownHeroName == HeroEnum.thief && a.card.card.type == CardDB.cardtype.SPELL && (a.target.isHero && !a.target.own)) retval -= 11;
             }
             if (usecoin >= 1 && useAbili && p.ownMaxMana <= 2) retval -= 40;
-            if (usecoin >= 1 && p.manaTurnEnd >= usecoin && p.owncards.Count <= 8) retval -= 20 * p.manaTurnEnd;
+            if (p.ownMinions.Find(a => a.name == CardDB.cardName.gadgetzanauctioneer && !a.silenced) == null)
+            {
+                if (usecoin >= 1 && p.manaTurnEnd >= 1 && p.owncards.Count <= 8) retval -= 20 * p.manaTurnEnd;
+            }
+            
             int heropowermana = p.ownHeroAblility.card.getManaCost(p, 2);
 
             if (p.manaTurnEnd >= heropowermana && !useAbili && p.ownAbilityReady)

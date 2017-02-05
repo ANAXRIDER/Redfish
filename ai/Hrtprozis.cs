@@ -55,6 +55,7 @@
 
         public Dictionary<CardDB.cardIDEnum, int> startDeck = new Dictionary<CardDB.cardIDEnum, int>();
         public Dictionary<CardDB.cardIDEnum, int> turnDeck = new Dictionary<CardDB.cardIDEnum, int>();
+        public List<Handmanager.Handcard> deckCard = new List<Handmanager.Handcard>();
         public bool noDuplicates = false;
 
 
@@ -193,6 +194,7 @@
         public void setTurnDeck(string td)
         {
             turnDeck.Clear();
+            deckCard.Clear();
             string temp = td.Replace("td: ", "");
             foreach (string s in temp.Split(';'))
             {
@@ -200,10 +202,13 @@
                 if (ss == "" || ss == " ") continue;
                 string[] pair = ss.Split(',');
                 CardDB.cardIDEnum card = CardDB.Instance.cardIdstringToEnum(pair[0]);
+                CardDB.Card dcard = CardDB.Instance.getCardDataFromID(card);
+                Handmanager.Handcard newdcard = new Handmanager.Handcard(dcard);
                 int num = 1;
                 if (pair.Length > 1) num = Convert.ToInt32(pair[1]);
 
                 turnDeck.Add(card, num);
+                this.deckCard.Add(newdcard);
             }
         }
         

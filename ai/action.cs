@@ -279,7 +279,7 @@ namespace HREngine.Bots
                 help.logg("useability " + discover);
                 if (this.target != null)
                 {
-                    help.logg("on enemy: " + targetname + " id " + this.target.entityID + discover);
+                    help.logg("on " + (target.own ? "own " : "enemy ") + targetname + " id " + this.target.entityID + discover);
                 }
             }
         }

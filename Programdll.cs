@@ -808,7 +808,7 @@ namespace HREngine.Bots
 
                     foreach (Minion m in Playfield.Instance.ownMinions)
                     {
-                        if (m.name == CardDB.cardName.flametonguetotem || m.name == CardDB.cardName.direwolfalpha)
+                        if (m.name == CardDB.cardName.flametonguetotem || m.name == CardDB.cardName.direwolfalpha || (m.name == CardDB.cardName.frothingberserker && m.Ready && m.frozen))
                         {
                             this.doMultipleThingsAtATime = false;
                             this.dontmultiactioncount++;

@@ -435,7 +435,7 @@
                                             }
                                             
                                         }
-                                        else if (p.ownMinions.Count >= 3 && !hc.card.Charge)
+                                        else if (p.ownMinions.Count >= 3 && !hc.card.Charge && !hc.card.tank) 
                                         {
                                             for (int placer = 1; placer <= p.ownMinions.Count + 1; placer++)
                                             {

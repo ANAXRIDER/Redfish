@@ -3443,7 +3443,7 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.frothingberserker)
             {
-                if (p.cardsPlayedThisTurn >= 1 || p.playactions.Find(a => a.actionType == actionEnum.attackWithHero || a.actionType == actionEnum.attackWithMinion) != null) return 15;
+                //if (p.cardsPlayedThisTurn >= 1 || p.playactions.Find(a => a.actionType == actionEnum.attackWithHero || a.actionType == actionEnum.attackWithMinion) != null) return 15;
             }
 
             if (name == CardDB.cardName.handofprotection)

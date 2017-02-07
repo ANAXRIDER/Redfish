@@ -224,7 +224,18 @@ namespace HREngine.Bots
                 if (m.Angr - 4 >= target.Hp) pen += 20;
             }
 
-
+            if (m.destroyOnEnemyTurnStart && p.enemyMinions.Count >= 1)//corruption
+            {
+                int StealthMinionCount = 0;
+                foreach (Minion mnn in p.enemyMinions)
+                {
+                    if (mnn.stealth) StealthMinionCount++;
+                }
+                if (StealthMinionCount < p.enemyMinions.Count)
+                {
+                    if (target.isHero) pen += m.Angr * 2;
+                }
+            }
 
 
             //if (this.anti_aoe_minion.ContainsKey(m.name))
@@ -1305,9 +1316,9 @@ namespace HREngine.Bots
 
                     if (name == CardDB.cardName.fireblast && !lethal && m.Hp == 1) pen = -4;
 
-                    if (name == CardDB.cardName.mortalstrike && p.ownHero.Hp > 12) pen = 10;
+                    if (name == CardDB.cardName.mortalstrike && p.ownHero.Hp > 12) pen = 12;
 
-                    if (name == CardDB.cardName.quickshot && p.owncards.Count == 1) return p.playactions.Count * 0.1f;
+                    if (name == CardDB.cardName.quickshot && p.owncards.Count == 1) pen = p.playactions.Count * 0.1f;
 
                     if (name == CardDB.cardName.killcommand) 
                     {
@@ -1357,7 +1368,18 @@ namespace HREngine.Bots
                         pen += 8;
                     }
 
-                    if (target.name == CardDB.cardName.doomsayer && pen >= 5) pen = 2;
+                    if (name == CardDB.cardName.wrath) pen += 2;
+
+                    if (target.name == CardDB.cardName.doomsayer && pen >= 5)
+                    {
+                        int enemydoomsayerMaxHp = 0;
+                        foreach (Minion min in p.enemyMinions)
+                        {
+                            if (min.name == CardDB.cardName.doomsayer && enemydoomsayerMaxHp <= min.Hp) enemydoomsayerMaxHp = min.Hp;
+                        }
+                        if (DamageTargetDatabase.ContainsKey(name) && DamageTargetDatabase[name] >= enemydoomsayerMaxHp) return 0;
+                        if (DamageTargetSpecialDatabase.ContainsKey(name) && DamageTargetSpecialDatabase[name] >= enemydoomsayerMaxHp) return 0;
+                    }
                 }
             }
 
@@ -2386,9 +2408,9 @@ namespace HREngine.Bots
                 int enemydoomsayerMaxHp = 0;
                 foreach (Minion min in p.enemyMinions)
                 {
-                    if (min.name == CardDB.cardName.doomsayer && enemydoomsayerMaxHp >= min.Hp) enemydoomsayerMaxHp = min.Hp; 
+                    if (min.name == CardDB.cardName.doomsayer && enemydoomsayerMaxHp <= min.Hp) enemydoomsayerMaxHp = min.Hp; 
                 }
-
+                //Helpfunctions.Instance.ErrorLog("enemydoomsayerMaxHp " + enemydoomsayerMaxHp);
 
                 if (this.silenceDatabase.ContainsKey(card.card.name)) return 0;
                 if (card.card.name == CardDB.cardName.crazedalchemist) return 0;
@@ -2400,15 +2422,22 @@ namespace HREngine.Bots
                 else if (card.card.type == CardDB.cardtype.HEROPWR) return 0;
                 else if (this.summonMinionSpellsDatabase.ContainsKey(card.card.name))
                 {
-                    if (DamageAllDatabase.ContainsKey(card.card.name) && DamageAllDatabase[card.card.name] >= enemydoomsayerMaxHp) return 0;
-                    else if (DamageAllEnemysDatabase.ContainsKey(card.card.name) && DamageAllEnemysDatabase[card.card.name] >= enemydoomsayerMaxHp) return 0;
-                    else if (DamageTargetDatabase.ContainsKey(card.card.name) && DamageTargetDatabase[card.card.name] >= enemydoomsayerMaxHp) return 0;
-                    else if (DamageTargetSpecialDatabase.ContainsKey(card.card.name) && DamageTargetSpecialDatabase[card.card.name] >= enemydoomsayerMaxHp) return 0;
+                    if (DamageAllDatabase.ContainsKey(card.card.name) && DamageAllDatabase[card.card.name] >= enemydoomsayerMaxHp) return 5;
+                    else if (DamageAllEnemysDatabase.ContainsKey(card.card.name) && DamageAllEnemysDatabase[card.card.name] >= enemydoomsayerMaxHp) return 5;
+                    else if (DamageTargetDatabase.ContainsKey(card.card.name) && DamageTargetDatabase[card.card.name] >= enemydoomsayerMaxHp) return 5;
+                    else if (DamageTargetSpecialDatabase.ContainsKey(card.card.name) && DamageTargetSpecialDatabase[card.card.name] >= enemydoomsayerMaxHp) return 5;
+                    else if (heroAttackBuffDatabase.ContainsKey(card.card.name) && heroAttackBuffDatabase[card.card.name] >= enemydoomsayerMaxHp && !p.ownHero.frozen) return 25;
+                }
+                else if (specialMinions.ContainsKey(card.card.name))
+                {
+                    doomsayerreturn = 100;
                 }
                 else return 500;
                 if (p.diedMinions != null && p.diedMinions.Find(ct => !ct.own && ct.cardid == CardDB.cardIDEnum.NEW1_021).cardid == CardDB.cardIDEnum.NEW1_021) cards = 0;//doomsayerreturn = 0;
 
+
                 
+
 
                 //cards = doomsayerreturn;
 
@@ -3284,9 +3313,10 @@ namespace HREngine.Bots
                 return 500;
             }
 
-            if (name == CardDB.cardName.nourish && choice == 1 && p.ownMaxMana > 6)
+            if (name == CardDB.cardName.nourish)
             {
-                return 500;
+                if (choice == 1 && p.ownMaxMana > 6) return 500;
+                if (choice == 1 && p.owncards.Count <= 3) return 25;
             }
 
             if (card.name == CardDB.cardName.excessmana && card.getManaCost(p, 0) == 0)
@@ -3870,7 +3900,13 @@ namespace HREngine.Bots
             if (name == CardDB.cardName.blackwingcorruptor)
             {
                 float ret = 0;
-                if (target != null && target.isHero) ret += 3;
+                if (target != null)
+                {
+                    if (target.isHero) ret += 6;
+                    if (target.isHero && p.enemyMinions.Count >= 1) ret += 3;
+                    if (target.Angr == 0 && target.Hp <= 2 && p.ownMinions.Find(a => a.Ready && a.Angr <= 2) != null) ret += 5;
+                    if (target.Hp >= 4 && !target.isHero) ret += 0.5f;
+                }
                 return ret;
             }
 
@@ -3879,7 +3915,6 @@ namespace HREngine.Bots
                 float ret = 0;
                 if (target.isHero) ret += 6;
                 if (target.isHero && p.enemyMinions.Count >= 1) ret += 3;
-
                 if (target.Angr == 0 && target.Hp <= 2 && p.ownMinions.Find(a => a.Ready && a.Angr <= 2) != null) ret += 5;
                 if (target.Hp >= 4 && !target.isHero) ret += 0.5f;
                 return ret;
@@ -3961,8 +3996,19 @@ namespace HREngine.Bots
             }
             if (name == CardDB.cardName.livingroots)
             {
-                if (choice == 1) return 2;
+                if (choice == 1) return 6;
                 if (choice == 2) return 4;
+            }
+
+            if (name == CardDB.cardName.shadowwordpain)
+            {
+                if (target.Hp <= 2 && target.Hp <= 2) pen = 15;
+                if (target.Hp >= 4) pen = 0;
+            }
+
+            if (name == CardDB.cardName.emperorthaurissan)
+            {
+                return - p.owncards.Count;
             }
 
             return pen;

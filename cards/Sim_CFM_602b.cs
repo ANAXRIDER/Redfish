@@ -13,7 +13,7 @@ namespace HREngine.Bots
             if (ownplay)
             {
                 p.ownDeckSize += 3;
-                p.evaluatePenality -= 11;
+                //p.evaluatePenality -= 11;
             }
             else p.enemyDeckSize += 3;
         }

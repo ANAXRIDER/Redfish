@@ -7845,7 +7845,7 @@ namespace HREngine.Bots
 
             if (justactions)
             {
-                Helpfunctions.Instance.logg("HP + Armor: " + this.ownHero.Hp + "+" + this.ownHero.armor + " VS " + this.enemyHero.Hp + "+" + this.enemyHero.armor + "  Minion Count: " + this.ownMinions.Count + " VS " + this.enemyMinions.Count);
+                Helpfunctions.Instance.logg("HP + Armor: " + this.ownHero.Hp + (this.ownHero.armor > 0  ? "+" + this.ownHero.armor : "") + " VS " + this.enemyHero.Hp + (this.enemyHero.armor > 0 ? "+" + this.enemyHero.armor : "") + "  Minion Count: " + this.ownMinions.Count + " VS " + this.enemyMinions.Count);
                 foreach (Action a in this.playactions)
                 {
                     a.print();

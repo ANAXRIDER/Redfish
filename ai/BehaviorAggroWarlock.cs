@@ -428,7 +428,7 @@
             if (p.manaTurnEnd >= heropowermana && !useAbili && p.ownAbilityReady)
             {
                 if ((p.ownHeroAblility.card.name == CardDB.cardName.thesilverhand ||
-                   p.ownHeroAblility.card.name == CardDB.cardName.reinforce) && p.ownMinions.Count <= 6) retval -= 10;
+                   p.ownHeroAblility.card.name == CardDB.cardName.reinforce) && p.ownMinions.Count <= 6) retval -= 10; //didn't use pala heropower
                 else if (p.ownHeroAblility.card.name == CardDB.cardName.lifetap && p.ownHero.Hp >= 12) retval -= 30;
                 else if (!(p.ownHeroAblility.card.name == CardDB.cardName.daggermastery && (p.ownWeaponDurability >= 2 || p.ownWeaponAttack >= 2))
                     && !(p.ownHeroAblility.card.name == CardDB.cardName.thesilverhand ||
@@ -437,6 +437,11 @@
                    p.ownHeroAblility.card.name == CardDB.cardName.totemicslam ||
                    p.ownHeroAblility.card.name == CardDB.cardName.inferno) && p.ownMinions.Count == 7
                     ) retval -= 20;
+
+                if (p.ownHeroAblility.card.name == CardDB.cardName.armorup || p.ownHeroAblility.card.name == CardDB.cardName.tankup)
+                {
+                    retval -= 8;
+                }
             }
             //if (usecoin && p.mana >= 1) retval -= 20;
 
@@ -535,8 +540,13 @@
                     }
                 }
 
+                //druid attack
+                if (!hasenemytaunt && !p.enemyHero.immune && p.ownHero.Ready) retval -= 5;
+
                 //mage
                 if (p.enemyHeroAblility.card.name == CardDB.cardName.fireblast && p.ownMaxMana >= 7) retval -= strongesthp1minion;
+                //druid
+                if (p.enemyHeroAblility.card.name == CardDB.cardName.shapeshift && p.ownMaxMana >= 7) retval -= strongesthp1minion;
 
                 foreach (Minion m in p.ownMinions)
                 {
@@ -599,13 +609,24 @@
                     if (p.enemyMinions.Count >= 1)
                     {
                         if ((m.name == CardDB.cardName.darkshirecouncilman || m.name == CardDB.cardName.tundrarhino) && m.Hp <= p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Angr && m.Angr < p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Hp) retval -= 5;
-                        if (m.name == CardDB.cardName.darkshirecouncilman && (m.Hp <= p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Angr + enemypotentialattack + p.enemyWeaponAttack) && p.ownMaxMana <= 3) retval -= 10;
-                        if (m.name == CardDB.cardName.tundrarhino && (m.Hp <= p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Angr + enemypotentialattack + p.enemyWeaponAttack) && p.ownMaxMana <= 5) retval -= 10;
+                        if (m.name == CardDB.cardName.darkshirecouncilman && (m.Hp <= enemypotentialattacktotal) && p.ownMaxMana <= 3) retval -= 10;
+                        if (m.name == CardDB.cardName.tundrarhino && (m.Hp <= enemypotentialattacktotal) && p.ownMaxMana <= 5) retval -= 10;
                         // 적미니언 공높은놈이랑 비교.. 
                         // 적미니언 공높은놈보다 피 작고 (한방에죽음) + 적 미니언 공높은놈보다 공낮으면 -밸류;
-                        if (m.name == CardDB.cardName.flametonguetotem && (m.Hp <= p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Angr + enemypotentialattack + p.enemyWeaponAttack) && p.ownMinions.Find (a => a.taunt) == null) retval -= 10;
-                        if (m.name == CardDB.cardName.manatidetotem && (m.Hp <= p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Angr + enemypotentialattack + p.enemyWeaponAttack) && p.ownMinions.Find(a => a.taunt) == null) retval -= 10;
-                        if (m.name == CardDB.cardName.wickedwitchdoctor && (m.Hp <= p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Angr + enemypotentialattack + p.enemyWeaponAttack)) retval -= 5;
+                        if (m.name == CardDB.cardName.gadgetzanauctioneer && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null) retval -= 10;
+                        if (m.name == CardDB.cardName.flametonguetotem && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find (a => a.taunt) == null) retval -= 10;
+                        if (m.name == CardDB.cardName.manatidetotem && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null) retval -= 10;
+                        if (m.name == CardDB.cardName.wickedwitchdoctor && (m.Hp <= enemypotentialattacktotal)) retval -= 5;
+
+                        //if ((m.name == CardDB.cardName.darkshirecouncilman || m.name == CardDB.cardName.tundrarhino) && m.Hp <= p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Angr && m.Angr < p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Hp) retval -= 5;
+                        //if (m.name == CardDB.cardName.darkshirecouncilman && (m.Hp <= p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Angr + enemypotentialattacktotal + p.enemyWeaponAttack) && p.ownMaxMana <= 3) retval -= 10;
+                        //if (m.name == CardDB.cardName.tundrarhino && (m.Hp <= p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Angr + enemypotentialattacktotal + p.enemyWeaponAttack) && p.ownMaxMana <= 5) retval -= 10;
+                        //// 적미니언 공높은놈이랑 비교.. 
+                        //// 적미니언 공높은놈보다 피 작고 (한방에죽음) + 적 미니언 공높은놈보다 공낮으면 -밸류;
+                        //if (m.name == CardDB.cardName.gadgetzanauctioneer && (m.Hp <= p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Angr + enemypotentialattacktotal + p.enemyWeaponAttack) && p.ownMinions.Find(a => a.taunt) == null) retval -= 10;
+                        //if (m.name == CardDB.cardName.flametonguetotem && (m.Hp <= p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Angr + enemypotentialattacktotal + p.enemyWeaponAttack) && p.ownMinions.Find(a => a.taunt) == null) retval -= 10;
+                        //if (m.name == CardDB.cardName.manatidetotem && (m.Hp <= p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Angr + enemypotentialattacktotal + p.enemyWeaponAttack) && p.ownMinions.Find(a => a.taunt) == null) retval -= 10;
+                        //if (m.name == CardDB.cardName.wickedwitchdoctor && (m.Hp <= p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Angr + enemypotentialattacktotal + p.enemyWeaponAttack)) retval -= 5;
                     }
 
                     if (m.name == CardDB.cardName.scavenginghyena && !m.silenced)

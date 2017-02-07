@@ -22,7 +22,7 @@ namespace HREngine.Bots
                 if (ownplay)
                 {
                     p.ownDeckSize += 3;
-                    if (p.ownHeroName == HeroEnum.druid && p.anzOwnJadeGolem >= 2) p.evaluatePenality -= 11;
+                    //if (p.ownHeroName == HeroEnum.druid && p.anzOwnJadeGolem >= 2) p.evaluatePenality -= 11;
                 }
                 else p.enemyDeckSize += 3;
             }

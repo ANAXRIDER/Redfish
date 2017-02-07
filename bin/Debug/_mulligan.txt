@@ -940,6 +940,16 @@ hold;druid;all;LOE_046:2;coin
 hold;druid;all;AT_038:2;nocoin
 hold;druid;all;AT_038:2;coin
 
+//Wild Growth
+hold;druid;all;CS2_013
+
+//Jade Blossom
+hold;druid;all;CFM_713
+
+
+//Wrath EX1_154
+hold;druid;shaman;EX1_154:1
+hold;druid;warrior;EX1_154:1
 
 // 3 DROP
 //Druid of the Flame BRM_010 // when has 1+2mana
@@ -949,4 +959,42 @@ hold;druid;all;BRM_010:1;nocoin
 //Mounted Raptor LOE_050 // when has 1+2mana
 hold;druid;all;LOE_050:1:KAR_300+NEW1_023/KAR_300+LOE_046/KAR_300+AT_038/KAR_300+OG_048  /AT_037+NEW1_023/AT_037+LOE_046/AT_037+AT_038   /LOE_076+NEW1_023/LOE_076+LOE_046/LOE_076+AT_038;nocoin
 hold;druid;all;LOE_050:1;nocoin
+
+
+
+
+
+
+
+
+
+
+
+
+//Priest DRAGON P
+
+//Twilight Whelp BRM_004
+hold;priest;all;BRM_004:2
+
+//Northshire Cleric CS2_235
+hold;priest;all;CS2_235:1
+discard;priest;all;CS2_235:2:BRM_004
+
+//Wyrmrest Agent AT_116
+hold;priest;all;AT_116:1
+
+// 1 x Faerie Dragon
+hold;priest;all;NEW1_023:1
+
+//Netherspite Historian KAR_062 when has 1cost dragon
+hold;priest;all;KAR_062:1:BRM_004
+discard;priest;all;KAR_062:2:BRM_004+AT_116
+
+
+// Acid Swamp Ooze (EX1_066)
+hold;priest;shaman;EX1_066:1
+hold;priest;warrior;EX1_066:1
+
+//Kabal Talonpriest CFM_626
+hold;priest;all;CFM_626:1:BRM_004+AT_116/BRM_004+KAR_062/CS2_235+AT_116/CS2_235+KAR_062
 

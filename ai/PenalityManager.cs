@@ -310,7 +310,7 @@ namespace HREngine.Bots
 
             bool rockbiterHero = p.playactions.Find(a => a.actionType == actionEnum.playcard && a.card.card.name == CardDB.cardName.rockbiterweapon && a.target.entityID == p.ownHero.entityID) != null;
 
-
+            if (target.name == CardDB.cardName.doomsayer && target.Hp > p.ownHero.Angr) return 10;
 
 
             if (target.isHero && !target.own)
@@ -481,7 +481,12 @@ namespace HREngine.Bots
 
             if (p.ownWeaponName == CardDB.cardName.spiritclaws)
             {
-                if (target.isHero && p.ownWeaponAttack == 1 && target.Hp >= 3 && !AttacksEnemyHeroCanTrigger) return 5 + jugglerpen;
+                bool hasweapon = false;
+                foreach (Handmanager.Handcard c in p.owncards)
+                {
+                    if (c.card.type == CardDB.cardtype.WEAPON || (alsoEquipsWeaponDB.ContainsKey(c.card.name) && c.card.name != CardDB.cardName.upgrade)) hasweapon = true;
+                }
+                if (target.isHero && p.ownWeaponAttack == 1 && target.Hp + target.armor >= 3 && !AttacksEnemyHeroCanTrigger && !hasweapon) return 7 + jugglerpen;
 
                 if (target.isHero)
                 {
@@ -494,11 +499,7 @@ namespace HREngine.Bots
                 }
                 if (p.ownWeaponDurability >= 1)
                 {
-                    bool hasweapon = false;
-                    foreach (Handmanager.Handcard c in p.owncards)
-                    {
-                        if (c.card.type == CardDB.cardtype.WEAPON || (alsoEquipsWeaponDB.ContainsKey(c.card.name) && c.card.name != CardDB.cardName.upgrade)) hasweapon = true;
-                    }
+                    
                     if (hasweapon) retval = 0;
                 }
                 //if (target.Hp <= p.ownHero.Angr || target.divineshild) retval--;
@@ -519,7 +520,13 @@ namespace HREngine.Bots
 
             if (p.ownWeaponName == CardDB.cardName.jadeclaws)
             {
-                if (target.isHero && p.ownWeaponAttack == 1 && target.Hp >= 3 && !AttacksEnemyHeroCanTrigger) return 5 + jugglerpen;
+                bool hasweapon = false;
+                foreach (Handmanager.Handcard c in p.owncards)
+                {
+                    if (c.card.type == CardDB.cardtype.WEAPON || alsoEquipsWeaponDB.ContainsKey(c.card.name)) hasweapon = true;
+                }
+
+                if (target.isHero && target.Hp + target.armor >= 5 && !AttacksEnemyHeroCanTrigger && !hasweapon) return 8 + jugglerpen;
 
                 if (target.isHero)
                 {
@@ -532,11 +539,6 @@ namespace HREngine.Bots
                 }
                 if (p.ownWeaponDurability >= 1)
                 {
-                    bool hasweapon = false;
-                    foreach (Handmanager.Handcard c in p.owncards)
-                    {
-                        if (c.card.type == CardDB.cardtype.WEAPON || alsoEquipsWeaponDB.ContainsKey(c.card.name)) hasweapon = true;
-                    }
                     if (hasweapon) retval = 0;
                 }
                 //if (target.Hp <= p.ownHero.Angr || target.divineshild) retval--;
@@ -1314,7 +1316,7 @@ namespace HREngine.Bots
 
                     if (name == CardDB.cardName.lavashock && p.owedRecall == 0 && p.currentRecall == 0) pen = 15;
 
-                    if (name == CardDB.cardName.fireblast && !lethal && m.Hp == 1) pen = -4;
+                    if (name == CardDB.cardName.fireblast && !lethal && m.Hp == 1) pen = -1;
 
                     if (name == CardDB.cardName.mortalstrike && p.ownHero.Hp > 12) pen = 12;
 
@@ -1359,7 +1361,7 @@ namespace HREngine.Bots
                     if (name == CardDB.cardName.jadelightning)
                     {
                         pen += 6;
-                        if (target.Angr == 0) pen += 2;
+                        if (target.Angr == 0) pen += 4;
                         if (p.spellpower + 4 >= target.Hp && target.Hp >= 4 && target.Angr >= 2) pen = 0;
                     }
 
@@ -2818,6 +2820,8 @@ namespace HREngine.Bots
                 {
                     return 0;
                 }
+
+                if (p.ownMaxMana >= 6) return 2;
                 return 10 - p.playactions.Count * 0.3f;
             }
 
@@ -2829,7 +2833,7 @@ namespace HREngine.Bots
                     return 0;
                 }
                 if (p.mana >= 9) return 100;
-                return 10;
+                return 6;
             }
 
 
@@ -3308,15 +3312,21 @@ namespace HREngine.Bots
                 if (m.own && !m.Ready) return 500;
             }
 
-            if (name == CardDB.cardName.wildgrowth && p.ownMaxMana > 5 && p.ownMaxMana < 10)
+            if (name == CardDB.cardName.wildgrowth)
             {
-                return 500;
+                if (p.ownMaxMana > 5 && p.ownMaxMana < 10 || p.ownMaxMana <= 1) return 500;
+
             }
 
             if (name == CardDB.cardName.nourish)
             {
                 if (choice == 1 && p.ownMaxMana > 6) return 500;
-                if (choice == 1 && p.owncards.Count <= 3) return 25;
+                if (choice == 1)
+                {
+                    int penalty = 20;
+                    if (p.owncards.Count - 3 >= 5) penalty += (p.owncards.Count - 3 - 10) * 2;
+                    return penalty;
+                }
             }
 
             if (card.name == CardDB.cardName.excessmana && card.getManaCost(p, 0) == 0)
@@ -3981,9 +3991,14 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.southseadeckhand)
             {
-                if (p.ownWeaponAttack <= 0)
+                bool hasweaponIndecks = false;
+                foreach (Handmanager.Handcard hc in Hrtprozis.Instance.deckCard)
                 {
-                    return 3;
+                    if (hc.card.type == CardDB.cardtype.WEAPON) hasweaponIndecks = true;
+                }
+                if (p.ownWeaponAttack <= 0 && hasweaponIndecks && p.ownMaxMana >= 6)
+                {
+                    return 8;
                 }
             }
 
@@ -4009,6 +4024,17 @@ namespace HREngine.Bots
             if (name == CardDB.cardName.emperorthaurissan)
             {
                 return - p.owncards.Count;
+            }
+
+            if (name == CardDB.cardName.shieldblock)
+            {
+                return 5;
+            }
+
+            if (name == CardDB.cardName.powerwordshield)
+            {
+                int ret = 5;
+                return ret;
             }
 
             return pen;
@@ -4389,8 +4415,10 @@ namespace HREngine.Bots
                 {
                     case CardDB.cardName.blackwingtechnician:
                         dragonPen = 2; break;
-                    case CardDB.cardName.blackwingcorruptor:
-                        dragonPen = 6; break;
+                    case CardDB.cardName.blackwingcorruptor:                        
+                        dragonPen = 6;
+                        if (p.enemyHero.Hp + p.enemyHero.armor <= 3) dragonPen += 20;
+                        break;
                     case CardDB.cardName.bookwyrm:
                         dragonPen = 8; break;
                     case CardDB.cardName.wyrmrestagent:
@@ -4406,7 +4434,7 @@ namespace HREngine.Bots
                     case CardDB.cardName.netherspitehistorian:
                         dragonPen = 10; break;
                     case CardDB.cardName.twilightwhelp:
-                        dragonPen = 5; break;
+                        dragonPen = 10; break;
                     case CardDB.cardName.twilightguardian:
                         dragonPen = 4; break;
                     default:

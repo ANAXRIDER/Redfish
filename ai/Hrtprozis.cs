@@ -211,7 +211,28 @@
                 this.deckCard.Add(newdcard);
             }
         }
-        
+
+        public void setTurnDeck(string td, CardDB.cardIDEnum card, int num)
+        {
+            turnDeck.Clear();
+            deckCard.Clear();
+            string temp = td.Replace("td: ", "");
+            foreach (string s in temp.Split(';'))
+            {
+                string ss = s.Replace(" ", "");
+                if (ss == "" || ss == " ") continue;
+                string[] pair = ss.Split(',');
+                card = CardDB.Instance.cardIdstringToEnum(pair[0]);
+                CardDB.Card dcard = CardDB.Instance.getCardDataFromID(card);
+                Handmanager.Handcard newdcard = new Handmanager.Handcard(dcard);
+                //int num = 1;
+                if (pair.Length > 1) num = Convert.ToInt32(pair[1]);
+
+                turnDeck.Add(card, num);
+                this.deckCard.Add(newdcard);
+            }
+        }
+
         public void setDeckName(string deckname)
         {
             this.deckName = deckname;

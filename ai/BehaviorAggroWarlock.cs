@@ -144,7 +144,7 @@
 
 
 
-            if (phase == 3) // additional value when hero hp under 10
+            if (phase == 3 && p.turnCounter == 0) // additional value when hero hp under 10
             {
                 foreach(Minion m in p.ownMinions)
                 {
@@ -283,7 +283,7 @@
             //Helpfunctions.Instance.ErrorLog("enemyherohpvalue : " + enemyherohpvalue);
             retval += enemyherohpvalue;
 
-            retval += p.ownMaxMana * 15 - p.enemyMaxMana * 15;
+            retval += p.ownMaxMana * 10 - p.enemyMaxMana * 10;
 
             if (p.ownMaxMana <= 6 && p.owncards.Count >= 4) retval -= p.manaTurnEnd * 3;
             else if (p.owncards.Count >= 4) retval -= p.manaTurnEnd;
@@ -291,7 +291,7 @@
 
             if (!p.ownHero.frozen)
             {
-                retval += p.ownWeaponAttack + p.enemyWeaponDurability * 0.1f;
+                retval += p.ownWeaponAttack + p.enemyWeaponDurability * 0.5f;
                 if (p.ownWeaponName == CardDB.cardName.spiritclaws && p.spellpower >= 1) retval -= 2;
             }
 
@@ -514,7 +514,6 @@
 
 
 
-            bool hasowntauntminion = false;
             if (!enemyDoomsayer && !ownDoomsayer)
             {
                 bool impgangbossgoodposition = true;
@@ -525,7 +524,7 @@
                 foreach (Minion mmm in p.enemyMinions)
                 {
                     if (mmm.Angr >= 4) impgangbossgoodposition = false;
-                    if (mmm.taunt && mmm.Angr >= 1) hasenemytaunt = true;
+                    if (mmm.taunt) hasenemytaunt = true;
                     if (mmm.Hp >= 2 && mmm.Angr >= 3) darkshirecouncilmanBadposition = true;
                     if (!mmm.silenced && mmm.name == CardDB.cardName.chillmaw) enemyhaschillmaw = true;
                     if (!mmm.silenced && mmm.name == CardDB.cardName.abomination) abomination = true;
@@ -541,7 +540,7 @@
                 }
 
                 //druid attack
-                if (!hasenemytaunt && !p.enemyHero.immune && p.ownHero.Ready) retval -= 5;
+                if (!hasenemytaunt && !p.enemyHero.immune && p.ownHero.Ready && p.ownHero.Angr - p.ownWeaponAttack >= 1) retval -= 5;
 
                 //mage
                 if (p.enemyHeroAblility.card.name == CardDB.cardName.fireblast && p.ownMaxMana >= 7) retval -= strongesthp1minion;
@@ -600,7 +599,7 @@
                     if (p.ownHeroName == HeroEnum.mage && m.name == CardDB.cardName.flamewaker) retval += 5;
 
                     
-                    if (!hasenemytaunt && !p.enemyHero.immune && m.Ready && m.enemyBlessingOfWisdom == 0 && m.enemyPowerWordGlory == 0) retval -= 10 * m.Angr;
+                    if (!hasenemytaunt && !p.enemyHero.immune && m.Ready && m.Angr >= 1 && !m.frozen && m.enemyBlessingOfWisdom == 0 && m.enemyPowerWordGlory == 0) retval -= 10 * m.Angr;
 
                     //minion each
                     if (impgangbossgoodposition && m.handcard.card.name == CardDB.cardName.impgangboss && m.Hp == 4 && p.ownMaxMana <= 3 && m.playedThisTurn) retval += 5;
@@ -725,7 +724,6 @@
                     if (m.taunt)
                     {
                         retval += m.AdjacentAngr * 0.25f;
-                        hasowntauntminion = true;
                     }
                     if (m.handcard.card.isSpecialMinion && !m.silenced)
                     {
@@ -992,11 +990,20 @@
                 //Helpfunctions.Instance.ErrorLog("lethalmissing " + lethalmissing + " " + retval);
             }
 
+            bool ExistAttackedMinionCount = false;
+            foreach (Minion mmm in p.ownMinions)
+            {
+                if (mmm.numAttacksThisTurn >= 1) ExistAttackedMinionCount = true;
+            }
+
             if (p.owncards.Count <= 9 && p.ownDeckSize >= 1)
             {
-                if (lethalmissing <= 5 && !p.enemyHero.immune) retval += p.owncarddraw * 2;
-                if (lethalmissing <= 4 && p.ownMinions.Count >= 1 && !p.enemyHero.immune) retval += p.owncarddraw * 3;
-                if (lethalmissing <= 2 && p.ownMinions.Count >= 1 && !p.enemyHero.immune) retval += p.owncarddraw * 5;
+                if (!ExistAttackedMinionCount)
+                {
+                    if (lethalmissing <= 5 && !p.enemyHero.immune) retval += p.owncarddraw * 2;
+                    if (lethalmissing <= 4 && p.ownMinions.Count >= 1 && !p.enemyHero.immune) retval += p.owncarddraw * 3;
+                    if (lethalmissing <= 2 && p.ownMinions.Count >= 1 && !p.enemyHero.immune) retval += p.owncarddraw * 5;
+                }
             }
 
             
@@ -1464,7 +1471,7 @@
             retval += m.Hp * 1;
             if (m.wounded) retval += (m.maxHp - m.Hp) * 0.001f;
             if (m.name == CardDB.cardName.doomsayer && m.Angr == 0 && m.silenced) retval -= m.Hp * 2;
-            if (!m.frozen && !((m.name == CardDB.cardName.ancientwatcher) && !m.silenced))
+            if (!m.frozen && !(m.name == CardDB.cardName.ancientwatcher && !m.silenced))
             {
                 retval += m.Angr * 2;
                 if (m.windfury) retval += m.Angr * 2;
@@ -1486,7 +1493,7 @@
 
             if (m.spellpower >= 1) retval += m.spellpower * 5;
             if (m.spellpower >= 1 && p.enemyHeroName == HeroEnum.mage) retval += m.spellpower * 5;
-            if (m.taunt) retval+= m.Angr;
+            if (m.taunt) retval+= m.Angr >= 1 ? m.Angr : 1;
             if (m.divineshild) retval += m.Angr * 3;
             //if (m.divineshild && m.Angr == 1 && p.enemyHeroName == HeroEnum.pala) retval += 5;
             if (m.frozen) retval -= 1; // because its bad for enemy :D

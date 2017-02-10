@@ -14,7 +14,7 @@ namespace HREngine.Bots
             List<Minion> tmp = m.own ? p.ownMinions : p.enemyMinions;
             int pos = m.zonepos;
             Minion mnn;
-            mnn = tmp[pos - 1];
+            mnn = tmp[Math.Min(pos - 1, 0)];
 
             //Helpfunctions.Instance.ErrorLog("&&&" + mnn.name);
 

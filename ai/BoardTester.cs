@@ -122,14 +122,14 @@ namespace HREngine.Bots
         }
 
 
-
+        public string td = "";
 
         public BoardTester(string data = "")
         {
             this.boardToSimulate = -1;
             string og = "";
             string eg = "";
-            string td = "";
+            
 
             string omd = "";
             string emd = "";

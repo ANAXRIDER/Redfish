@@ -15,7 +15,14 @@ namespace HREngine.Bots
             p.equipWeapon(weapon, ownplay);
 
             int place = (ownplay) ? p.ownMinions.Count : p.enemyMinions.Count;
-            p.callKid(p.getNextJadeGolem(ownplay), place, ownplay, true);
+            p.callKid(p.getNextJadeGolem(ownplay), place + 1, ownplay);
+
+            if (p.ownMinions.Find(a => a.name == CardDB.cardName.brannbronzebeard && !a.silenced) != null)
+            {
+                p.callKid(p.getNextJadeGolem(ownplay), place + 2, ownplay);
+            }
+
+
             p.changeRecall(ownplay, 1);
         }
     }

@@ -25,13 +25,28 @@ namespace HREngine.Bots
                     //    temp2.Reverse();//damage the highest if mine
                     //}
                     
-                    foreach (Minion mins in temp2)
+                    if (p.isEnemyHasLethal())
                     {
-                        if (mins.Hp >= 9 || mins.divineshild) continue;
-                        p.minionGetDamageOrHeal(mins, 8);
-                        if (loggtarget) Helpfunctions.Instance.logg("/// T A R G E T ///" + mins.name);
-                        break;
+                        temp2.Sort((a, b) => b.Angr.CompareTo(a.Angr));//damage the Highest Angr
+                        foreach (Minion mins in temp2)
+                        {
+                            if (mins.Hp >= 9 || mins.divineshild) continue;
+                            p.minionGetDamageOrHeal(mins, 8);
+                            if (loggtarget) Helpfunctions.Instance.logg("/// T A R G E T ///" + mins.name);
+                            break;
+                        }
                     }
+                    else
+                    {
+                        foreach (Minion mins in temp2)
+                        {
+                            if (mins.Hp >= 9 || mins.divineshild) continue;
+                            p.minionGetDamageOrHeal(mins, 8);
+                            //if (loggtarget) Helpfunctions.Instance.logg("/// T A R G E T ///" + mins.name);
+                            break;
+                        }
+                    }
+                    
                 }
                 else if (count == 0)
                 {

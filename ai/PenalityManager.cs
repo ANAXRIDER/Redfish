@@ -16,7 +16,7 @@ namespace HREngine.Bots
         Dictionary<CardDB.cardName, int> HealTargetDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> HealHeroDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> HealAllDatabase = new Dictionary<CardDB.cardName, int>();
-
+        Dictionary<CardDB.cardName, int> HealCardButCanUseFullHP = new Dictionary<CardDB.cardName, int>();
 
         public Dictionary<CardDB.cardName, int> DamageAllDatabase = new Dictionary<CardDB.cardName, int>();
         public Dictionary<CardDB.cardName, int> DamageHeroDatabase = new Dictionary<CardDB.cardName, int>(); //not used
@@ -1484,7 +1484,6 @@ namespace HREngine.Bots
 
             if (HealTargetDatabase.ContainsKey(name) || HealHeroDatabase.ContainsKey(name))
              {
-                
                 if (HealHeroDatabase.ContainsKey(name))
                 {
                     target = p.ownHero;
@@ -1498,8 +1497,8 @@ namespace HREngine.Bots
                 }
                 if (target.isHero && !target.own) return 510 + offset; // dont heal enemy
                 //Helpfunctions.Instance.ErrorLog("pencheck for " + name + " " + target.entitiyID + " " + target.isHero + " " + target.own);
-                if ((target.isHero && target.own) && p.ownHero.Hp == 30) return 150 + offset;
-                if ((target.isHero && target.own) && p.ownHero.Hp + heal > 30) pen = p.ownHero.Hp + heal - 30;
+                if ((target.isHero && target.own) && p.ownHero.Hp == 30 && !HealCardButCanUseFullHP.ContainsKey(name)) return 150 + offset;
+                if ((target.isHero && target.own) && p.ownHero.Hp + heal > 30 && !HealCardButCanUseFullHP.ContainsKey(name)) pen = p.ownHero.Hp + heal - 30;
                 if (name == CardDB.cardName.lesserheal || name == CardDB.cardName.heal) pen = 0;
                 Minion m = new Minion();
 
@@ -1511,7 +1510,7 @@ namespace HREngine.Bots
                     if (m.Hp + heal - 1 > m.maxHp) wasted = m.Hp + heal - m.maxHp;
                     pen = wasted;
 
-                    if (m.taunt && wasted <= 2 && m.Hp < m.maxHp) pen -= 5; // if we heal a taunt, its good :D
+                    //if (m.taunt && wasted <= 2 && m.Hp < m.maxHp) pen -= 5; // if we heal a taunt, its good :D
 
                     if (m.Hp + heal <= m.maxHp) pen = -1;
                 }
@@ -2803,6 +2802,7 @@ namespace HREngine.Bots
                 if (hasPalSecret && hassecretkepper && (p.enemyMinions.Count >= 1 || p.enemyWeaponAttack >= 2)) return 0;
 
                 if (hasMaelstrom && p.enemyMinions.Count >= 2) return 0;
+                if (has1manacard >= 1 && p.ownMinions.Find(b => b.name == CardDB.cardName.manawyrm && !b.silenced) != null) return 0;
                 if (has1manacard >= 1) return 2;
                 if (has1costSpellAndEnemyMinion) return 2;
                 if (hasweapon) return 3;
@@ -4037,6 +4037,30 @@ namespace HREngine.Bots
                 return ret;
             }
 
+            if (name == CardDB.cardName.menageriewarden)
+            {
+                
+                bool hasBeast = false;
+                bool hasBeastIndecks = false;
+                foreach (Handmanager.Handcard hc in p.owncards)
+                {
+                    if (hc.card.race == TAG_RACE.PET) hasBeast = true;
+                }
+                if (hasBeast)
+                {
+                    if (target == null) return 10;
+                }
+
+                else
+                {
+                    foreach (Handmanager.Handcard hc in Hrtprozis.Instance.deckCard)
+                    {
+                        if ((TAG_RACE)hc.card.race == TAG_RACE.DRAGON) hasBeastIndecks = true;
+                    }
+                }
+                if (hasBeastIndecks) return 10;
+            }
+
             return pen;
         }
 
@@ -4479,6 +4503,8 @@ namespace HREngine.Bots
                         if (choice == 2 && Hrtprozis.Instance.turnDeck.ContainsKey(CardDB.cardIDEnum.CFM_602)) return 50; //don't shuffle more in if some still in deck
                     }
                     return 0;
+                case CardDB.cardName.arcanemissiles:
+                    return 10;
                 default:
                     return 0;
             }
@@ -4637,6 +4663,20 @@ namespace HREngine.Bots
             HealTargetDatabase.Add(CardDB.cardName.gadgetzansocialite, 2);
             HealTargetDatabase.Add(CardDB.cardName.hozenhealer, 30); //minion to full hp
             //HealTargetDatabase.Add(CardDB.cardName.divinespirit, 2);
+
+            HealCardButCanUseFullHP.Add(CardDB.cardName.gadgetzansocialite, 0);
+            HealCardButCanUseFullHP.Add(CardDB.cardName.moongladeportal, 0);
+            HealCardButCanUseFullHP.Add(CardDB.cardName.earthenringfarseer, 0);
+            HealCardButCanUseFullHP.Add(CardDB.cardName.voodoodoctor, 0);
+            HealCardButCanUseFullHP.Add(CardDB.cardName.layonhands, 0);
+            HealCardButCanUseFullHP.Add(CardDB.cardName.darkshirealchemist, 0);
+            HealCardButCanUseFullHP.Add(CardDB.cardName.priestessofelune, 0);
+            HealCardButCanUseFullHP.Add(CardDB.cardName.guardianofkings, 0);
+            HealCardButCanUseFullHP.Add(CardDB.cardName.cultapothecary, 0);
+            HealCardButCanUseFullHP.Add(CardDB.cardName.jinyuwaterspeaker, 0);
+            HealCardButCanUseFullHP.Add(CardDB.cardName.refreshmentvendor, 0);
+            HealCardButCanUseFullHP.Add(CardDB.cardName.hozenhealer, 0);
+            HealCardButCanUseFullHP.Add(CardDB.cardName.tuskarrjouster, 0);
         }
 
         public void setupDamageDatabase()

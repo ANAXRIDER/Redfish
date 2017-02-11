@@ -6990,7 +6990,286 @@ namespace HREngine.Bots
         }
 
         
+        public bool isEnemyHasLethal()
+        {
+            bool enemyhaslethal = false;
+            //do face-attack:
+            int concedevalue = this.ownHero.Hp + this.ownHero.armor;
+            int hasowntaunthp = this.ownHero.Hp + this.ownHero.armor;
+            int potentialenemyattack = 0;
+            int directenemyheropowerattack = 0;
+            if (!this.ownHero.immune && !this.ownSecretsIDList.Contains(CardDB.cardIDEnum.EX1_295))// enemys turn ends -> attack with all minions face (if there is no taunt)
+            {
+                //Helpfunctions.Instance.ErrorLog(turnCounter + " bef " + p.ownHero.Hp + " " + p.ownHero.armor);
+                int attack = 0;
+                int directattack = 0;
+                int hasowntaunt = 0;
 
+
+                List<Minion> hastauntminion = new List<Minion>(this.ownMinions);
+                hastauntminion.Sort((b, a) => a.Hp.CompareTo(b.Hp));//take the strongest hp
+                                                                    //if (hastauntminion.Count >= 1 ) hastauntminion.Clear();
+
+                if (this.enemyWeaponName != CardDB.cardName.foolsbane) attack += this.enemyHero.Angr;
+                potentialenemyattack += this.enemyHero.Angr;
+                if (this.enemyWeaponName == CardDB.cardName.doomhammer && this.enemyWeaponDurability >= 2 && hasowntaunt == 0)
+                {
+                    attack += this.enemyHero.Angr;
+                    potentialenemyattack += this.enemyHero.Angr;
+                }
+
+
+
+                List<Minion> ownminionshp = new List<Minion>(this.ownMinions);
+                List<Minion> enemyminionsattack = new List<Minion>(this.enemyMinions);
+
+                ownminionshp.Sort((b, a) => a.Hp.CompareTo(b.Hp));//take the strongest hp
+                enemyminionsattack.Sort((b, a) => a.Angr.CompareTo(b.Angr));//take the strongest angr
+
+
+
+
+                foreach (Minion m in this.ownMinions)
+                {
+                    if (m.taunt && !m.stealth)
+                    {
+                        hasowntaunt++;
+                        hasowntaunthp += m.Hp;
+                    }
+                    else
+                    {
+                        for (int i = 1; i <= hastauntminion.Count; i++)
+                        {
+                            if (hastauntminion[i - 1].name == m.name)
+                            {
+                                hastauntminion.RemoveAt(i - 1);
+                            }
+                        }
+                    }
+                }
+
+                //foreach (Minion mnn in hastauntminion)
+                //{
+                //    if (mnn.taunt)
+                //    {
+                //        Helpfunctions.Instance.ErrorLog(" hasowntaunt " + mnn.name);
+                //        Helpfunctions.Instance.ErrorLog(" mnn 카운트" + hastauntminion.Count + "\r\n");
+                //    }
+                //}
+
+                bool hasInspire2Attack = false;
+                foreach (Minion m in this.enemyMinions)
+                {
+                    if (m.name == CardDB.cardName.ragnarosthefirelord && this.ownMinions.Count == 0 && !m.silenced)
+                    {
+                        attack += 8;
+                        potentialenemyattack += 8;
+                    }
+                    if (m.Ready)
+                    {
+                        attack += m.Angr;
+                        potentialenemyattack += m.Angr;
+                    }
+                    if (m.Ready && m.windfury && m.numAttacksThisTurn == 0)
+                    {
+                        attack += m.Angr;
+                        potentialenemyattack += m.Angr;
+                    }
+                    if (m.name == CardDB.cardName.savagecombatant) hasInspire2Attack = true;
+
+                }
+                ////Helpfunctions.Instance.ErrorLog(" hasowntaunt " + hasowntaunt);
+                //if (hasowntaunt >= 1)
+                //{
+                //    for (int i = 1; i <= hasowntaunt; i++)
+                //    {
+                //        if (i <= p.enemyMinions.Count)
+                //        {
+                //            attack -= enemyminionsattack[i - 1].Angr;
+                //        }
+                //    }
+                //    if (p.enemyMinions.Count == 0 && p.enemyWeaponAttack >= 1) attack -= p.enemyWeaponAttack;
+                //}
+                ////Helpfunctions.Instance.ErrorLog(" attack " + attack);
+
+
+
+
+
+                //Helpfunctions.Instance.ErrorLog(" hasowntaunt " + hasowntaunt);
+                if (hasowntaunt >= 1)
+                {
+                    //for (int j = 1; j <= hastauntminion.Count; j++)
+                    //{
+                    //    if (hastauntminion[j-1].Hp == p.enemyWeaponAttack)
+                    //    {
+                    //        attack -= p.enemyWeaponAttack;
+                    //        hastauntminion.RemoveAt(j - 1);
+                    //        break;
+                    //    }
+                    //}
+                    //Helpfunctions.Instance.ErrorLog(" hastauntminion " + hastauntminion.Count);
+
+                    int tempEnemyweaponattack = this.enemyWeaponAttack;
+                    int enemyweaponCanmultipleattack = (this.enemyWeaponName == CardDB.cardName.doomhammer && this.enemyWeaponDurability >= 2 ? 2 : 1);
+
+                    foreach (Minion mnn in hastauntminion)
+                    {
+                        bool found = false;
+                        for (int i = 1; i <= enemyminionsattack.Count; i++)
+                        {
+                            if (mnn.Hp == enemyminionsattack[i - 1].Angr || mnn.Hp == tempEnemyweaponattack)
+                            {
+                                found = true;
+                                if (mnn.Hp == enemyminionsattack[i - 1].Angr)
+                                {
+                                    attack -= enemyminionsattack[i - 1].Angr;
+                                    enemyminionsattack.RemoveAt(i - 1);
+                                }
+                                else if (mnn.Hp == tempEnemyweaponattack)
+                                {
+                                    attack -= tempEnemyweaponattack;
+                                    if (enemyweaponCanmultipleattack == 1) tempEnemyweaponattack = 0;
+                                    enemyweaponCanmultipleattack--;
+                                    //hastauntminion.Remove(mnn);
+                                }
+                                break;
+                            }
+                            //else if (mnn.Hp > enemyminionsattack[i - 1].Angr || mnn.Hp > tempEnemyweaponattack)
+                            //{
+                            //    if (enemyminionsattack[i - 1].Angr >= tempEnemyweaponattack)
+                            //    {
+                            //        attack -= enemyminionsattack[Math.Max(i - 2, 0)].Angr;
+                            //        enemyminionsattack.RemoveAt(Math.Max(i - 2, 0));
+                            //    }
+                            //    else
+                            //    {
+                            //        attack -= tempEnemyweaponattack;
+                            //        if (enemyweaponCanmultipleattack == 1) tempEnemyweaponattack = 0;
+                            //        enemyweaponCanmultipleattack--;
+                            //    }
+
+                            //    break;
+                            //}
+                            //else if (mnn.Hp < enemyminionsattack[i - 1].Angr || mnn.Hp < tempEnemyweaponattack)
+                            //{
+                            //    if (enemyminionsattack[i - 1].Angr <= tempEnemyweaponattack)
+                            //    {
+                            //        attack -= enemyminionsattack[enemyminionsattack.Count - 1].Angr;
+                            //        enemyminionsattack.RemoveAt(enemyminionsattack.Count - 1);
+                            //    }
+                            //    else
+                            //    {
+                            //        attack -= tempEnemyweaponattack;
+                            //        if (enemyweaponCanmultipleattack == 1) tempEnemyweaponattack = 0;
+                            //        enemyweaponCanmultipleattack--;
+                            //        //hastauntminion.Remove(mnn);
+                            //    }                                  
+                            //    break;
+                            //}
+                        }
+
+                        if (!found)
+                        {
+                            for (int i = 1; i <= enemyminionsattack.Count; i++)
+                            {
+                                if (mnn.Hp > enemyminionsattack[i - 1].Angr || mnn.Hp > tempEnemyweaponattack)
+                                {
+                                    found = true;
+                                    if (enemyminionsattack[i - 1].Angr >= tempEnemyweaponattack)
+                                    {
+                                        attack -= enemyminionsattack[Math.Max(i - 2, 0)].Angr;
+                                        enemyminionsattack.RemoveAt(Math.Max(i - 2, 0));
+                                    }
+                                    else
+                                    {
+                                        attack -= tempEnemyweaponattack;
+                                        if (enemyweaponCanmultipleattack == 1) tempEnemyweaponattack = 0;
+                                        enemyweaponCanmultipleattack--;
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (!found)
+                        {
+                            for (int i = 1; i <= enemyminionsattack.Count; i++)
+                            {
+                                if (mnn.Hp < enemyminionsattack[i - 1].Angr || mnn.Hp < tempEnemyweaponattack)
+                                {
+                                    found = true;
+                                    if (enemyminionsattack[i - 1].Angr <= tempEnemyweaponattack)
+                                    {
+                                        attack -= enemyminionsattack[enemyminionsattack.Count - 1].Angr;
+                                        enemyminionsattack.RemoveAt(enemyminionsattack.Count - 1);
+                                    }
+                                    else
+                                    {
+                                        attack -= tempEnemyweaponattack;
+                                        if (enemyweaponCanmultipleattack == 1) tempEnemyweaponattack = 0;
+                                        enemyweaponCanmultipleattack--;
+                                        //hastauntminion.Remove(mnn);
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+
+                    }
+                    if (this.enemyMinions.Count == 0 && this.enemyWeaponAttack >= 1) attack -= this.enemyWeaponAttack;
+                }
+                //Helpfunctions.Instance.ErrorLog(" attack " + attack);
+
+
+
+
+
+                switch (this.enemyHeroAblility.card.name)
+                {
+                    case CardDB.cardName.steadyshot: directattack += 2; directenemyheropowerattack += 2; break; //hunter
+                    case CardDB.cardName.ballistashot: directattack += 3; directenemyheropowerattack += 3; break; //hunter 3 damage
+                    case CardDB.cardName.daggermastery: if (this.enemyWeaponAttack == 0) { attack += 1; potentialenemyattack += 1; } break; //rogue
+                    case CardDB.cardName.poisoneddaggers: if (this.enemyWeaponAttack == 0) { attack += 2; potentialenemyattack += 2; } break; //rogue 2 att
+                    case CardDB.cardName.shapeshift: { attack += 1; potentialenemyattack += 1; } break; //druid
+                    case CardDB.cardName.direshapeshift: { attack += 2; potentialenemyattack += 2; } break; //druid 2att
+                    case CardDB.cardName.fireblast: directattack += 1; directenemyheropowerattack += 1; break; //mage
+                    case CardDB.cardName.fireblastrank2: directattack += 2; directenemyheropowerattack += 2; break; //mage 2att
+                    case CardDB.cardName.mindspike: directattack += 2; directenemyheropowerattack += 2; break; //dark priest
+                    case CardDB.cardName.mindshatter: directattack += 3; directenemyheropowerattack += 3; break; //dark priest rank2
+                    case CardDB.cardName.lightningjolt: directattack += 2; break; //2dmg shamman weapon
+                    case CardDB.cardName.lesserheal:
+                        {
+                            if (this.enemyMinions.Find(a => a.name == CardDB.cardName.auchenaisoulpriest && !a.silenced) != null)
+                            {
+                                directattack += 2;
+                            }
+                        }
+                        break;
+                    case CardDB.cardName.heal:
+                        {
+                            if (this.enemyMinions.Find(a => a.name == CardDB.cardName.auchenaisoulpriest && !a.silenced) != null)
+                            {
+                                directattack += 4;
+                            }
+                        }
+                        break;
+                    default: break;
+                }
+                if (hasInspire2Attack) { attack += 2; potentialenemyattack += 2; }
+
+                concedevalue -= attack + directattack + this.destroyunitattack;
+                //if (p.destroyunitattack >= 1) Helpfunctions.Instance.ErrorLog("destroyunitattack = " + p.destroyunitattack);
+                potentialenemyattack += directattack;
+
+            }
+
+            if (concedevalue <= 0)
+            {
+                enemyhaslethal = true;
+            }
+            return enemyhaslethal;
+        }
 
         // some helpfunctions 
 
@@ -7850,6 +8129,18 @@ namespace HREngine.Bots
                 {
                     a.print();
                 }
+                //string data = "";
+                //int tdc = 0;
+                //data += "td: ";
+                //foreach (KeyValuePair<CardDB.cardIDEnum, int> card in Hrtprozis.Instance.turnDeck)
+                //{
+                //    data += card.Key;
+                //    if (card.Value > 1) data += "," + card.Value;
+                //    data += ";";
+                //    tdc += card.Value;
+                //}
+                //data += "\r\n";
+                //Helpfunctions.Instance.logg(data);
             }
             else
             {

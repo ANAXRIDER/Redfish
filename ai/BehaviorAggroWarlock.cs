@@ -1057,18 +1057,17 @@
 
                 foreach (Minion m in p.ownMinions)
                 {
-                    if (m.name == CardDB.cardName.ragnarosthefirelord)
-                    {
-                        List<Minion> strongest = new List<Minion>(p.enemyMinions);
-                        strongest.Sort((b, a) => a.Angr.CompareTo(b.Angr));//take the strongest
-                        if (strongest.Count == 0) break;
-                        Minion strongestMNN = strongest[0];
-
-                        foreach (Minion mnn in p.enemyMinions)
-                        {
-                            if (mnn.Angr == strongestMNN.Angr) attack -= mnn.Angr; break;
-                        }
-                    }
+                    //if (m.name == CardDB.cardName.ragnarosthefirelord)
+                    //{
+                    //    List<Minion> strongest = new List<Minion>(p.enemyMinions);
+                    //    strongest.Sort((b, a) => a.Angr.CompareTo(b.Angr));//take the strongest
+                    //    if (strongest.Count == 0) break;
+                    //    Minion strongestMNN = strongest[0];
+                    //    foreach (Minion mnn in p.enemyMinions)
+                    //    {
+                    //        if (mnn.Angr == strongestMNN.Angr) attack -= mnn.Angr; break;
+                    //    }
+                    //}
                     if (m.taunt && !m.stealth)
                     {
                         hasowntaunt++;
@@ -1518,6 +1517,13 @@
             {
                 retval += m.handcard.card.targetPriority;
             }
+            //priority correction
+            if (p.enemyHeroAblility.card.name != CardDB.cardName.lesserheal && p.enemyHeroAblility.card.name != CardDB.cardName.heal)
+            {
+               if (m.name == CardDB.cardName.northshirecleric) retval -= 10;
+            }
+            
+
             //if (m.Angr >= 4) retval += m.Angr;
             //if (m.Angr >= 7) retval += m.Angr;
             if (m.name == CardDB.cardName.nerubianegg && m.Angr <= 3 && !m.taunt) retval = 0;

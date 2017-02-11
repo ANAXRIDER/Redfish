@@ -721,12 +721,14 @@ namespace HREngine.Bots
                                 this.attackdeathrattlebefore++;
 
                             }
-                            
-                            //hex need 
-                            if (daum.bestmove.card.card.name == CardDB.cardName.hex)
+
+                            switch (daum.bestmove.card.card.name)
                             {
-                                this.attackdeathrattlebefore++;
-                            }                                                      
+                                case CardDB.cardName.hex:
+                                case CardDB.cardName.jadeidol:
+                                    this.attackdeathrattlebefore++; break;
+                                default: break;
+                            }                                           
                         }
 
                         foreach (Minion m in Playfield.Instance.ownMinions)

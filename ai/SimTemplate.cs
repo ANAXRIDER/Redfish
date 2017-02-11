@@ -122,6 +122,10 @@
             return;
         }
 
+        public virtual void onCardToDecks(Playfield p, bool ownplay, Minion target, int choice)
+        {
+            return;
+        }
 
     }
 

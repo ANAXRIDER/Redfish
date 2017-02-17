@@ -252,6 +252,81 @@ namespace HREngine.Bots
                 }
 
 
+                //// HEROPOWER VALUE
+
+                //switch (hc.card.name)
+                //{
+                //    //case CardDB.cardName.steadyshot:
+                //    //    {
+                //    //        if (p.enemyHero.Hp + p.enemyHero.armor <= 10) bonus += 200;
+                //    //        break;
+                //    //    }
+                //    case CardDB.cardName.lifetap:
+                //        {
+                //            if (p.owncards.Count <= 5) bonus += 200;
+                //            break;
+                //        }
+                //    case CardDB.cardName.reliquaryseeker:
+                //        {
+                //            if (p.mana >= 1 && p.ownMinions.Count >= 6) bonus += 200;
+                //            break;
+                //        }
+                //    case CardDB.cardName.elvenarcher:
+                //        {
+                //            if (p.mana >= 1 && (enemyhas1hp || Ai.Instance.lethalMissing == 1)) bonus += 250;
+                //            else if (p.mana >= 1 && cankillmortalcoil) bonus += 200;
+                //            break;
+                //        }
+                //    case CardDB.cardName.stonetuskboar:
+                //        {
+                //            if (p.mana >= 1 && (enemyhas1hp || (Ai.Instance.lethalMissing == 1 && !enemyhastaunt))) bonus += 250;
+                //            break;
+                //        }
+                //    case CardDB.cardName.soulfire:
+                //        {
+                //            if (p.mana >= 1 && (soulfiretarget || Ai.Instance.lethalMissing <= 4)) bonus += 250;
+                //            break;
+                //        }
+                //    case CardDB.cardName.poweroverwhelming:
+                //        {
+                //            if (p.mana >= 1 && ((canibuff && Ai.Instance.lethalMissing <= 4) || (canibuff && corruptiontarget))) bonus += 250;
+                //            break;
+                //        }
+                //    case CardDB.cardName.corruption:
+                //        {
+                //            if (p.mana >= 1 && corruptiontarget && !canibuff) bonus += 150;
+                //            break;
+                //        }
+                //    case CardDB.cardName.voidwalker:
+                //        {
+                //            if (p.mana >= 1 && Ai.Instance.bestmoveValue <= -400) bonus += 200;
+                //            break;
+                //        }
+                //    case CardDB.cardName.shieldbearer:
+                //        {
+                //            if (p.mana >= 1 && Ai.Instance.bestmoveValue <= -400) bonus += 190;
+                //            break;
+                //        }
+                //    case CardDB.cardName.goldshirefootman:
+                //        {
+                //            if (p.mana >= 1 && Ai.Instance.bestmoveValue <= -400) bonus += 180;
+                //            break;
+                //        }
+                //    case CardDB.cardName.tournamentattendee:
+                //        {
+                //            if (p.mana >= 1 && Ai.Instance.bestmoveValue <= -400) bonus += 180;
+                //            break;
+                //        }
+                //    case CardDB.cardName.sirfinleymrrgglton:
+                //        {
+                //            if (p.ownHeroName == HeroEnum.warlock) { bonus -= 100; hasMinusValue = true; minusvalue.Remove(i); }
+                //            break;
+                //        }
+                //    default: break;
+
+                //}
+
+
                 if (bonus > prevbonus)
                 {
                     choice = i;

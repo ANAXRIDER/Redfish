@@ -21,7 +21,7 @@ namespace HREngine.Bots
             {
                 if (ownplay)
                 {
-                    //Hrtprozis.Instance.AddTurnDeck(BoardTester.Instance.td, CardDB.cardIDEnum.CFM_602, 3);
+                    //Playfield.Instance.AddTurnDeck(CardDB.cardIDEnum.CFM_602, 3);
                     p.ownDeckSize += 3;
                     //if (p.ownHeroName == HeroEnum.druid && p.anzOwnJadeGolem >= 2) p.evaluatePenality -= 11;
                 }

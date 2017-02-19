@@ -212,7 +212,25 @@
             }
         }
 
-        
+        public void AddTurnDeck(CardDB.cardIDEnum card, int num)
+        {
+            //this.TempTurnDeck.Clear();
+            //Hrtprozis.Instance.setTurnDeck(BoardTester.Instance.td);
+            //this.TempTurnDeck = Hrtprozis.Instance.turnDeck;
+
+            int originalCount = 0;
+
+            foreach (KeyValuePair<CardDB.cardIDEnum, int> cid in this.turnDeck)
+            {
+                if (cid.Key == card)
+                {
+                    originalCount = cid.Value;
+                    //this.turnDeck.Remove(cid.Key); break;
+                }
+            }
+            this.turnDeck.Remove(card);
+            this.turnDeck.Add(card, num + originalCount);
+        }
 
         public void setDeckName(string deckname)
         {

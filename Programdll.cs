@@ -77,7 +77,7 @@ namespace HREngine.Bots
 
         bool doMultipleThingsAtATime = true;
         public int dontmultiactioncount = 0;
-        public int attackdeathrattlebefore = 0;
+        public int POWERFULSINGLEACTION = 0;
 
         //private int stopAfterWins = 30;
         private int concedeLvl = 5; // the rank, till you want to concede
@@ -509,7 +509,7 @@ namespace HREngine.Bots
             
             if (sf_action_type == actionEnum.endturn)
             {
-                if (attackdeathrattlebefore >= 1) attackdeathrattlebefore = 0;
+                if (POWERFULSINGLEACTION >= 1) POWERFULSINGLEACTION = 0;
                 return BotActionType.END_TURN;
             }
 
@@ -572,7 +572,7 @@ namespace HREngine.Bots
                                                          + " target none.");
             }
 
-            if (attackdeathrattlebefore >= 1) attackdeathrattlebefore = 0;
+            if (POWERFULSINGLEACTION >= 1) POWERFULSINGLEACTION = 0;
             return BotActionType.END_TURN;
         }
 
@@ -586,7 +586,7 @@ namespace HREngine.Bots
             switch (moveTodo.actionType)
             {
                 case actionEnum.endturn:
-                    if (attackdeathrattlebefore >= 1) attackdeathrattlebefore = 0;
+                    if (POWERFULSINGLEACTION >= 1) POWERFULSINGLEACTION = 0;
                     break;
                 case actionEnum.playcard:
                     ranger_action.Actor = getCardWithNumber(moveTodo.card.entity);
@@ -603,7 +603,7 @@ namespace HREngine.Bots
                         else this.doMultipleThingsAtATime = true;
 
 
-                        if (daum.bestmove.card.card.name == CardDB.cardName.barnes) attackdeathrattlebefore++;
+                        if (daum.bestmove.card.card.name == CardDB.cardName.barnes) POWERFULSINGLEACTION++;
 
                         switch (daum.bestmove.card.card.name)
                         {
@@ -630,6 +630,67 @@ namespace HREngine.Bots
                             this.dontmultiactioncount++; break;
                         }
 
+                        //charge
+                        if (daum.bestmove.card.card.Charge)
+                        {
+                            this.doMultipleThingsAtATime = false;
+                            this.POWERFULSINGLEACTION++;
+                            this.dontmultiactioncount++; break;
+
+                        }
+                        else
+                        {
+                            //special charge
+                            switch (daum.bestmove.card.card.name)
+                            {
+                                case CardDB.cardName.leathercladhogleader:
+                                    if (Playfield.Instance.EnemyCards.Count >= 6)
+                                    {
+                                        this.doMultipleThingsAtATime = false;
+                                        this.POWERFULSINGLEACTION++;
+                                        this.dontmultiactioncount++; break;
+                                    }
+                                    else break;
+                                case CardDB.cardName.southseadeckhand:
+                                    if (Playfield.Instance.ownWeaponAttack >= 1)
+                                    {
+                                        this.doMultipleThingsAtATime = false;
+                                        this.POWERFULSINGLEACTION++;
+                                        this.dontmultiactioncount++; break;
+                                    }
+                                    else break;
+                                case CardDB.cardName.spikedhogrider:
+                                    if (Playfield.Instance.enemyMinions.Find(a => a.taunt) != null)
+                                    {
+                                        this.doMultipleThingsAtATime = false;
+                                        this.POWERFULSINGLEACTION++;
+                                        this.dontmultiactioncount++; break;
+                                    }
+                                    else break;
+                                case CardDB.cardName.alexstraszaschampion:
+                                    if (Playfield.Instance.owncards.Find(a => a.card.race == TAG_RACE.DRAGON) != null)
+                                    {
+                                        this.doMultipleThingsAtATime = false;
+                                        this.POWERFULSINGLEACTION++;
+                                        this.dontmultiactioncount++; break;
+                                    }
+                                    else break;
+                                case CardDB.cardName.tanarishogchopper:
+                                    if (Playfield.Instance.EnemyCards.Count == 6)
+                                    {
+                                        this.doMultipleThingsAtATime = false;
+                                        this.POWERFULSINGLEACTION++;
+                                        this.dontmultiactioncount++; break;
+                                    }
+                                    else break;
+                                case CardDB.cardName.armoredwarhorse:
+                                    this.doMultipleThingsAtATime = false;
+                                    this.POWERFULSINGLEACTION++;
+                                    this.dontmultiactioncount++; break;
+                                default: break;
+                            }
+                        }
+
 
                         bool hasjuggler = false;
                         foreach (Minion m in Playfield.Instance.ownMinions)
@@ -647,7 +708,7 @@ namespace HREngine.Bots
                                     m.name == CardDB.cardName.grimpatron) hasdamageeffectminion = true;
                                 if (!m.silenced && (m.handcard.card.deathrattle || m.hasDeathrattle())) hasdamageeffectminion = true;
                             }
-                            if (hasdamageeffectminion) this.attackdeathrattlebefore++;
+                            if (hasdamageeffectminion) this.POWERFULSINGLEACTION++;
                             Helpfunctions.Instance.logg("찾는거 저글러 몹" + daum.bestmove.card.card.name);
                             Helpfunctions.Instance.logg("찾는거 저글러 몹" + daum.bestmove.card.card.name);
                             Helpfunctions.Instance.ErrorLog("찾는거 저글러 몹" + daum.bestmove.card.card.name);
@@ -660,6 +721,13 @@ namespace HREngine.Bots
 
                         if (daum.bestmove.card.card.type == CardDB.cardtype.SPELL)
                         {
+                            //if (daum.bestmove.card.card.name == CardDB.cardName.jadeidol && 
+                            //    (daum.bestmove.druidchoice == 2 || Playfield.Instance.ownMinions.Find(a => a.name == CardDB.cardName.fandralstaghelm && !a.silenced) != null))
+                            //{
+                            //    Hrtprozis.Instance.AddTurnDeck(CardDB.cardIDEnum.CFM_602, 3);
+                            //}
+
+
                             this.doMultipleThingsAtATime = false;
                             this.dontmultiactioncount++;
                             bool hasenemydeathrattle = false;
@@ -718,7 +786,7 @@ namespace HREngine.Bots
                             if ((daum.bestmove.target != null && (hastargetdeathrattle || targethasdamageeffect) || 
                                 ((hasenemydeathrattle || hasdamageeffectminion) && (Random_Spell_But_Can_Kill_Deathrattle_Card || PenalityManager.Instance.DamageAllDatabase.ContainsKey(daum.bestmove.card.card.name) || PenalityManager.Instance.DamageAllEnemysDatabase.ContainsKey(daum.bestmove.card.card.name)))))
                             {
-                                this.attackdeathrattlebefore++;
+                                this.POWERFULSINGLEACTION++;
 
                             }
 
@@ -726,7 +794,7 @@ namespace HREngine.Bots
                             {
                                 case CardDB.cardName.hex:
                                 case CardDB.cardName.jadeidol:
-                                    this.attackdeathrattlebefore++; break;
+                                    this.POWERFULSINGLEACTION++; break;
                                 default: break;
                             }                                           
                         }
@@ -737,7 +805,7 @@ namespace HREngine.Bots
                             {
                                 this.doMultipleThingsAtATime = false;
                                 this.dontmultiactioncount++;
-                                this.attackdeathrattlebefore++;
+                                this.POWERFULSINGLEACTION++;
                             }
                         }
 
@@ -797,7 +865,7 @@ namespace HREngine.Bots
                         {
                             this.doMultipleThingsAtATime = false;
                             this.dontmultiactioncount++;
-                            this.attackdeathrattlebefore++;
+                            this.POWERFULSINGLEACTION++;
                         }
                     }
 
@@ -815,7 +883,7 @@ namespace HREngine.Bots
                         {
                             this.doMultipleThingsAtATime = false;
                             this.dontmultiactioncount++;
-                            this.attackdeathrattlebefore++;
+                            this.POWERFULSINGLEACTION++;
                         }
                     }
 
@@ -883,7 +951,7 @@ namespace HREngine.Bots
 
                     this.dontmultiactioncount++;
 
-                    this.attackdeathrattlebefore++;
+                    this.POWERFULSINGLEACTION++;
 
                     //Helpfunctions.Instance.ErrorLog("doMultipleThingsAtATime attackWithMinion " + doMultipleThingsAtATime + " because " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(ranger_action.Target.CardId));
                 }
@@ -891,9 +959,9 @@ namespace HREngine.Bots
                 //{
                 //    this.doMultipleThingsAtATime = false;
                 //    this.dontmultiactioncount++;
-                //    this.attackdeathrattlebefore++;
+                //    this.POWERFULSINGLEACTION++;
                 //}
-                else if (attackdeathrattlebefore >= 1)
+                else if (POWERFULSINGLEACTION >= 1)
                 {
                     this.doMultipleThingsAtATime = false;
                 }
@@ -910,7 +978,7 @@ namespace HREngine.Bots
             if (this.EnemySecrets.Count >= 1)
             {
                 this.doMultipleThingsAtATime = false;
-                this.attackdeathrattlebefore++;
+                this.POWERFULSINGLEACTION++;
                 //Helpfunctions.Instance.ErrorLog("찾는거 doMultipleThingsAtATime " + doMultipleThingsAtATime + " because enemy secret");
                 //Helpfunctions.Instance.logg("찾는거 doMultipleThingsAtATime " + doMultipleThingsAtATime + " because enemy secret");
             }
@@ -922,22 +990,26 @@ namespace HREngine.Bots
             //        Helpfunctions.Instance.logg("찾는거 doMultipleThingsAtATime " + doMultipleThingsAtATime + " 히어로파워");
             //        this.doMultipleThingsAtATime = false;
             //        this.dontmultiactioncount++;
-            //        this.attackdeathrattlebefore++;
+            //        this.POWERFULSINGLEACTION++;
             //    }
             //}
 
-            if (attackdeathrattlebefore >= 1) this.doMultipleThingsAtATime = false;
+            if (POWERFULSINGLEACTION >= 1) this.doMultipleThingsAtATime = false;
 
             //string path = SilverFishBotPath.AssemblyDirectory + System.IO.Path.DirectorySeparatorChar + "HRERRORLogs" + System.IO.Path.DirectorySeparatorChar;
             //System.IO.Directory.CreateDirectory(path);
             //this.gameState.SaveToXMLFile(path + "HRErrorLog" + DateTime.Now.ToString("_yyyy-MM-dd_HH-mm-ss") + ".xml");
 
-
-            if (this.gameState.TimerState == TurnTimerState.COUNTDOWN && this.EnemyMinion.Count == 0 || moveTodo.actionType == actionEnum.attackWithMinion && ranger_action.Target.IsHero && this.EnemyMinion.Count == 0)
+            
+            if (Playfield.Instance.ownMinions.Find(a => a.name == CardDB.cardName.southseadeckhand || a.charge >= 1) == null)
             {
-                this.doMultipleThingsAtATime = true;
-                this.attackdeathrattlebefore = 0;
+                if (this.gameState.TimerState == TurnTimerState.COUNTDOWN && this.EnemyMinion.Count == 0 || moveTodo.actionType == actionEnum.attackWithMinion && ranger_action.Target.IsHero && this.EnemyMinion.Count == 0)
+                {
+                    this.doMultipleThingsAtATime = true;
+                    this.POWERFULSINGLEACTION = 0;
+                }
             }
+            
 
             return ranger_action;
         }
@@ -955,7 +1027,6 @@ namespace HREngine.Bots
             //base.HasBestMoveAI = true;
             e.handled = true;
             HSRangerLib.BotAction ranger_action;
-
             try
             {
                 Helpfunctions.Instance.ErrorLog("start things...");
@@ -984,7 +1055,6 @@ namespace HREngine.Bots
                     {
                         e.action_list.Clear(); //clear fake actions
                     }*/
-
                     //better test... we checked if isprocessing is true.. after that, we wait little time and test it again.
                     if (this.gameState.IsProcessingPowers || this.gameState.IsBlockingServer)
                     {
@@ -1127,11 +1197,11 @@ namespace HREngine.Bots
                         endturnmove.Type = BotActionType.END_TURN;
                         Helpfunctions.Instance.ErrorLog("end turn action");
                         e.action_list.Add(endturnmove);
-                        if (attackdeathrattlebefore >= 1)
+                        if (POWERFULSINGLEACTION >= 1)
                         {
-                            attackdeathrattlebefore = 0;
-                            Helpfunctions.Instance.ErrorLog("찾는거종료1" + attackdeathrattlebefore);
-                            Helpfunctions.Instance.logg("찾는거종료1" + attackdeathrattlebefore);
+                            POWERFULSINGLEACTION = 0;
+                            Helpfunctions.Instance.ErrorLog("찾는거종료1" + POWERFULSINGLEACTION);
+                            Helpfunctions.Instance.logg("찾는거종료1" + POWERFULSINGLEACTION);
                         }
 
                         return;
@@ -1170,11 +1240,11 @@ namespace HREngine.Bots
                             endturnmove.Type = BotActionType.END_TURN;
                             e.action_list.Add(endturnmove);
                             hasMoreActions = false;
-                            if (attackdeathrattlebefore >= 1)
+                            if (POWERFULSINGLEACTION >= 1)
                             {
-                                attackdeathrattlebefore = 0;
-                                Helpfunctions.Instance.ErrorLog("찾는거종료2" + attackdeathrattlebefore);
-                                Helpfunctions.Instance.logg("찾는거종료2" + attackdeathrattlebefore);
+                                POWERFULSINGLEACTION = 0;
+                                Helpfunctions.Instance.ErrorLog("찾는거종료2" + POWERFULSINGLEACTION);
+                                Helpfunctions.Instance.logg("찾는거종료2" + POWERFULSINGLEACTION);
                             }
                         }
                         else
@@ -1198,11 +1268,11 @@ namespace HREngine.Bots
                     numActionsSent = e.action_list.Count();
                     Helpfunctions.Instance.ErrorLog("sending HR " + numActionsSent + " queued actions");
                     numExecsReceived = 0;
-                    //if (attackdeathrattlebefore >= 1)
+                    //if (POWERFULSINGLEACTION >= 1)
                     //{
-                    //    attackdeathrattlebefore = 0;
-                    //    Helpfunctions.Instance.ErrorLog("찾는거종료3" + attackdeathrattlebefore);
-                    //    Helpfunctions.Instance.logg("찾는거종료3" + attackdeathrattlebefore);
+                    //    POWERFULSINGLEACTION = 0;
+                    //    Helpfunctions.Instance.ErrorLog("찾는거종료3" + POWERFULSINGLEACTION);
+                    //    Helpfunctions.Instance.logg("찾는거종료3" + POWERFULSINGLEACTION);
                     //}
                 }//##########################################################################
 
@@ -2346,7 +2416,7 @@ namespace HREngine.Bots
                     }
 
                     Bot.Instance.dontmultiactioncount = 0;
-                    Bot.Instance.attackdeathrattlebefore = 0;
+                    Bot.Instance.POWERFULSINGLEACTION = 0;
                     printstuff(p, true);
                     readActionFile(passiveWait);
                 }

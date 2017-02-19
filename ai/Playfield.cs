@@ -6634,6 +6634,7 @@ namespace HREngine.Bots
             List<Minion> temp = (own) ? this.ownMinions : this.enemyMinions;
             foreach (Minion m in temp)
             {
+                if (m.silenced) continue;
                 switch (m.name)
                 {
                     case CardDB.cardName.southseadeckhand:
@@ -6989,7 +6990,7 @@ namespace HREngine.Bots
 
         }
 
-        
+
         public bool isEnemyHasLethal()
         {
             bool enemyhaslethal = false;
@@ -8141,6 +8142,7 @@ namespace HREngine.Bots
                 //}
                 //data += "\r\n";
                 //Helpfunctions.Instance.logg(data);
+
             }
             else
             {

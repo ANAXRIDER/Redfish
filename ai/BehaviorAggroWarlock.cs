@@ -420,7 +420,7 @@
             if (usecoin >= 1 && useAbili && p.ownMaxMana <= 2) retval -= 40;
             if (p.ownMinions.Find(a => a.name == CardDB.cardName.gadgetzanauctioneer && !a.silenced) == null)
             {
-                if (usecoin >= 1 && p.manaTurnEnd >= 1 && p.owncards.Count <= 8 && p.ownMaxMana != 10) retval -= 20 * p.manaTurnEnd;
+                if (usecoin >= 1 && p.manaTurnEnd >= 1 && p.owncards.Count <= 8) retval -= 20 * p.manaTurnEnd;
             }
             
             int heropowermana = p.ownHeroAblility.card.getManaCost(p, 2);
@@ -437,11 +437,11 @@
                    p.ownHeroAblility.card.name == CardDB.cardName.totemicslam ||
                    p.ownHeroAblility.card.name == CardDB.cardName.inferno) && p.ownMinions.Count == 7
                     ) retval -= 20;
-                else retval -= 8;
-                //if (p.ownHeroAblility.card.name == CardDB.cardName.armorup || p.ownHeroAblility.card.name == CardDB.cardName.tankup)
-                //{
-                //    retval -= 8;
-                //}
+
+                if (p.ownHeroAblility.card.name == CardDB.cardName.armorup || p.ownHeroAblility.card.name == CardDB.cardName.tankup)
+                {
+                    retval -= 8;
+                }
             }
             //if (usecoin && p.mana >= 1) retval -= 20;
 
@@ -578,8 +578,6 @@
                     if (enemyhaschillmaw && (m.Hp <= 3 && !m.divineshild && !m.hasDeathrattle())) retval -= m.Angr * 2;
                     if (abomination && (m.Hp <= 2 && !m.divineshild && !m.hasDeathrattle())) retval -= m.Angr * 2;
 
-                    if (m.souloftheforest >= 1) retval += 5;
-
                     //meta
 
                     //switch (p.ownHeroName)
@@ -618,7 +616,7 @@
                         if (m.name == CardDB.cardName.flametonguetotem && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find (a => a.taunt) == null) retval -= 10;
                         if (m.name == CardDB.cardName.manatidetotem && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null && p.owncards.Count >= 3) retval -= 10;
                         if (m.name == CardDB.cardName.wickedwitchdoctor && (m.Hp <= enemypotentialattacktotal)) retval -= 5;
-                        if (m.name == CardDB.cardName.darnassusaspirant && (m.Hp <= enemypotentialattacktotal)) retval -= 10;
+
                         //if ((m.name == CardDB.cardName.darkshirecouncilman || m.name == CardDB.cardName.tundrarhino) && m.Hp <= p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Angr && m.Angr < p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Hp) retval -= 5;
                         //if (m.name == CardDB.cardName.darkshirecouncilman && (m.Hp <= p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Angr + enemypotentialattacktotal + p.enemyWeaponAttack) && p.ownMaxMana <= 3) retval -= 10;
                         //if (m.name == CardDB.cardName.tundrarhino && (m.Hp <= p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Angr + enemypotentialattacktotal + p.enemyWeaponAttack) && p.ownMaxMana <= 5) retval -= 10;
@@ -1461,8 +1459,8 @@
             if (p.enemyHeroName == HeroEnum.shaman)
             {
                 if (m.divineshild) retval += m.Angr * 2;
-                if ((TAG_RACE)m.handcard.card.race == TAG_RACE.TOTEM) retval += 1; //totemic shaman
-                if (p.ownMaxMana <= 5 && (TAG_RACE)m.handcard.card.race == TAG_RACE.TOTEM) retval += 1;
+                if ((TAG_RACE)m.handcard.card.race == TAG_RACE.TOTEM) retval += 2; //totemic shaman
+                if (p.ownMaxMana <= 5 && (TAG_RACE)m.handcard.card.race == TAG_RACE.TOTEM) retval += 2;
                 if ((TAG_RACE)m.handcard.card.race == TAG_RACE.TOTEM && m.Hp >= 3) retval += 2; //totemic shaman
                 if (m.name == CardDB.cardName.manatidetotem && !m.silenced) retval += 3;
                 retval += m.handcard.card.cost * 0.5f; //evolve

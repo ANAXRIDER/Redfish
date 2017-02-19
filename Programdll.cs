@@ -878,8 +878,7 @@ namespace HREngine.Bots
 
                     foreach (Minion m in Playfield.Instance.ownMinions)
                     {
-                        if (m.name == CardDB.cardName.flametonguetotem || m.name == CardDB.cardName.direwolfalpha || (m.name == CardDB.cardName.frothingberserker && m.Ready && !m.frozen)
-                            || m.name == CardDB.cardName.southseadeckhand && m.Ready)
+                        if (m.name == CardDB.cardName.flametonguetotem || m.name == CardDB.cardName.direwolfalpha || (m.name == CardDB.cardName.frothingberserker && m.Ready && m.frozen))
                         {
                             this.doMultipleThingsAtATime = false;
                             this.dontmultiactioncount++;
@@ -2098,7 +2097,7 @@ namespace HREngine.Bots
                                     case CardDB.cardName.southseadeckhand:
                                         if (this.heroWeaponAttack >= 1)
                                         {
-                                            System.Threading.Thread.Sleep(3200);
+                                            System.Threading.Thread.Sleep(2200);
                                         }
                                         break;
                                     //case CardDB.cardName.: System.Threading.Thread.Sleep(2200); break;

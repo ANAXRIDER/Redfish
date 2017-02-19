@@ -1510,6 +1510,7 @@ namespace HREngine.Bots
                     if (m.Hp + heal - 1 > m.maxHp) wasted = m.Hp + heal - m.maxHp;
                     pen = wasted;
 
+                    if (HealCardButCanUseFullHP.ContainsKey(name)) pen = 0;
                     //if (m.taunt && wasted <= 2 && m.Hp < m.maxHp) pen -= 5; // if we heal a taunt, its good :D
 
                     if (m.Hp + heal <= m.maxHp) pen = -1;
@@ -2803,9 +2804,9 @@ namespace HREngine.Bots
 
                 if (hasMaelstrom && p.enemyMinions.Count >= 2) return 0;
                 if (has1manacard >= 1 && p.ownMinions.Find(b => b.name == CardDB.cardName.manawyrm && !b.silenced) != null) return 0;
-                if (has1manacard >= 1) return 2;
+                if (has1manacard >= 1 && p.mana == 0) return 2;
                 if (has1costSpellAndEnemyMinion) return 2;
-                if (hasweapon) return 3;
+                if (hasweapon) return 3.5f;
                 if (hasvaluable3costminion && p.ownMaxMana == 2) return 5;
                 if (hasownready && hasabusive && p.enemyMinions.Count >= 1) return 5;
 
@@ -3970,7 +3971,7 @@ namespace HREngine.Bots
             if (name == CardDB.cardName.deathwing)
             {
                 if (p.ownHero.Hp + p.ownHero.armor <= 10) return 0;
-                return p.owncards.Count * 10;
+                return (p.owncards.Count - 1) * 10;
             }
 
             if (name == CardDB.cardName.potionofmadness)
@@ -4429,21 +4430,33 @@ namespace HREngine.Bots
         private int getPlayPenalty(CardDB.cardName name, Playfield p, int choice)
         {
             bool hasdragon = false;
+            int HandDragonCount = 0;
+            bool IsPlayDragon = false;
             bool hasdragonIndecks = false;
+            int Deckdragoncount = 0;
             foreach (Handmanager.Handcard hc in p.owncards)
             {
-                if (hc.card.race == TAG_RACE.DRAGON) hasdragon = true;
-            }
-            if (!hasdragon)
-            {
-                foreach (Handmanager.Handcard hc in Hrtprozis.Instance.deckCard)
+                if ((TAG_RACE)hc.card.race == TAG_RACE.DRAGON) 
                 {
-                    if ((TAG_RACE)hc.card.race == TAG_RACE.DRAGON) hasdragonIndecks = true;
+                    hasdragon = true;
+                    HandDragonCount++;
+                    if (hc.card.name == name) IsPlayDragon = true;
+                }
+            }
+
+            CardDB.Card c;
+            foreach (KeyValuePair<CardDB.cardIDEnum, int> cid in Hrtprozis.Instance.turnDeck)
+            {
+                c = CardDB.Instance.getCardDataFromID(cid.Key);
+                if ((TAG_RACE)c.race == TAG_RACE.DRAGON)
+                {
+                    hasdragonIndecks = true;
+                    Deckdragoncount += cid.Value;
                 }
             }
 
             //Dragon - Hand - synergy cards
-            if (hasdragonIndecks)
+            if (hasdragonIndecks && !hasdragon)
             {
                 int dragonPen = 0;
                 switch (name)
@@ -4467,7 +4480,7 @@ namespace HREngine.Bots
                     case CardDB.cardName.nightbanetemplar:
                         dragonPen = 4; break;
                     case CardDB.cardName.netherspitehistorian:
-                        dragonPen = 10; break;
+                        dragonPen = 12; break;
                     case CardDB.cardName.twilightwhelp:
                         dragonPen = 10; break;
                     case CardDB.cardName.twilightguardian:
@@ -4477,6 +4490,29 @@ namespace HREngine.Bots
                 }
                 if (dragonPen >= 1) return dragonPen;
             }
+
+            //last dragon
+            if (HandDragonCount <= 1 && IsPlayDragon)
+            {
+                int dragonPen = 0;
+                switch (name)
+                {
+                    case CardDB.cardName.bookwyrm:
+                        dragonPen = 8; break;
+                    case CardDB.cardName.drakonidoperative:
+                        dragonPen = 6; break;
+                    case CardDB.cardName.twilightwhelp:
+                        dragonPen = 10; break;
+                    case CardDB.cardName.twilightguardian:
+                        dragonPen = 4; break;
+                    default:
+                        break;
+                }
+                if (dragonPen >= 1) return dragonPen;
+                //10% draw chance
+                if (100 * Deckdragoncount / p.ownDeckSize >= 10) return 5;
+            }
+
 
             switch (name)
             {

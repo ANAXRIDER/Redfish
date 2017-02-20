@@ -19,6 +19,7 @@ namespace HREngine.Bots
                     if (mnn.name == target.name && target.entityID != mnn.entityID)
                     {
                         mnn.setMinionTominion(target);
+                        if (target.charge == 0) mnn.Ready = false;
                         break;
                     }
                 }

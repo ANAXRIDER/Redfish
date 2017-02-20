@@ -6634,6 +6634,7 @@ namespace HREngine.Bots
             List<Minion> temp = (own) ? this.ownMinions : this.enemyMinions;
             foreach (Minion m in temp)
             {
+                if (m.silenced) continue;
                 switch (m.name)
                 {
                     case CardDB.cardName.southseadeckhand:

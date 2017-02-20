@@ -1024,7 +1024,7 @@ namespace HREngine.Bots
             if (name == CardDB.cardName.shieldslam && p.ownHero.armor == 0) return 500;
             if (name == CardDB.cardName.savagery && p.ownHero.Angr == 0) return 500;
             if (name == CardDB.cardName.keeperofthegrove && choice != 1) return 0; // look at silence penality
-            if (name == CardDB.cardName.livingroots && choice != 1) return 0; // look at silence penality
+            if (name == CardDB.cardName.livingroots && choice != 2) return 0; // look at silence penality
             //if (name == CardDB.cardName.swipe && !target.own) return -p.enemyMinions.Count; // treat it as single target spell with bonus for aoe
 
             if (this.DamageAllDatabase.ContainsKey(name) || (p.anzOwnAuchenaiSoulpriest >= 1 && HealAllDatabase.ContainsKey(name))) // aoe penality
@@ -1177,10 +1177,6 @@ namespace HREngine.Bots
                 {
                     pen = 20;
                 }
-                else if (name == CardDB.cardName.fireblast && p.enemyMinions.Count > 0)
-                {
-                    pen = 10;
-                }
 
                 else if (name == CardDB.cardName.mortalstrike && p.ownHero.Hp > 12) pen = 30;
 
@@ -1316,7 +1312,7 @@ namespace HREngine.Bots
 
                     if (name == CardDB.cardName.lavashock && p.owedRecall == 0 && p.currentRecall == 0) pen = 15;
 
-                    if (name == CardDB.cardName.fireblast && !lethal && m.Hp == 1) pen = -1;
+                    if (name == CardDB.cardName.fireblast && !lethal && m.Hp == 1 && m.Angr >= 1) pen = -1;
 
                     if (name == CardDB.cardName.mortalstrike && p.ownHero.Hp > 12) pen = 12;
 
@@ -2693,15 +2689,15 @@ namespace HREngine.Bots
             //    //if (card.name == CardDB.cardName.wildgrowth) return -150; //bonus for turn 1 coin+growth or turn 2 growth but not innervate+growth
             //}
 
-            /*if (card.name == CardDB.cardName.flamewaker && p.turnCounter == 0)
+            if (card.name == CardDB.cardName.flamewaker && p.turnCounter == 0)
             {
-                int number =0;
+                int number = 0;
                 foreach (Action a in p.playactions)
                 {
-                    if (a.card!=null && a.card.card.type == CardDB.cardtype.SPELL) number++;
+                    if (a.card != null && a.card.card.type == CardDB.cardtype.SPELL) number++;
                 }
-                return number * 10;
-            }*/
+                return number;
+            }
 
 
             switch (card.name)
@@ -3278,7 +3274,7 @@ namespace HREngine.Bots
             if (card.name == CardDB.cardName.flametonguetotem)
             {
                 if (p.ownMinions.Count == 0) return 100;
-                int ret = 6;
+                int ret = 3;
                 int readycount = p.ownMinions.Count;
                 bool hastaunt = false;
                 foreach (Minion mnn in p.ownMinions)
@@ -3286,7 +3282,7 @@ namespace HREngine.Bots
                     if (mnn.allreadyAttacked || mnn.exhausted || (mnn.playedThisTurn && mnn.charge == 0)) readycount --;
                     if (mnn.taunt) hastaunt = true;
                 }
-                if (p.enemyMinions.Count == 0 && p.ownMaxMana <= 4) ret += 5;
+                if (p.enemyMinions.Count == 0 && p.ownMaxMana <= 4 && readycount <= 1) ret += 5;
                 //if (readycount == 1) ret += 5;
                 if (readycount == 0) ret += 5;
                 if (readycount == 0 && p.ownMinions.Count >= 1 && p.enemyMinions.Count == 0 && p.ownMaxMana >= 5) ret -= 3;
@@ -3406,11 +3402,14 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.frostbolt)
             {
-                if (!target.own && !target.isHero)
-                {
-                    if (m.handcard.card.cost <= 2)
-                        return 15;
-                }
+                return 8;
+            }
+            if (name == CardDB.cardName.fireball)
+            {
+                return 16;
+            }
+            if (name == CardDB.cardName.arcaneblast)
+            {
                 return 8;
             }
 
@@ -3455,6 +3454,11 @@ namespace HREngine.Bots
             if (name == CardDB.cardName.frothingberserker)
             {
                 //if (p.cardsPlayedThisTurn >= 1 || p.playactions.Find(a => a.actionType == actionEnum.attackWithHero || a.actionType == actionEnum.attackWithMinion) != null) return 15;
+            }
+
+            if (name == CardDB.cardName.bloodsailcultist)
+            {
+                if (p.ownWeaponAttack == 0) return 2;
             }
 
             if (name == CardDB.cardName.handofprotection)
@@ -4061,6 +4065,8 @@ namespace HREngine.Bots
                 }
                 if (hasBeastIndecks) return 10;
             }
+            if (name == CardDB.cardName.freezingpotion) return 10;
+            if (name == CardDB.cardName.icelance) return 10;
 
             return pen;
         }

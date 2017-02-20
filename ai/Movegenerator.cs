@@ -1065,6 +1065,7 @@
                 if (!m.silenced && m.name == CardDB.cardName.tundrarhino) hasTundraRhino = true;
                 if (!m.silenced && (m.name == CardDB.cardName.flametonguetotem || m.name == CardDB.cardName.direwolfalpha)) return true;
                 if (!m.silenced && (m.name == CardDB.cardName.leokk || m.name == CardDB.cardName.raidleader)) return true;
+                //buff
                 if (!m.silenced &&
                     (m.name == CardDB.cardName.southseacaptain ||
                     m.name == CardDB.cardName.murlocwarleader ||
@@ -1074,6 +1075,17 @@
                     m.name == CardDB.cardName.flesheatingghoul ||
                     m.name == CardDB.cardName.malganis ||
                     m.name == CardDB.cardName.oldmurkeye)) return true;
+
+                // spell
+                if (!m.silenced && m.Ready &&
+                    (m.name == CardDB.cardName.manawyrm ||
+                    m.name == CardDB.cardName.redmanawyrm ||
+                    m.name == CardDB.cardName.manaaddict ||
+                    m.name == CardDB.cardName.arcaneanomaly)) return true;
+
+                //charge
+                if (!m.silenced && m.Ready &&
+                    (m.name == CardDB.cardName.southseadeckhand)) return true;
 
                 if (!m.silenced && (m.name == CardDB.cardName.impgangboss || m.name == CardDB.cardName.dragonegg || m.name == CardDB.cardName.hoggerdoomofelwynn || m.name == CardDB.cardName.grimpatron) && p.ownMinions.Count == 7) return true;
 

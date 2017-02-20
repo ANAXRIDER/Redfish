@@ -2384,7 +2384,7 @@ namespace HREngine.Bots
             }
 
 
-            return -p.playactions.Count * 0.0003f;
+            return 2 -p.playactions.Count * 0.0003f;
             //return 0;
 			
         }
@@ -2938,8 +2938,8 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.ancientofwar)
             {
-                if (p.enemyMinions.Count > 0 && choice == 1) return 200;
-                if (p.enemyMinions.Count == 0 && choice == 2) return 50;
+                if (choice == 1) return 10;
+                //if (p.enemyMinions.Count == 0 && choice == 2) return 50;
             }
 
             if (name == CardDB.cardName.druidoftheflame) //choice1 -> 5/2 choice2 -> 2/5

@@ -652,13 +652,8 @@ namespace HREngine.Bots
                                     }
                                     else break;
                                 case CardDB.cardName.southseadeckhand:
-                                    if (Playfield.Instance.ownWeaponAttack >= 1)
-                                    {
-                                        this.doMultipleThingsAtATime = false;
-                                        this.POWERFULSINGLEACTION++;
-                                        this.dontmultiactioncount++; break;
-                                    }
-                                    else break;
+                                    this.POWERFULSINGLEACTION++;
+                                    break;
                                 case CardDB.cardName.spikedhogrider:
                                     if (Playfield.Instance.enemyMinions.Find(a => a.taunt) != null)
                                     {
@@ -862,7 +857,7 @@ namespace HREngine.Bots
 
                     foreach (Minion m in Playfield.Instance.ownMinions)
                     {
-                        if (m.name == CardDB.cardName.southseadeckhand && m.playedThisTurn)
+                        if (m.name == CardDB.cardName.southseadeckhand && (m.playedThisTurn || m.Ready ))
                         {
                             this.doMultipleThingsAtATime = false;
                             this.dontmultiactioncount++;
@@ -977,9 +972,13 @@ namespace HREngine.Bots
             if (this.gameState.TimerState == TurnTimerState.COUNTDOWN && this.EnemyMinion.Count == 0 || moveTodo.actionType == actionEnum.attackWithMinion && ranger_action.Target.IsHero && this.EnemyMinion.Count == 0)
             {
                 this.doMultipleThingsAtATime = true;
-                this.POWERFULSINGLEACTION = 0;
+                this.dontmultiactioncount = 0;
             }
-            if (POWERFULSINGLEACTION >= 1) this.doMultipleThingsAtATime = false;
+            if (POWERFULSINGLEACTION >= 1) 
+            {
+                this.doMultipleThingsAtATime = false;
+                dontmultiactioncount++;
+            }
 
             return ranger_action;
         }

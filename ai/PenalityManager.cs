@@ -561,15 +561,16 @@ namespace HREngine.Bots
             //general weapon
             if (p.ownWeaponDurability >= 1)
             {
-                bool hasweapon = false;
+                int hasweapon = 0;
                 foreach (Handmanager.Handcard c in p.owncards)
                 {
-                    if (c.card.type == CardDB.cardtype.WEAPON || alsoEquipsWeaponDB.ContainsKey(c.card.name)) hasweapon = true;
+                    if (c.card.type == CardDB.cardtype.WEAPON || alsoEquipsWeaponDB.ContainsKey(c.card.name)) hasweapon++;
                 }
-                if (p.ownWeaponAttack == 1 && p.ownHeroName == HeroEnum.thief) hasweapon = true;
+                if (p.ownHeroAblility.card.name == CardDB.cardName.daggermastery || p.ownHeroAblility.card.name == CardDB.cardName.poisoneddaggers) hasweapon +=2;
                 //if (hasweapon && target.name != CardDB.cardName.doomsayer) retval = -p.ownWeaponAttack - 1; // so he doesnt "lose" the weapon in evaluation :D
-                if (!hasweapon && target.isHero && p.ownWeaponDurability == 1) retval += p.ownWeaponAttack;
-                if (p.ownWeaponAttack == 1 && !hasweapon)
+                if (hasweapon <= 1 && target.isHero && p.ownWeaponDurability == 1) retval += p.ownWeaponAttack;
+                if (hasweapon <= 1 && target.isHero && p.ownMaxMana <= 4) retval += p.ownWeaponAttack;
+                if (p.ownWeaponAttack == 1 && hasweapon >= 2)
                 {
                     if (p.ownHeroAblility.card.name != CardDB.cardName.daggermastery && p.ownHeroAblility.card.name != CardDB.cardName.poisoneddaggers)
                     {
@@ -585,7 +586,8 @@ namespace HREngine.Bots
                     }
                 }
             }
-           // if (p.ownWeaponAttack == 1 && p.ownHeroName == HeroEnum.thief) retval += -1;
+            //Helpfunctions.Instance.ErrorLog("retval " + retval);
+            // if (p.ownWeaponAttack == 1 && p.ownHeroName == HeroEnum.thief) retval += -1;
             //if (p.ownHero.tempAttack > 0) retval += -5; //bonus to not waste rockbiter
 
             //Avoid wasting durability into doomsayer
@@ -2788,18 +2790,18 @@ namespace HREngine.Bots
                 }
                 if (hasvaluable3costminion && p.enemyMinions.Count == 0 && p.ownMaxMana == 1) return 15;
                 
-                if (p.ownHeroName == HeroEnum.druid && WGON) return 0;
-                if (has1manacard >= 2 && p.ownMaxMana == 1) return 0;
-                if (has2manacard >= 2 && p.ownMaxMana == 1) return 0;
-                if (hastotemgolem && p.ownMaxMana == 1) return 0;
-                if (has3manacard >= 2 && p.ownMaxMana == 2) return 0;
+                if (p.ownHeroName == HeroEnum.druid && WGON) return 2;
+                if (has1manacard >= 2 && p.ownMaxMana == 1) return 2;
+                if (has2manacard >= 2 && p.ownMaxMana == 1) return 2;
+                if (hastotemgolem && p.ownMaxMana == 1) return 2;
+                if (has3manacard >= 2 && p.ownMaxMana == 2) return 2;
                 
-                if ((has3manacard == 2 || (has1manacard == 1 && has2manacard == 1)) && p.ownMaxMana == 2) return 0;
+                if ((has3manacard == 2 || (has1manacard == 1 && has2manacard == 1)) && p.ownMaxMana == 2) return 2;
                 
-                if (hasPalSecret && hassecretkepper && (p.enemyMinions.Count >= 1 || p.enemyWeaponAttack >= 2)) return 0;
+                if (hasPalSecret && hassecretkepper && (p.enemyMinions.Count >= 1 || p.enemyWeaponAttack >= 2)) return 2;
 
-                if (hasMaelstrom && p.enemyMinions.Count >= 2) return 0;
-                if (has1manacard >= 1 && p.ownMinions.Find(b => b.name == CardDB.cardName.manawyrm && !b.silenced) != null) return 0;
+                if (hasMaelstrom && p.enemyMinions.Count >= 2) return 2;
+                if (has1manacard >= 1 && p.ownMinions.Find(b => b.name == CardDB.cardName.manawyrm && !b.silenced) != null) return 2;
                 if (has1manacard >= 1 && p.mana == 0) return 2;
                 if (has1costSpellAndEnemyMinion) return 2;
                 if (hasweapon) return 3.5f;
@@ -4001,9 +4003,9 @@ namespace HREngine.Bots
                 {
                     if (hc.card.type == CardDB.cardtype.WEAPON) hasweaponIndecks = true;
                 }
-                if (p.ownWeaponAttack <= 0 && hasweaponIndecks && p.ownMaxMana >= 6)
+                if (p.ownWeaponAttack <= 0 && hasweaponIndecks)
                 {
-                    return 8;
+                    return 6;
                 }
             }
 
@@ -4719,6 +4721,12 @@ namespace HREngine.Bots
             HealCardButCanUseFullHP.Add(CardDB.cardName.refreshmentvendor, 0);
             HealCardButCanUseFullHP.Add(CardDB.cardName.hozenhealer, 0);
             HealCardButCanUseFullHP.Add(CardDB.cardName.tuskarrjouster, 0);
+            HealCardButCanUseFullHP.Add(CardDB.cardName.drainlife, 0);
+            HealCardButCanUseFullHP.Add(CardDB.cardName.holyfire, 0);
+            HealCardButCanUseFullHP.Add(CardDB.cardName.siphonsoul, 0);
+            HealCardButCanUseFullHP.Add(CardDB.cardName.tournamentmedic, 0);
+            HealCardButCanUseFullHP.Add(CardDB.cardName.twilightdarkmender, 0);
+            HealCardButCanUseFullHP.Add(CardDB.cardName.ivoryknight, 0);
         }
 
         public void setupDamageDatabase()

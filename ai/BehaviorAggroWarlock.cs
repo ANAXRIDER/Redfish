@@ -273,6 +273,12 @@
             {
                 enemyherohpvalue += -2 * (p.enemyHero.Hp + p.enemyHero.armor) + 50; //y = - 2x + 50
             }
+
+            if (p.enemyHero.immune)
+            {
+                retval += 20 - 2 * (p.enemyHero.Hp);
+            }
+
             //else if (p.enemyHero.Hp + p.enemyHero.armor >= 21)
             //{
             //    retval += -(p.enemyHero.Hp + p.enemyHero.armor) + 30; //y= - x + 30
@@ -380,7 +386,7 @@
 
 
 
-            if (p.CountEnemyAcolyteStarted == 1 && p.enemycarddraw >= 2 || p.CountEnemyAcolyteStarted == 2 && p.enemycarddraw >= 3) retval -= p.enemycarddraw * 7;
+            if (p.CountEnemyAcolyteStarted == 1 && p.enemycarddraw >= 2 || p.CountEnemyAcolyteStarted == 2 && p.enemycarddraw >= 4) retval -= p.enemycarddraw * 7;
 
 
             bool hassecretkeeper = false;
@@ -523,7 +529,7 @@
                 foreach (Minion mmm in p.enemyMinions)
                 {
                     if (mmm.Angr >= 4) impgangbossgoodposition = false;
-                    if (mmm.taunt) hasenemytaunt = true;
+                    if (mmm.taunt && mmm.Angr >= 1) hasenemytaunt = true;
                     if (mmm.Hp >= 2 && mmm.Angr >= 3) darkshirecouncilmanBadposition = true;
                     if (!mmm.silenced && mmm.name == CardDB.cardName.chillmaw) enemyhaschillmaw = true;
                     if (!mmm.silenced && mmm.name == CardDB.cardName.abomination) abomination = true;
@@ -601,6 +607,7 @@
 
                     
                     if (!hasenemytaunt && !p.enemyHero.immune && m.Ready && m.Angr >= 1 && !m.frozen && m.enemyBlessingOfWisdom == 0 && m.enemyPowerWordGlory == 0) retval -= 10 * m.Angr;
+                    if (m.enemyBlessingOfWisdom >= 1 || m.enemyPowerWordGlory >= 1) retval -= 8;
 
                     //minion each
                     if (impgangbossgoodposition && m.handcard.card.name == CardDB.cardName.impgangboss && m.Hp == 4 && p.ownMaxMana <= 3 && m.playedThisTurn) retval += 5;

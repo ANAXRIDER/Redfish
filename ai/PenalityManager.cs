@@ -283,7 +283,9 @@ namespace HREngine.Bots
             }
 
             if (m.tempAttack >= 1 && target.isHero && target.Hp >= 10 && p.enemyMinions.Count >= 1) pen += m.tempAttack;
-            
+
+            if (m.enemyBlessingOfWisdom >= 1) pen += 10;
+
             //if (target.name == CardDB.cardName.acolyteofpain && !target.silenced && target.Hp >= 2)
             //{
             //    //Helpfunctions.Instance.ErrorLog("(((((((((((((((((((((((((((((((((((((((");
@@ -620,7 +622,7 @@ namespace HREngine.Bots
             {
                 if (card.name == CardDB.cardName.upgrade)
                 {
-                    if (p.ownWeaponAttack >= 3 || p.ownWeaponDurability >= 3) return 0; 
+                    if (p.ownWeaponAttack >= 3 || p.ownWeaponDurability >= 2) return 0; 
                 } 
                 return 25 * ((p.ownWeaponAttack * p.ownWeaponDurability) - (2 * alsoEquipsWeaponDB[card.name]));
             }
@@ -4203,7 +4205,8 @@ namespace HREngine.Bots
                         else if (si.canBe_snipe && p.mobsPlayedThisTurn == 0)
                         {
                             pen += c.calculateManaCost(p);
-                            if (c.deathrattle && c.name != CardDB.cardName.darnassusaspirant && c.name != CardDB.cardName.dancingswords || c.Shield) pen = 0;                            
+                            if (c.cost <= 3) pen = 0;
+                            if (c.deathrattle && c.name != CardDB.cardName.darnassusaspirant && c.name != CardDB.cardName.dancingswords || c.Shield) pen -= 1;                        
                         }
                     }
                     

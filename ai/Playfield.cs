@@ -5912,6 +5912,7 @@ namespace HREngine.Bots
                         {
                             sii.canBe_snipe = false;
                         }
+                        this.evaluatePenality --;
                     }
 
                     if (si.canBe_Trial && minionCount >= 3)
@@ -6669,7 +6670,7 @@ namespace HREngine.Bots
             {
                 if (this.ownMinions.Count >= allowed)
                 {
-                    if(spawnKid) this.evaluatePenality += 20;
+                    if(spawnKid) this.evaluatePenality += 50;
                     return;
                 }
             }
@@ -6748,6 +6749,13 @@ namespace HREngine.Bots
 
                 }
 
+                foreach (Minion m in this.enemyMinions)
+                {
+                    if (m.name == CardDB.cardName.daringreporter && !m.silenced)
+                    {
+                        this.minionGetBuffed(m, 1, 1);
+                    }
+                }
 
             }
             else
@@ -6894,6 +6902,13 @@ namespace HREngine.Bots
 
                 }
 
+                foreach (Minion m in this.enemyMinions)
+                {
+                    if (m.name == CardDB.cardName.daringreporter && !m.silenced)
+                    {
+                        this.minionGetBuffed(m, 1, 1);
+                    }
+                }
 
             }
             else

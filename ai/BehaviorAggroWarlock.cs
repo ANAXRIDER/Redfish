@@ -414,13 +414,16 @@
 
                 //save spell for all classes: (except for rouge if he has no combo)
                 if (a.target == null) continue;
-                if (p.ownHeroName != HeroEnum.thief && a.card.card.type == CardDB.cardtype.SPELL && (!a.target.own && a.target.isHero) && a.card.card.name != CardDB.cardName.shieldblock) retval -= 11;
+                if (p.ownHeroName != HeroEnum.thief && a.card.card.type == CardDB.cardtype.SPELL && (!a.target.own && a.target.isHero) &&
+                    (a.card.card.name != CardDB.cardName.shieldblock &&
+                    a.card.card.name != CardDB.cardName.jadelightning
+                    )) retval -= 11;
                 if (p.ownHeroName == HeroEnum.thief && a.card.card.type == CardDB.cardtype.SPELL && (a.target.isHero && !a.target.own)) retval -= 11;
             }
             if (usecoin >= 1 && useAbili && p.ownMaxMana <= 2) retval -= 40;
             if (p.ownMinions.Find(a => a.name == CardDB.cardName.gadgetzanauctioneer && !a.silenced) == null)
             {
-                if (usecoin >= 1 && p.manaTurnEnd >= 1 && p.owncards.Count <= 8 && p.ownMaxMana != 10) retval -= 20 * p.manaTurnEnd;
+                if (usecoin >= 1 && p.manaTurnEnd >= 1 && p.owncards.Count <= 8 && p.ownMaxMana != 10) retval -= 5 * p.manaTurnEnd;
             }
             
             int heropowermana = p.ownHeroAblility.card.getManaCost(p, 2);
@@ -612,10 +615,13 @@
                         // 적미니언 공높은놈보다 피 작고 (한방에죽음) + 적 미니언 공높은놈보다 공낮으면 -밸류;
                         if (m.name == CardDB.cardName.gadgetzanauctioneer && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null) retval -= 10;
                         if (m.name == CardDB.cardName.flametonguetotem && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find (a => a.taunt) == null) retval -= 10;
-                        if (m.name == CardDB.cardName.manatidetotem && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null && p.owncards.Count >= 3) retval -= 10;
+                        if (m.name == CardDB.cardName.manatidetotem && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null && p.owncards.Count >= 3) retval -= 13;
                         if (m.name == CardDB.cardName.wickedwitchdoctor && (m.Hp <= enemypotentialattacktotal)) retval -= 5;
                         if (m.name == CardDB.cardName.darnassusaspirant && (m.Hp <= enemypotentialattacktotal)) retval -= 10;
+                        if (m.name == CardDB.cardName.brannbronzebeard && (m.Hp <= enemypotentialattacktotal)) retval -= 5;
                     }
+
+                    if (m.name == CardDB.cardName.manatidetotem && !m.silenced && (p.ownMaxMana <= 4 || p.owncards.Count <= 2)) retval += 3;
 
                     if (m.name == CardDB.cardName.scavenginghyena && !m.silenced)
                     {
@@ -857,7 +863,7 @@
 
             if (p.enemyHero.Hp <= 0)
             {
-                if (p.turnCounter <= 1)
+                if (p.turnCounter == 0)
                 {
                     bool ragon = false;
                     foreach (Minion mnn in p.ownMinions)
@@ -868,7 +874,7 @@
                         }
                     }
                     //Helpfunctions.Instance.ErrorLog("ragon " + ragon + " "  );
-                    if (ragon)
+                    if (ragon && p.enemyMinions.Count >= 2)
                     {
                         retval += 1600 - 200 * p.enemyMinions.Count;
                     }
@@ -897,7 +903,7 @@
                 // if our damage on board is lethal, give a strong bonus so enemy AI avoids this outcome in its turn (i.e. AI will clear our minions if it can instead of ignoring them)
                 if (p.turnCounter == 1 && p.guessHeroDamage(true) >= p.enemyHero.Hp + p.enemyHero.armor && p.enemyMinions.Count == 0) retval += 5;
 
-                if (p.turnCounter <= 1)
+                if (p.turnCounter == 0)
                 {
                     int fatiguedamage = (p.enemyDeckSize == 0) ? p.enemyHeroFatigue + 1 : 0;
                     bool ragon = false;

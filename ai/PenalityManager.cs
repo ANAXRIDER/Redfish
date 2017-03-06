@@ -2474,9 +2474,9 @@ namespace HREngine.Bots
 
             }
 
-            if (buffs >=1)
+            if (buffs >= 1)
             {
-                retval += 5*buffs;
+                retval += 5 * buffs;
             }
 
 
@@ -3414,6 +3414,7 @@ namespace HREngine.Bots
             {
                 return 8;
             }
+            if (name == CardDB.cardName.shadowstrike) return 8;
 
             if (!lethal && choice == 1 && name == CardDB.cardName.druidoftheclaw)
             {
@@ -3968,7 +3969,6 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.deathwing)
             {
-                if (p.ownHero.Hp + p.ownHero.armor <= 10) return 0;
                 return (p.owncards.Count - 1) * 10;
             }
 
@@ -4495,13 +4495,11 @@ namespace HREngine.Bots
                 switch (name)
                 {
                     case CardDB.cardName.bookwyrm:
-                        dragonPen = 8; break;
+                        dragonPen = 10; break;
                     case CardDB.cardName.drakonidoperative:
-                        dragonPen = 6; break;
+                        dragonPen = 10; break;
                     case CardDB.cardName.twilightwhelp:
                         dragonPen = 10; break;
-                    case CardDB.cardName.twilightguardian:
-                        dragonPen = 4; break;
                     default:
                         break;
                 }
@@ -5094,7 +5092,7 @@ namespace HREngine.Bots
 			attackBuffDatabase.Add(CardDB.cardName.silvermoonportal, 2);
             attackBuffDatabase.Add(CardDB.cardName.zoobot, 1);
             attackBuffDatabase.Add(CardDB.cardName.menageriemagician, 2);
-            attackBuffDatabase.Add(CardDB.cardName.powerofthewild, 1); //choice 1
+            //attackBuffDatabase.Add(CardDB.cardName.powerofthewild, 1); //choice 1
             attackBuffDatabase.Add(CardDB.cardName.markofthelotus, 1);
             attackBuffDatabase.Add(CardDB.cardName.virmensensei, 2); //to a beast
             attackBuffDatabase.Add(CardDB.cardName.shadowsensei, 2); //to a stealth
@@ -5878,7 +5876,11 @@ namespace HREngine.Bots
 
             priorityTargets.Add(CardDB.cardName.selflesshero, 4);
             priorityTargets.Add(CardDB.cardName.grimscaleoracle, 2);
+
+            priorityTargets.Add(CardDB.cardName.finjatheflyingstar, 6);
             
+
+
         }
 
         private void setupLethalHelpMinions()

@@ -40,52 +40,52 @@ namespace HREngine.Bots
             }
         }
 
-        public void onCardWasPlayedold(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion)
-        {
-            if (triggerEffectMinion.own == wasOwnCard)
-            {
-                List<Minion> temp = (triggerEffectMinion.own) ? p.enemyMinions : p.ownMinions;
-                for (int i = 0; i < 2; i++)
-                {
-                    if (temp.Count >= 1)
-                    {
-                        //search Minion with lowest hp
-                        Minion enemy = temp[0];
-                        int minhp = 10000;
-                        bool found = false;
-                        foreach (Minion m in temp)
-                        {
-                            if (m.name == CardDB.cardName.nerubianegg && m.Hp >= 2) continue; //dont attack nerubianegg!
-                            if (m.handcard.card.isToken && m.Hp == 1) continue;
-                            if (m.name == CardDB.cardName.defender) continue;
-                            if (m.name == CardDB.cardName.spellbender) continue;
-                            if (m.Hp >= 2 && minhp > m.Hp)
-                            {
-                                enemy = m;
-                                minhp = m.Hp;
-                                found = true;
-                            }
-                        }
+        //public void onCardWasPlayedold(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion)
+        //{
+        //    if (triggerEffectMinion.own == wasOwnCard)
+        //    {
+        //        List<Minion> temp = (triggerEffectMinion.own) ? p.enemyMinions : p.ownMinions;
+        //        for (int i = 0; i < 2; i++)
+        //        {
+        //            if (temp.Count >= 1)
+        //            {
+        //                //search Minion with lowest hp
+        //                Minion enemy = temp[0];
+        //                int minhp = 10000;
+        //                bool found = false;
+        //                foreach (Minion m in temp)
+        //                {
+        //                    if (m.name == CardDB.cardName.nerubianegg && m.Hp >= 2) continue; //dont attack nerubianegg!
+        //                    if (m.handcard.card.isToken && m.Hp == 1) continue;
+        //                    if (m.name == CardDB.cardName.defender) continue;
+        //                    if (m.name == CardDB.cardName.spellbender) continue;
+        //                    if (m.Hp >= 2 && minhp > m.Hp)
+        //                    {
+        //                        enemy = m;
+        //                        minhp = m.Hp;
+        //                        found = true;
+        //                    }
+        //                }
 
-                        if (found)
-                        {
-                            p.minionGetDamageOrHeal(enemy, 1);
-                        }
-                        else
-                        {
-                            p.minionGetDamageOrHeal(triggerEffectMinion.own ? p.enemyHero : p.ownHero, 1);
-                        }
+        //                if (found)
+        //                {
+        //                    p.minionGetDamageOrHeal(enemy, 1);
+        //                }
+        //                else
+        //                {
+        //                    p.minionGetDamageOrHeal(triggerEffectMinion.own ? p.enemyHero : p.ownHero, 1);
+        //                }
 
-                    }
-                    else
-                    {
-                        p.minionGetDamageOrHeal(triggerEffectMinion.own ? p.enemyHero : p.ownHero, 1);
-                    }
-                }
+        //            }
+        //            else
+        //            {
+        //                p.minionGetDamageOrHeal(triggerEffectMinion.own ? p.enemyHero : p.ownHero, 1);
+        //            }
+        //        }
 
-                triggerEffectMinion.stealth = false;
-            }
-        }
+        //        triggerEffectMinion.stealth = false;
+        //    }
+        //}
 
     }
 }

@@ -735,10 +735,10 @@ namespace HREngine.Bots
                             bool Random_Spell_But_Can_Kill_Deathrattle_Card = false;
                             switch (daum.bestmove.card.card.name)
                             {
+                                case CardDB.cardName.arcanemissiles:
                                 case CardDB.cardName.forkedlightning:
                                 case CardDB.cardName.brawl:
-                                case CardDB.cardName.bouncingblade:
-                                case CardDB.cardName.arcanemissiles:
+                                case CardDB.cardName.bouncingblade:      
                                 case CardDB.cardName.darkbargain:
                                 case CardDB.cardName.avengingwrath:
                                 case CardDB.cardName.multishot:
@@ -747,7 +747,9 @@ namespace HREngine.Bots
                                 case CardDB.cardName.sabotage:
                                 case CardDB.cardName.spreadingmadness:
                                 case CardDB.cardName.flamecannon: 
-                                case CardDB.cardName.cleave: Random_Spell_But_Can_Kill_Deathrattle_Card = true; break;
+                                case CardDB.cardName.cleave: Random_Spell_But_Can_Kill_Deathrattle_Card = true;
+                                    this.POWERFULSINGLEACTION++;
+                                    break;
                                 default: break;
                             }
 

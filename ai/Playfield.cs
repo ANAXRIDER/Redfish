@@ -701,6 +701,9 @@ namespace HREngine.Bots
                     case CardDB.cardName.kelthuzad:
                         this.needGraveyard = true;
                         continue;
+                    case CardDB.cardName.nzoththecorruptor:
+                        this.needGraveyard = true;
+                        continue;
                     case CardDB.cardName.coldarradrake:
                         this.anzOwnGarrisonCommander += 1000;
                         continue;
@@ -799,7 +802,7 @@ namespace HREngine.Bots
 
             foreach (Handmanager.Handcard hc in this.owncards)
             {
-                if (hc.card.name == CardDB.cardName.kelthuzad)
+                if (hc.card.name == CardDB.cardName.kelthuzad || hc.card.name == CardDB.cardName.nzoththecorruptor)
                 {
                     this.needGraveyard = true;
                 }
@@ -3831,6 +3834,7 @@ namespace HREngine.Bots
                         this.ownWeaponDurability += hc.addHp;
                         this.ownHero.Angr += hc.addattack;
                     }
+                    if (c.type == CardDB.cardtype.SPELL) this.triggerACardWasPlayed(c, true);
                     this.doDmgTriggers();
 
 
@@ -7380,16 +7384,16 @@ namespace HREngine.Bots
             CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_231); 
             switch (manaCost)
             {
-                case 1: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_011); break; 
-                case 2: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_131); break; 
-                case 3: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_134); break; 
-                case 4: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.GVG_074); break; 
-                case 5: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.DS1_055); break; 
-                case 6: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_283); break; 
-                case 7: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_088); break; 
-                case 8: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.NEW1_038); break; 
-                case 9: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_573); break; 
-                case 10: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.AT_120); break; 
+                case 1: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CFM_712_t01); break;
+                case 2: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CFM_712_t02); break;
+                case 3: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CFM_712_t03); break;
+                case 4: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CFM_712_t04); break;
+                case 5: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CFM_712_t05); break;
+                case 6: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CFM_712_t06); break;
+                case 7: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CFM_712_t07); break; 
+                case 8: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CFM_712_t08); break; 
+                case 9: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CFM_712_t09); break; 
+                case 10: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CFM_712_t10); break; 
             }
             return kid;
         }

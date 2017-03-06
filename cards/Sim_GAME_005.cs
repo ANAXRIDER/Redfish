@@ -12,7 +12,7 @@ namespace HREngine.Bots
         {
             if (ownplay)
             {
-                p.mana++;
+                if (p.mana <= 9) p.mana++;
             }
             else
             {

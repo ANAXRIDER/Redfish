@@ -32,6 +32,15 @@ namespace HREngine.Bots
                     }
                 }
             }
+
+            if (kids > 0 && own.own)
+            {
+                foreach (GraveYardItem m in p.diedMinions.ToArray()) // toArray() because a knifejuggler could kill a minion due to the summon :D
+                {
+                    CardDB.Card card = CardDB.Instance.getCardDataFromID(m.cardid);
+                    if (card.deathrattle) p.callKid(card, p.ownMinions.Count, m.own);
+                }
+            }
         }
     }
 }

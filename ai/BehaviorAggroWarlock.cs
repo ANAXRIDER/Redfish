@@ -715,7 +715,11 @@
                     if (m.windfury && p.enemyMinions.Count == 0) retval += m.Angr;
 
                     if (m.divineshild && p.enemyHeroAblility.card.name != CardDB.cardName.fireblast) retval += m.Angr * 1.5f;
-                    if (m.stealth) retval += 1;
+                    if (m.stealth)
+                    {
+                        retval += 1;
+                        if (m.name == CardDB.cardName.moroes && !m.silenced) retval += m.Angr * 1.25f;
+                    }
                     if (m.taunt)
                     {
                         retval += m.AdjacentAngr * 0.25f;

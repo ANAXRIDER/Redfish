@@ -3922,7 +3922,8 @@ namespace HREngine.Bots
                 {
                     if (target.isHero) ret += 6;
                     if (target.isHero && p.enemyMinions.Count >= 1) ret += 3;
-                    if (target.Angr == 0 && target.Hp <= 2 && p.ownMinions.Find(a => a.Ready && a.Angr <= 2) != null) ret += 5;
+                    if (target.Angr == 0 && target.Hp <= 2 && 
+                        p.ownMinions.Find(a => !a.frozen && a.canAttackNormal && a.Angr <= 2 && target.Hp <= a.Angr && (!a.playedThisTurn || a.charge >= 1)) != null) ret += 5;
                     if (target.Hp >= 4 && !target.isHero) ret += 0.5f;
                 }
                 return ret;
@@ -3933,7 +3934,8 @@ namespace HREngine.Bots
                 float ret = 0;
                 if (target.isHero) ret += 6;
                 if (target.isHero && p.enemyMinions.Count >= 1) ret += 3;
-                if (target.Angr == 0 && target.Hp <= 2 && p.ownMinions.Find(a => a.Ready && a.Angr <= 2) != null) ret += 5;
+                if (target.Angr == 0 && target.Hp <= 2 &&
+                        p.ownMinions.Find(a => !a.frozen && a.canAttackNormal && a.Angr <= 2 && target.Hp <= a.Angr && (!a.playedThisTurn || a.charge >= 1)) != null) ret += 5;
                 if (target.Hp >= 4 && !target.isHero) ret += 0.5f;
                 return ret;
             }
@@ -4042,6 +4044,11 @@ namespace HREngine.Bots
             {
                 int ret = 5;
                 return ret;
+            }
+
+            if (name == CardDB.cardName.powerofthewild && choice == 1)
+            {
+                if (p.ownMinions.Count <= 2) return 4;
             }
 
             if (name == CardDB.cardName.menageriewarden)

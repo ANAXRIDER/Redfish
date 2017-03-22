@@ -6711,12 +6711,12 @@ namespace HREngine.Bots
                         int murlocs = 0;
                         foreach (Minion m in p.ownMinions)
                         {
-                            if (m.handcard.card.race == TAG_RACE.MURLOC)
+                            if ((TAG_RACE)m.handcard.card.race == TAG_RACE.MURLOC)
                             {
                                 murlocs++;
                             }
                         }
-                        retval = retval - murlocs;
+                        retval = retval + offset - murlocs;
                         break;
                     default:
                         retval = retval + offset;

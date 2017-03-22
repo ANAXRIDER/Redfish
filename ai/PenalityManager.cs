@@ -1241,7 +1241,7 @@ namespace HREngine.Bots
 
                     if (m.name == CardDB.cardName.madscientist && p.ownHeroName == HeroEnum.hunter) return 500;
                     if (m.name == CardDB.cardName.sylvanaswindrunner) return 0;
-                    if (m.handcard.card.deathrattle) return 60;
+                    if (m.handcard.card.deathrattle) return 25;
                     if (m.Hp > dmg)
                     {
                         if (m.name == CardDB.cardName.acolyteofpain && p.owncards.Count <= 3) return 0;
@@ -1252,7 +1252,7 @@ namespace HREngine.Bots
                         }
                     }
 
-                    
+                    if (m.name == CardDB.cardName.grimpatron) return 0;
 
                     pen = 500;
                 }
@@ -1355,7 +1355,7 @@ namespace HREngine.Bots
                     {
                         pen += 8;
                         if (target.Angr == 0) pen += 2;
-                        if (p.spellpower + 3 >= target.Hp && target.Hp >= 4 && target.Angr >= 2) pen = 0;
+                        if (p.spellpower + 3 >= target.Hp && target.Angr >= 4) pen = 0;
                     }
 
                     if (name == CardDB.cardName.jadelightning)
@@ -2387,6 +2387,10 @@ namespace HREngine.Bots
                 }
             }
 
+            if (name == CardDB.cardName.thesilverhand || name == CardDB.cardName.reinforce)
+            {
+                return 0;
+            }
 
             return 2 -p.playactions.Count * 0.0003f;
             //return 0;
@@ -2804,8 +2808,10 @@ namespace HREngine.Bots
 
                 if (hasMaelstrom && p.enemyMinions.Count >= 2) return 2;
                 if (has1manacard >= 1 && p.ownMinions.Find(b => b.name == CardDB.cardName.manawyrm && !b.silenced) != null) return 2;
+                if (has2manacard >= 1 && p.ownMinions.Find(b => b.name == CardDB.cardName.manawyrm && !b.silenced) != null && p.mana == 1) return 2;
                 if (has1manacard >= 1 && p.mana == 0) return 2;
                 if (has1costSpellAndEnemyMinion) return 2;
+
                 if (hasweapon) return 3.5f;
                 if (hasvaluable3costminion && p.ownMaxMana == 2) return 5;
                 if (hasownready && hasabusive && p.enemyMinions.Count >= 1) return 5;
@@ -3424,7 +3430,7 @@ namespace HREngine.Bots
             }
 
 
-            if (name == CardDB.cardName.poweroverwhelming)
+            if (name == CardDB.cardName.poweroverwhelming || name == CardDB.cardName.nightmare)
             {
                 int ret = 15;
                 if (target.own && !target.isHero && !m.Ready)
@@ -3956,7 +3962,7 @@ namespace HREngine.Bots
 
             if (card.type == CardDB.cardtype.WEAPON)
             {
-                float ret = 0;
+                float ret = card.Attack * 0.5f;
                 if (card.Attack <= p.ownWeaponAttack || (p.ownWeaponDurability >= 2 && !p.ownHero.allreadyAttacked))
                 {
                     ret += p.ownWeaponAttack * p.ownWeaponDurability;
@@ -4076,8 +4082,24 @@ namespace HREngine.Bots
                 }
                 if (hasBeastIndecks) return 10;
             }
+
+            if (name == CardDB.cardName.blubberbaron)
+            {
+                int bccount = 0;
+                foreach (Handmanager.Handcard hc in p.owncards)
+                {
+                    if (hc.card.battlecry) bccount++;
+                }
+                return 3 * bccount;
+            }
+
+
+
             if (name == CardDB.cardName.freezingpotion) return 10;
             if (name == CardDB.cardName.icelance) return 10;
+            if (name == CardDB.cardName.backstab) return 2;
+            if (name == CardDB.cardName.innerfire) return 4;
+            if (name == CardDB.cardName.forbiddenflame) return 5;
 
             return pen;
         }
@@ -4288,7 +4310,7 @@ namespace HREngine.Bots
                     };
                     if ((!this.isOwnLowestInHand(m, p) && p.mobsPlayedThisTurn == 0) || (attackedbefore == 0 && canattack > 0))
                     {
-                        pen += 10;
+                        pen += 1;
                     }
                 }
             }
@@ -4515,7 +4537,12 @@ namespace HREngine.Bots
                 }
                 if (dragonPen >= 1) return dragonPen;
                 //10% draw chance
-                if (100 * Deckdragoncount / p.ownDeckSize >= 10) return 5;
+                if (p.ownDeckSize >= 1)
+                {
+                    if (100 * Deckdragoncount / p.ownDeckSize >= 10) return 5;
+                }
+                else return 0;
+                
             }
 
 

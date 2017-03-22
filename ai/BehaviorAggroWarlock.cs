@@ -27,7 +27,7 @@
             if (p.value >= -2000000) return p.value;
             float retval = 0;
             retval -= p.evaluatePenality;
-            //retval += p.owncards.Count * 2;
+            retval += p.owncards.Count * 0.1f;
 
             //retval -= p.enemyspellpower * 5;
 
@@ -430,6 +430,7 @@
             if (p.ownMinions.Find(a => a.name == CardDB.cardName.gadgetzanauctioneer && !a.silenced) == null)
             {
                 if (usecoin >= 1 && p.manaTurnEnd >= 1 && p.owncards.Count <= 8 && p.ownMaxMana != 10) retval -= 5 * p.manaTurnEnd;
+                if (usecoin >= 1 && p.manaTurnEnd >= 1 && p.ownMaxMana <= 4) retval -= 5 * p.manaTurnEnd;
             }
             
             int heropowermana = p.ownHeroAblility.card.getManaCost(p, 2);

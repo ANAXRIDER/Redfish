@@ -36,6 +36,9 @@ namespace HREngine.Bots
 
         Dictionary<CardDB.cardName, int> backToHandDatabase = new Dictionary<CardDB.cardName, int>();
 
+        Dictionary<CardDB.cardName, int> TransformCardDatabase = new Dictionary<CardDB.cardName, int>();
+        Dictionary<CardDB.cardName, int> KillCardDatabase = new Dictionary<CardDB.cardName, int>();
+
         Dictionary<CardDB.cardName, int> cardDiscardDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> discardedCardCount = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> destroyOwnDatabase = new Dictionary<CardDB.cardName, int>();
@@ -91,7 +94,7 @@ namespace HREngine.Bots
 
             setupDiscover();
             setupCardDrawBattlecry();
-
+            setupTransformCards();
             setupDiscardCards();
             setupDestroyOwnCards();
             setupSpecialMins();
@@ -291,6 +294,24 @@ namespace HREngine.Bots
             //    //Helpfunctions.Instance.ErrorLog("(((((((((((((((((((((((((((((((((((((((");
             //    //if (m.Angr >= target.Hp) pen -= 5;
             //}
+
+
+            if (m.name == CardDB.cardName.finjatheflyingstar)
+            {
+                int mulroccnt = 0;
+                CardDB.Card c;
+                foreach (KeyValuePair<CardDB.cardIDEnum, int> cid in Hrtprozis.Instance.turnDeck)
+                {
+                    c = CardDB.Instance.getCardDataFromID(cid.Key);
+                    if ((TAG_RACE)c.race == TAG_RACE.MURLOC)
+                    {
+                        mulroccnt++;
+                    }
+                }
+                Helpfunctions.Instance.ErrorLog("mulroccnt " + mulroccnt);
+                if (mulroccnt >= 1 && target.Hp <= m.Angr) pen -= 10;
+            }
+
 
             return pen;
         }
@@ -2528,7 +2549,42 @@ namespace HREngine.Bots
             if (p.ownMinions.Find(m => m.name == CardDB.cardName.doomsayer && !m.silenced) != null || p.enemyMinions.Find(m => m.name == CardDB.cardName.doomsayer && !m.silenced) != null)
             {
                 if (card.card.type == CardDB.cardtype.HEROPWR) return 0;
+
+
+                int enemydoomsayerMaxHp = 0;
+                foreach (Minion min in p.enemyMinions)
+                {
+                    if (min.name == CardDB.cardName.doomsayer && enemydoomsayerMaxHp <= min.Hp) enemydoomsayerMaxHp = min.Hp;
+                }
+
                 if (p.ownMinions.Count == 0) return 10;
+
+                if (target != null)
+                {
+                    if (silenceDatabase.ContainsKey(card.card.name) && target.name == CardDB.cardName.doomsayer && !target.silenced) return 0;
+                    if (TransformCardDatabase.ContainsKey(card.card.name) && target.name == CardDB.cardName.doomsayer && !target.silenced) return 0;
+                    if (backToHandDatabase.ContainsKey(card.card.name) && target.name == CardDB.cardName.doomsayer && !target.silenced) return 0;
+                    if ((destroyDatabase.ContainsKey(card.card.name) ||
+                    destroyOwnDatabase.ContainsKey(card.card.name)) && target.name == CardDB.cardName.doomsayer && !target.silenced) return 0;
+                }
+                else
+                {
+                    if (silenceDatabase.ContainsKey(card.card.name) ||
+                        TransformCardDatabase.ContainsKey(card.card.name) ||
+                        backToHandDatabase.ContainsKey(card.card.name) ||
+                        destroyDatabase.ContainsKey(card.card.name) ||
+                        destroyOwnDatabase.ContainsKey(card.card.name) ||
+                        KillCardDatabase.ContainsKey(card.card.name)) return 5;
+                }
+
+
+
+                if (DamageAllDatabase.ContainsKey(card.card.name) && DamageAllDatabase[card.card.name] >= enemydoomsayerMaxHp) return 5;
+                else if (DamageAllEnemysDatabase.ContainsKey(card.card.name) && DamageAllEnemysDatabase[card.card.name] >= enemydoomsayerMaxHp) return 5;
+                else if (DamageTargetDatabase.ContainsKey(card.card.name) && DamageTargetDatabase[card.card.name] >= enemydoomsayerMaxHp) return 5;
+                else if (DamageTargetSpecialDatabase.ContainsKey(card.card.name) && DamageTargetSpecialDatabase[card.card.name] >= enemydoomsayerMaxHp) return 5;
+                else if (heroAttackBuffDatabase.ContainsKey(card.card.name) && heroAttackBuffDatabase[card.card.name] >= enemydoomsayerMaxHp && !p.ownHero.frozen) return 5;
+                else return 100;
             }
 
             //if (p.enemyHeroName == HeroEnum.mage)
@@ -3561,7 +3617,11 @@ namespace HREngine.Bots
                     else if (anti_aoe_minion.ContainsKey(target.name)) hexpen -= 15;
                     else if (target.Angr >= 3 && target.divineshild) hexpen -= 15;
 
-                    if (priorityTargets.ContainsKey(target.name) && priorityTargets[target.name] >= 11) hexpen = 5;
+                    if (!target.silenced && priorityTargets.ContainsKey(target.name) && priorityTargets[target.name] >= 11) hexpen = 0;
+                    if (!target.silenced && anti_aoe_minion.ContainsKey(target.name) && anti_aoe_minion[target.name] >= 8) hexpen = 0;
+
+                    //Helpfunctions.Instance.ErrorLog("target.name   " + target.name + "  " + anti_aoe_minion.ContainsKey(target.name) + anti_aoe_minion[target.name]);
+
                     return hexpen;
                 }
             }
@@ -3609,6 +3669,7 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.equality) // aoe penality
             {
+                if (p.enemyMinions.Find(a => a.name == CardDB.cardName.doomsayer) != null) return 0;
                 int hpdestroyed = 0;
                 foreach (Minion mini in p.enemyMinions)
                 {
@@ -4077,7 +4138,7 @@ namespace HREngine.Bots
                 {
                     foreach (Handmanager.Handcard hc in Hrtprozis.Instance.deckCard)
                     {
-                        if ((TAG_RACE)hc.card.race == TAG_RACE.DRAGON) hasBeastIndecks = true;
+                        if ((TAG_RACE)hc.card.race == TAG_RACE.PET) hasBeastIndecks = true;
                     }
                 }
                 if (hasBeastIndecks) return 10;
@@ -4092,8 +4153,6 @@ namespace HREngine.Bots
                 }
                 return 3 * bccount;
             }
-
-
 
             if (name == CardDB.cardName.freezingpotion) return 10;
             if (name == CardDB.cardName.icelance) return 10;
@@ -5314,6 +5373,15 @@ namespace HREngine.Bots
             discardedCardCount.Add(CardDB.cardName.darkshirelibrarian, 1);
         }
 
+        private void setupTransformCards()
+        {
+            TransformCardDatabase.Add(CardDB.cardName.hex, 0);
+            TransformCardDatabase.Add(CardDB.cardName.devolve, 0);
+            TransformCardDatabase.Add(CardDB.cardName.polymorph, 0);
+
+            KillCardDatabase.Add(CardDB.cardName.equality, 0);
+        }
+
         private void setupDestroyOwnCards()
         {
             this.destroyOwnDatabase.Add(CardDB.cardName.brawl, 0);
@@ -6330,7 +6398,8 @@ namespace HREngine.Bots
             this.anti_aoe_minion.Add(CardDB.cardName.kindlygrandmother, 12);
             this.anti_aoe_minion.Add(CardDB.cardName.impgangboss, 3);
             this.anti_aoe_minion.Add(CardDB.cardName.dragonegg, 7);
-            this.anti_aoe_minion.Add(CardDB.cardName.ayablackpaw, 3);
+            this.anti_aoe_minion.Add(CardDB.cardName.ayablackpaw, 8);
+            this.anti_aoe_minion.Add(CardDB.cardName.cairnebloodhoof, 10);
 
         }
 

@@ -301,6 +301,11 @@
                 if (p.ownWeaponName == CardDB.cardName.spiritclaws && p.spellpower >= 1) retval -= 2;
             }
 
+            if (p.ownWeaponName == CardDB.cardName.atiesh)
+            {
+                retval += p.ownWeaponDurability * 8;
+            }
+
             //enemy weapon
             if (!p.enemyHero.frozen)
             {
@@ -423,7 +428,7 @@
                 if (p.ownHeroName != HeroEnum.thief && a.card.card.type == CardDB.cardtype.SPELL && (!a.target.own && a.target.isHero) &&
                     (a.card.card.name != CardDB.cardName.shieldblock &&
                     a.card.card.name != CardDB.cardName.jadelightning
-                    )) retval -= 11;
+                    )) retval -= 5.5f;
                 if (p.ownHeroName == HeroEnum.thief && a.card.card.type == CardDB.cardtype.SPELL && (a.target.isHero && !a.target.own)) retval -= 11;
             }
             if (usecoin >= 1 && useAbili && p.ownMaxMana <= 2) retval -= 40;
@@ -516,7 +521,7 @@
             //        if (!gy.own && gy.cardid == CardDB.cardIDEnum.EX1_007) retval += 7 * gy.entity; //acoyte
             //    }
             //}
-            
+
 
 
 
@@ -585,6 +590,8 @@
                     if (abomination && (m.Hp <= 2 && !m.divineshild && !m.hasDeathrattle())) retval -= m.Angr * 2;
 
                     if (m.souloftheforest >= 1) retval += 5;
+                    if (m.ancestralspirit >= 1) retval += m.Angr + m.maxHp;
+                    if (m.ancestralspirit >= 1 && (m.hasDeathrattle() || m.taunt)) retval += 2;
 
                     //meta
 
@@ -606,7 +613,7 @@
                     if (p.ownHeroName == HeroEnum.mage && (TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL) retval += 0.1f;
                     if (p.ownHeroName == HeroEnum.mage && m.name == CardDB.cardName.flamewaker) retval += 5;
 
-                    
+
                     if (!hasenemytaunt && !p.enemyHero.immune && m.Ready && m.Angr >= 1 && !m.frozen && m.enemyBlessingOfWisdom == 0 && m.enemyPowerWordGlory == 0) retval -= 10 * m.Angr;
                     if (m.enemyBlessingOfWisdom >= 1 || m.enemyPowerWordGlory >= 1) retval -= 8;
 
@@ -616,17 +623,20 @@
                     if (m.name == CardDB.cardName.darkshirecouncilman && p.enemyMinions.Count == 0 && p.ownMaxMana <= 3) retval += 5;
                     if (p.enemyMinions.Count >= 1)
                     {
-                        if ((m.name == CardDB.cardName.darkshirecouncilman || m.name == CardDB.cardName.tundrarhino) && m.Hp <= p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Angr && m.Angr < p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Hp) retval -= 5;
-                        if (m.name == CardDB.cardName.darkshirecouncilman && (m.Hp <= enemypotentialattacktotal) && p.ownMaxMana <= 3) retval -= 10;
-                        if (m.name == CardDB.cardName.tundrarhino && (m.Hp <= enemypotentialattacktotal) && p.ownMaxMana <= 5) retval -= 10;
-                        // 적미니언 공높은놈이랑 비교.. 
-                        // 적미니언 공높은놈보다 피 작고 (한방에죽음) + 적 미니언 공높은놈보다 공낮으면 -밸류;
-                        if (m.name == CardDB.cardName.gadgetzanauctioneer && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null) retval -= 10;
-                        if (m.name == CardDB.cardName.flametonguetotem && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find (a => a.taunt) == null) retval -= 10;
-                        if (m.name == CardDB.cardName.manatidetotem && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null && p.owncards.Count >= 3) retval -= 13;
-                        if (m.name == CardDB.cardName.wickedwitchdoctor && (m.Hp <= enemypotentialattacktotal)) retval -= 5;
-                        if (m.name == CardDB.cardName.darnassusaspirant && (m.Hp <= enemypotentialattacktotal)) retval -= 10;
-                        if (m.name == CardDB.cardName.brannbronzebeard && (m.Hp <= enemypotentialattacktotal)) retval -= 5;
+                        if (m.playedThisTurn && !m.stealth)
+                        {
+                            if ((m.name == CardDB.cardName.darkshirecouncilman || m.name == CardDB.cardName.tundrarhino) && m.Hp <= p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Angr && m.Angr < p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Hp) retval -= 5;
+                            if (m.name == CardDB.cardName.darkshirecouncilman && (m.Hp <= enemypotentialattacktotal) && p.ownMaxMana <= 3) retval -= 10;
+                            if (m.name == CardDB.cardName.tundrarhino && (m.Hp <= enemypotentialattacktotal) && p.ownMaxMana <= 5) retval -= 10;
+                            // 적미니언 공높은놈이랑 비교.. 
+                            // 적미니언 공높은놈보다 피 작고 (한방에죽음) + 적 미니언 공높은놈보다 공낮으면 -밸류;
+                            if (m.name == CardDB.cardName.gadgetzanauctioneer && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null) retval -= 10;
+                            if (m.name == CardDB.cardName.flametonguetotem && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null) retval -= 10;
+                            if (m.name == CardDB.cardName.manatidetotem && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null && p.owncards.Count >= 3) retval -= 13;
+                            if (m.name == CardDB.cardName.wickedwitchdoctor && (m.Hp <= enemypotentialattacktotal)) retval -= 5;
+                            if (m.name == CardDB.cardName.darnassusaspirant && (m.Hp <= enemypotentialattacktotal)) retval -= 10;
+                            if (m.name == CardDB.cardName.brannbronzebeard && (m.Hp <= enemypotentialattacktotal)) retval -= 5;
+                        }
                     }
 
                     if (m.name == CardDB.cardName.manatidetotem && !m.silenced && (p.ownMaxMana <= 4 || p.owncards.Count <= 2)) retval += 3;
@@ -642,6 +652,25 @@
                         retval += 8;
                     }
 
+                    if (m.name == CardDB.cardName.ysera && !m.silenced)
+                    {
+                        retval += 10;
+                    }
+
+                    if (m.name == CardDB.cardName.finjatheflyingstar && m.playedThisTurn)
+                    {
+                        int mulroccnt = 0;
+                        CardDB.Card c;
+                        foreach (KeyValuePair<CardDB.cardIDEnum, int> cid in Hrtprozis.Instance.turnDeck)
+                        {
+                            c = CardDB.Instance.getCardDataFromID(cid.Key);
+                            if ((TAG_RACE)c.race == TAG_RACE.MURLOC)
+                            {
+                                mulroccnt++;
+                            }
+                        }
+                        if (mulroccnt >= 1 && p.enemyMinions.Find(a => a.Hp <= m.Angr) != null && p.enemyMinions.Find(a => a.taunt) == null) retval += 10;
+                    }
 
                     ////attack face when own taunt can control board
                     //if (m.taunt)

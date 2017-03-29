@@ -2739,7 +2739,10 @@ namespace HREngine.Bots
                     temp.Sort((a, b) => a.Angr.CompareTo(b.Angr));//take the weakest
                     if (temp.Count == 0) continue;
                     Minion m = temp[0];
-                    minionGetDestroyed(m);
+                    if (!PenalityManager.Instance.priorityTargets.ContainsKey(m.name) || this.ownHero.Hp + this.ownHero.armor <= 10)
+                    {
+                        minionGetDestroyed(m);
+                    }
                 }
                 if (secretID == CardDB.cardIDEnum.FP1_018) // duplicate
                 {
@@ -5008,7 +5011,7 @@ namespace HREngine.Bots
                     }
                 }
 
-                if (this.ownWeaponCard.name == CardDB.cardName.atiesh)
+                if (this.ownWeaponName == CardDB.cardName.atiesh)
                 {
                     this.callKid(this.getRandomCardForManaMinion(hc.manacost), this.ownMinions.Count, own);
                     this.lowerWeaponDurability(1, own);
@@ -6244,10 +6247,10 @@ namespace HREngine.Bots
 
                         m.endAura(this);
 
-                        if ((!m.silenced && (m.handcard.card.name == CardDB.cardName.cairnebloodhoof || m.handcard.card.name == CardDB.cardName.harvestgolem)) || m.ancestralspirit >= 1)
-                        {
-                            if (Ai.Instance.botBase != null) this.evaluatePenality -= Ai.Instance.botBase.getEnemyMinionValue(m, this) - 1;
-                        }
+                        //if ((!m.silenced && (m.handcard.card.name == CardDB.cardName.cairnebloodhoof || m.handcard.card.name == CardDB.cardName.harvestgolem)) || m.ancestralspirit >= 1)
+                        //{
+                        //    if (Ai.Instance.botBase != null) this.evaluatePenality -= Ai.Instance.botBase.getEnemyMinionValue(m, this) - 1;
+                        //}
                     }
                     else
                     {
@@ -7369,7 +7372,7 @@ namespace HREngine.Bots
             int ancestral = m.ancestralspirit;
             if (m.handcard.card.name == CardDB.cardName.cairnebloodhoof || m.handcard.card.name == CardDB.cardName.harvestgolem || ancestral >= 1)
             {
-                if (Ai.Instance.botBase != null) this.evaluatePenality -= Ai.Instance.botBase.getEnemyMinionValue(m, this) - 1;
+                if (Ai.Instance.botBase != null) this.evaluatePenality += Ai.Instance.botBase.getEnemyMinionValue(m, this) - 1;
             }
 
             //necessary???

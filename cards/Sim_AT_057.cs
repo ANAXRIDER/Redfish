@@ -11,7 +11,7 @@ namespace HREngine.Bots
 
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            if (target != null && target.handcard.card.race == TAG_RACE.PET)
+            if (target != null && target.handcard.card.race == TAG_RACE.BEAST)
             {
                 target.immune = true;
             }

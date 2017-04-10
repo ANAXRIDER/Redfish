@@ -10,7 +10,7 @@ namespace HREngine.Bots
         
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            if (target != null && target.handcard.card.race == TAG_RACE.PET)
+            if (target != null && target.handcard.card.race == TAG_RACE.BEAST)
             {
                 p.callKid(target.handcard.card, target.zonepos, own.own);
                 List<Minion> temp = (own.own) ? p.ownMinions : p.enemyMinions;

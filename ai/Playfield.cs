@@ -5258,7 +5258,7 @@ namespace HREngine.Bots
 
 
 
-                if (m.handcard.card.race == TAG_RACE.PET) 
+                if (m.handcard.card.race == TAG_RACE.BEAST) 
                 {
                     foreach (Handmanager.Handcard hc in this.owncards)
                     {
@@ -6334,7 +6334,7 @@ namespace HREngine.Bots
                 angr += anzOwnRaidleader;
                 angr += anzOwnStormwindChamps;
                 vert += anzOwnStormwindChamps;
-                if (m.handcard.card.race == TAG_RACE.PET)
+                if (m.handcard.card.race == TAG_RACE.BEAST)
                 {
                     angr += anzOwnTimberWolfs;
 
@@ -6371,7 +6371,7 @@ namespace HREngine.Bots
                 angr += anzEnemyStormwindChamps;
                 vert += anzEnemyStormwindChamps;
 
-                if (m.handcard.card.race == TAG_RACE.PET)
+                if (m.handcard.card.race == TAG_RACE.BEAST)
                 {
                     angr += anzEnemyTimberWolfs;
                     if (get) m.charge += anzEnemyTundrarhino;
@@ -6575,13 +6575,13 @@ namespace HREngine.Bots
             {
                 this.tempTrigger.ownMinionsChanged = true;
                 if (m.Hp == 1 && m.Angr == 1 && (m.name == CardDB.cardName.flametonguetotem || m.name == CardDB.cardName.totemgolem || m.name == CardDB.cardName.manatidetotem)) this.tempTrigger.ownTotemSummoned++;
-                if (m.handcard.card.race == TAG_RACE.PET) this.tempTrigger.ownBeastSummoned++;
+                if (m.handcard.card.race == TAG_RACE.BEAST) this.tempTrigger.ownBeastSummoned++;
 
                 //foreach (Minion mn in temp)
                 //{
                 //    //Helpfunctions.Instance.ErrorLog("summonedthisturn" + thisturn.name);
                 //    if (mn.handcard.card.race == TAG_RACE.TOTEM && mn.playedThisTurn) this.tempTrigger.ownTotemSummoned++;
-                //    if (mn.handcard.card.race == TAG_RACE.PET && mn.playedThisTurn) this.tempTrigger.ownBeastSummoned++;
+                //    if (mn.handcard.card.race == TAG_RACE.BEAST && mn.playedThisTurn) this.tempTrigger.ownBeastSummoned++;
                 //}
             }
 

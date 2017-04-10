@@ -12,7 +12,7 @@ namespace HREngine.Bots
         {
             if (p.ownMinions != null)
             {
-                Minion beastmn = p.ownMinions.Find(beast => beast.handcard.card.race == TAG_RACE.PET);
+                Minion beastmn = p.ownMinions.Find(beast => beast.handcard.card.race == TAG_RACE.BEAST);
                 if (beastmn != null) p.minionGetBuffed(beastmn, 1, 1);
 
                 Minion dragonmn = p.ownMinions.Find(beast => beast.handcard.card.race == TAG_RACE.DRAGON);

@@ -607,7 +607,7 @@
                     if (p.ownHeroName == HeroEnum.warlock && (TAG_RACE)m.handcard.card.race == TAG_RACE.DEMON) retval += 0.1f;
                     //if (p.ownHeroName == HeroEnum.warlock && m.name == CardDB.cardName.darkshirecouncilman) retval += 1.5f;
 
-                    if (p.ownHeroName == HeroEnum.hunter && (TAG_RACE)m.handcard.card.race == TAG_RACE.PET) retval += 0.1f;
+                    if (p.ownHeroName == HeroEnum.hunter && (TAG_RACE)m.handcard.card.race == TAG_RACE.BEAST) retval += 0.1f;
                     if (p.ownHeroName == HeroEnum.shaman && (TAG_RACE)m.handcard.card.race == TAG_RACE.TOTEM) retval += 0.2f;
                     if (p.ownHeroName == HeroEnum.pala && m.name == CardDB.cardName.silverhandrecruit) retval += 0.1f; ;
                     if (p.ownHeroName == HeroEnum.mage && (TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL) retval += 0.1f;
@@ -837,7 +837,7 @@
             }
             if (Houndmaster == 0 && p.enemyHeroName == HeroEnum.hunter)
             {
-                if (p.enemyMinions.Find(a => (TAG_RACE)a.handcard.card.race == TAG_RACE.PET) != null && p.enemyMaxMana >= 3) retval -= 5;
+                if (p.enemyMinions.Find(a => (TAG_RACE)a.handcard.card.race == TAG_RACE.BEAST) != null && p.enemyMaxMana >= 3) retval -= 5;
             }
 
 
@@ -1537,7 +1537,7 @@
             //
             if (p.enemyHeroName == HeroEnum.hunter && p.ownHero.Hp <= 12) retval += m.Angr;
             if (p.enemyHeroName == HeroEnum.warlock && (TAG_RACE)m.handcard.card.race == TAG_RACE.DEMON) retval += 0.1f;
-            if (p.enemyHeroName == HeroEnum.hunter && (TAG_RACE)m.handcard.card.race == TAG_RACE.PET)
+            if (p.enemyHeroName == HeroEnum.hunter && (TAG_RACE)m.handcard.card.race == TAG_RACE.BEAST)
             {
                 retval += 0.1f;
                 //if (Houndmaster == 0 && p.enemyMaxMana >= 3) retval += 3;
@@ -1609,7 +1609,7 @@
             {
                 switch (p.enemyHeroName)
                 {
-                    case HeroEnum.hunter: if ((TAG_RACE)m.handcard.card.race != TAG_RACE.PET) retval -= m.Angr / 2; break;
+                    case HeroEnum.hunter: if ((TAG_RACE)m.handcard.card.race != TAG_RACE.BEAST) retval -= m.Angr / 2; break;
                     case HeroEnum.shaman: break;
                     case HeroEnum.druid: break;
                     case HeroEnum.pala: break;

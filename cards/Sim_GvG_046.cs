@@ -16,7 +16,7 @@ namespace HREngine.Bots
             List<Minion> temp  = (own.own) ? p.ownMinions : p.enemyMinions;
             foreach (Minion m in temp)
             {
-                if ((TAG_RACE)m.handcard.card.race == TAG_RACE.PET) bonusattack++;
+                if ((TAG_RACE)m.handcard.card.race == TAG_RACE.BEAST) bonusattack++;
             }
             p.minionGetBuffed(own, bonusattack, 0);
 

@@ -1118,7 +1118,7 @@
 
 
                     if (m.name == CardDB.cardName.scavenginghyena) hasHyena = true;
-                    if (m.handcard.card.race == TAG_RACE.PET) hasBeasts++;
+                    if (m.handcard.card.race == TAG_RACE.BEAST) hasBeasts++;
                     if (m.souloftheforest >= 1 || m.ancestralspirit >= 1) spawnMinions = true;
 
                     switch (m.name)

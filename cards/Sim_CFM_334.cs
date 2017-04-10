@@ -12,7 +12,7 @@ namespace HREngine.Bots
         {
             if (ownplay)
             {
-                Handmanager.Handcard hc = p.searchRandomMinionInHand(p.owncards, Playfield.searchmode.searchLowestCost, Playfield.cardsProperty.Race, TAG_RACE.PET);
+                Handmanager.Handcard hc = p.searchRandomMinionInHand(p.owncards, Playfield.searchmode.searchLowestCost, Playfield.cardsProperty.Race, TAG_RACE.BEAST);
                 if (hc != null)
                 {
                     hc.addattack += 2;

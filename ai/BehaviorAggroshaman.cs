@@ -311,7 +311,7 @@
 
                     //
                     if (p.ownHeroName == HeroEnum.warlock && (TAG_RACE)m.handcard.card.race == TAG_RACE.DEMON) retval += 0.1f;
-                    if (p.ownHeroName == HeroEnum.hunter && (TAG_RACE)m.handcard.card.race == TAG_RACE.PET) retval += 0.1f;
+                    if (p.ownHeroName == HeroEnum.hunter && (TAG_RACE)m.handcard.card.race == TAG_RACE.BEAST) retval += 0.1f;
                     if (p.ownHeroName == HeroEnum.shaman && (TAG_RACE)m.handcard.card.race == TAG_RACE.TOTEM) retval += 0.1f;
                     if (p.ownHeroName == HeroEnum.pala && m.name == CardDB.cardName.silverhandrecruit) retval += 0.1f; ;
                     if (p.ownHeroName == HeroEnum.mage && (TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL) retval += 0.1f;
@@ -482,7 +482,7 @@
             //
             if (p.enemyHeroName == HeroEnum.hunter && p.ownHero.Hp <= 12) retval += m.Angr;
             if (p.enemyHeroName == HeroEnum.warlock && (TAG_RACE)m.handcard.card.race == TAG_RACE.DEMON) retval += 0.1f;
-            if (p.enemyHeroName == HeroEnum.hunter && (TAG_RACE)m.handcard.card.race == TAG_RACE.PET) retval += 0.1f;
+            if (p.enemyHeroName == HeroEnum.hunter && (TAG_RACE)m.handcard.card.race == TAG_RACE.BEAST) retval += 0.1f;
             if (p.enemyHeroName == HeroEnum.shaman && (TAG_RACE)m.handcard.card.race == TAG_RACE.TOTEM) retval += 0.1f;
             if (p.enemyHeroName == HeroEnum.pala && m.name == CardDB.cardName.silverhandrecruit) retval += 0.1f;
             if (p.enemyHeroName == HeroEnum.mage && (TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL) retval += 0.1f;

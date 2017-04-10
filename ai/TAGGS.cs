@@ -228,6 +228,8 @@
         CANT_BE_FATIGUED = 456,
         AUTOATTACK = 457,
         ARMS_DEALING = 458,
+        PENDING_EVOLUTIONS = 461,
+        QUEST = 462,
         TAG_LAST_KNOWN_COST_IN_HAND = 466,
         DEFINING_ENCHANTMENT = 469,
         FINISH_ATTACK_SPELL_ON_DAMAGE = 470,
@@ -245,6 +247,18 @@
         KABAL = 484,
         ADDITIONAL_PLAY_REQS_1 = 515,
         ADDITIONAL_PLAY_REQS_2 = 516,
+        ELEMENTAL_POWERED_UP = 532,
+        QUEST_PROGRESS = 534,
+        QUEST_PROGRESS_TOTAL = 535,
+        QUEST_CONTRIBUTOR = 541,
+        ADAPT = 546,
+        IS_CURRENT_TURN_AN_EXTRA_TURN = 547,
+        EXTRA_TURNS_TAKEN_THIS_GAME = 548,
+        SHIFTING_MINION = 549,
+        SHIFTING_WEAPON = 550,
+        BOSS = 556,
+        STAMPEDE = 564,
+        CORRUPTED = 681,
     }
 
     public enum TAG_ZONE
@@ -299,7 +313,7 @@
         MECHANICAL = 17,
         ELEMENTAL = 18,
         OGRE = 19,
-        PET = 20,
+        BEAST = 20,
         TOTEM = 21,
         NERUBIAN = 22,
         PIRATE = 23,
@@ -350,6 +364,7 @@
         KARA_RESERVE = 24,
         GANGS = 25,
         GANGS_RESERVE = 26,
+        UNGORO = 27,
     }
 
     public enum TAG_RARITY

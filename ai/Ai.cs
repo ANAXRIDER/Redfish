@@ -917,7 +917,7 @@
             if ((hasknife && (oldField.enemyMinions.Count > 0) && (card.type == CardDB.cardtype.MOB || oldField.ownMinions.Count < newField.ownMinions.Count || PenalityManager.Instance.summonMinionSpellsDatabase.ContainsKey(card.name)))
                 || (hasgadget && card.type == CardDB.cardtype.SPELL)
                 || (hasflamewaker && (oldField.enemyMinions.Count > 0) && card.type == CardDB.cardtype.SPELL)
-                || (hasstarving && (TAG_RACE)card.race == TAG_RACE.PET))
+                || (hasstarving && (TAG_RACE)card.race == TAG_RACE.BEAST))
             {
                 return true;
             }

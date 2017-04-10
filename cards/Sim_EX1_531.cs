@@ -11,7 +11,7 @@ namespace HREngine.Bots
 
         public override void onMinionDiedTrigger(Playfield p, Minion triggerEffectMinion, Minion diedMinion)
         {
-            if (triggerEffectMinion.own == diedMinion.own && (TAG_RACE)diedMinion.handcard.card.race == TAG_RACE.PET)
+            if (triggerEffectMinion.own == diedMinion.own && (TAG_RACE)diedMinion.handcard.card.race == TAG_RACE.BEAST)
             {
                 p.minionGetBuffed(triggerEffectMinion, 2, 1);
             }

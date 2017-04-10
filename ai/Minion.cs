@@ -521,7 +521,7 @@
 
                 p.tempTrigger.ownMinionsDied++;
                 if (this.taunt) p.anzOwnTaunt--;
-                if (this.handcard.card.race == TAG_RACE.PET)
+                if (this.handcard.card.race == TAG_RACE.BEAST)
                 {
                     p.tempTrigger.ownBeastDied++;
                 }
@@ -543,7 +543,7 @@
             {
                 p.tempTrigger.enemyMinionsDied++;
                 if (this.taunt) p.anzEnemyTaunt--;
-                if (this.handcard.card.race == TAG_RACE.PET)
+                if (this.handcard.card.race == TAG_RACE.BEAST)
                 {
                     p.tempTrigger.enemyBeastDied++;
                 }

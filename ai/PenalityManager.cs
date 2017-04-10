@@ -1231,7 +1231,7 @@ namespace HREngine.Bots
                     bool haspet = false;
                     foreach (Minion mnn in p.ownMinions)
                     {
-                        if ((TAG_RACE)mnn.handcard.card.race == TAG_RACE.PET) haspet = true;
+                        if ((TAG_RACE)mnn.handcard.card.race == TAG_RACE.BEAST) haspet = true;
                     }
                     if (haspet && p.enemyHero.Hp + p.enemyHero.armor <= 10) pen -= 20;
 
@@ -1349,7 +1349,7 @@ namespace HREngine.Bots
                         bool haspet = false;
                         foreach (Minion mnn in p.ownMinions)
                         {
-                            if ((TAG_RACE)mnn.handcard.card.race == TAG_RACE.PET) haspet = true;
+                            if ((TAG_RACE)mnn.handcard.card.race == TAG_RACE.BEAST) haspet = true;
                         }
                         //Helpfunctions.Instance.ErrorLog("haspet" + haspet);
                         if (!haspet)
@@ -1734,7 +1734,7 @@ namespace HREngine.Bots
                 }
             }
 
-            if (card.type == CardDB.cardtype.MOB && (TAG_RACE)card.race == TAG_RACE.PET)
+            if (card.type == CardDB.cardtype.MOB && (TAG_RACE)card.race == TAG_RACE.BEAST)
             {
                 foreach (Minion mnn in p.ownMinions)
                 {
@@ -1806,7 +1806,7 @@ namespace HREngine.Bots
 
             //        if (a.own.name == CardDB.cardName.starvingbuzzard)
             //        {
-            //            if (!hasBuzzard && card.race == TAG_RACE.PET) pen += 20; 
+            //            if (!hasBuzzard && card.race == TAG_RACE.BEAST) pen += 20; 
             //        }
 
             //        if (a.own.name == CardDB.cardName.knifejuggler)
@@ -1858,7 +1858,7 @@ namespace HREngine.Bots
                 && !(hasAuctioneer && card.type == CardDB.cardtype.SPELL)
                 && !(hasFlamewaker && card.type == CardDB.cardtype.SPELL && p.enemyMinions.Count > 0)
                 && !(hasThunderbluffV && (TAG_RACE)card.race == TAG_RACE.TOTEM)
-                && !(hasBuzzard && (TAG_RACE)card.race == TAG_RACE.PET))
+                && !(hasBuzzard && (TAG_RACE)card.race == TAG_RACE.BEAST))
              {
                  return pen;
              }
@@ -1937,7 +1937,7 @@ namespace HREngine.Bots
                     if (this.lethalHelpers.ContainsKey(a.card.card.name)) continue;
                     if (this.randomEffects.ContainsKey(a.card.card.name)) continue;
                     if (a.card.card.name == CardDB.cardName.thecoin) continue; //no penalty for using coin first
-                    if (hasBuzzard && a.card.card.race == TAG_RACE.PET) continue;
+                    if (hasBuzzard && a.card.card.race == TAG_RACE.BEAST) continue;
                     if (hasThunderbluffV && a.card.card.race == TAG_RACE.TOTEM) continue;
 
 
@@ -2645,7 +2645,7 @@ namespace HREngine.Bots
                         int beasts = 0;
                         foreach (Minion mm in p.ownMinions)
                         {
-                            if (mm.Ready && (TAG_RACE)mm.handcard.card.race == TAG_RACE.PET) beasts++;
+                            if (mm.Ready && (TAG_RACE)mm.handcard.card.race == TAG_RACE.BEAST) beasts++;
                         }
                         if (beasts == 0) return 500;
                     }
@@ -2725,7 +2725,7 @@ namespace HREngine.Bots
                         else
                         {
                             //ignore that minion if it does not have charge, or we can give him charge ---> warsong was deleted ;_;
-                            if (!(name == CardDB.cardName.nightblade || card.Charge || this.silenceDatabase.ContainsKey(name) || ((TAG_RACE)card.race == TAG_RACE.PET && p.ownMinions.Find(x => x.name == CardDB.cardName.tundrarhino) != null) || p.owncards.Find(x => x.card.name == CardDB.cardName.charge) != null))
+                            if (!(name == CardDB.cardName.nightblade || card.Charge || this.silenceDatabase.ContainsKey(name) || ((TAG_RACE)card.race == TAG_RACE.BEAST && p.ownMinions.Find(x => x.name == CardDB.cardName.tundrarhino) != null) || p.owncards.Find(x => x.card.name == CardDB.cardName.charge) != null))
                             {
                                 return 500;
                             }
@@ -2933,7 +2933,7 @@ namespace HREngine.Bots
                 //{
                 //    if (hcc.getManaCost(p) <= p.mana)
                 //    {
-                //        if ((TAG_RACE)hcc.card.race == TAG_RACE.PET) pen += 5;
+                //        if ((TAG_RACE)hcc.card.race == TAG_RACE.BEAST) pen += 5;
                 //        if (hcc.card.name == CardDB.cardName.animalcompanion) pen += 5;
                 //        if (hcc.card.type == CardDB.cardtype.MOB) pen++;
                 //    }
@@ -3125,7 +3125,7 @@ namespace HREngine.Bots
                     bool hasOnMinionDiesMinion = false;
                     foreach (Minion mnn in p.ownMinions)
                     {
-                        if (mnn.name == CardDB.cardName.scavenginghyena && m.handcard.card.race == TAG_RACE.PET) hasOnMinionDiesMinion = true;
+                        if (mnn.name == CardDB.cardName.scavenginghyena && m.handcard.card.race == TAG_RACE.BEAST) hasOnMinionDiesMinion = true;
                         if (mnn.name == CardDB.cardName.flesheatingghoul || mnn.name == CardDB.cardName.cultmaster) hasOnMinionDiesMinion = true;
                     }
                     if (hasOnMinionDiesMinion) return 0;
@@ -4082,7 +4082,7 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.markofyshaarj)
             {
-                if ((TAG_RACE)target.handcard.card.race != TAG_RACE.PET) 
+                if ((TAG_RACE)target.handcard.card.race != TAG_RACE.BEAST) 
                 {
                     return 4;
                 }
@@ -4127,7 +4127,7 @@ namespace HREngine.Bots
                 bool hasBeastIndecks = false;
                 foreach (Handmanager.Handcard hc in p.owncards)
                 {
-                    if (hc.card.race == TAG_RACE.PET) hasBeast = true;
+                    if (hc.card.race == TAG_RACE.BEAST) hasBeast = true;
                 }
                 if (hasBeast)
                 {
@@ -4138,7 +4138,7 @@ namespace HREngine.Bots
                 {
                     foreach (Handmanager.Handcard hc in Hrtprozis.Instance.deckCard)
                     {
-                        if ((TAG_RACE)hc.card.race == TAG_RACE.PET) hasBeastIndecks = true;
+                        if ((TAG_RACE)hc.card.race == TAG_RACE.BEAST) hasBeastIndecks = true;
                     }
                 }
                 if (hasBeastIndecks) return 10;
@@ -4272,7 +4272,7 @@ namespace HREngine.Bots
                     bool haspetunder2hp = false;
                     foreach (Minion mnn in p.ownMinions)
                     {
-                        if ((TAG_RACE)mnn.handcard.card.race == TAG_RACE.PET) haspetunder2hp = true;
+                        if ((TAG_RACE)mnn.handcard.card.race == TAG_RACE.BEAST) haspetunder2hp = true;
                     }
 
                     foreach(SecretItem si in Probabilitymaker.Instance.enemySecrets)

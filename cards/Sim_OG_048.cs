@@ -11,7 +11,7 @@ namespace HREngine.Bots
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             p.minionGetBuffed(target, 2, 2);
-			if ((TAG_RACE)target.handcard.card.race == TAG_RACE.PET) p.drawACard(CardDB.cardName.unknown, ownplay);
+			if ((TAG_RACE)target.handcard.card.race == TAG_RACE.BEAST) p.drawACard(CardDB.cardName.unknown, ownplay);
         }
     }
 }

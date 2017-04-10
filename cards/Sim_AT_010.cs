@@ -16,7 +16,7 @@ namespace HREngine.Bots
             bool haspet = false;
             foreach (Minion m in (own.own) ? p.ownMinions : p.enemyMinions)
             {
-                if (m.handcard.card.race == TAG_RACE.PET) haspet = true;
+                if (m.handcard.card.race == TAG_RACE.BEAST) haspet = true;
             }
 
             if (!haspet) return;

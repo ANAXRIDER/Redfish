@@ -14,7 +14,7 @@ namespace HREngine.Bots
             List<Minion> temp = (own.own) ? p.ownMinions : p.enemyMinions;
             foreach (Minion m in temp)
             {
-                if (m.handcard.card.race == TAG_RACE.PET)
+                if (m.handcard.card.race == TAG_RACE.BEAST)
                 {
                     own.taunt = true;
                     break;

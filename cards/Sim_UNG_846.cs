@@ -9,6 +9,11 @@ namespace HREngine.Bots
 
         //Deathrattle: Add a random Mage spell to your hand.
 
+        public override void onDeathrattle(Playfield p, Minion m)
+        {
+            p.CardToHand(CardDB.cardName.unknown, m.own);
+        }
+
     }
 
 }

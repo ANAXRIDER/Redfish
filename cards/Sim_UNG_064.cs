@@ -9,6 +9,11 @@ namespace HREngine.Bots
 
         //Combo: Destroy a minion.
 
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+            if (p.cardsPlayedThisTurn >= 1 && target != null) p.minionGetDestroyed(target);
+        }
+
     }
 
 }

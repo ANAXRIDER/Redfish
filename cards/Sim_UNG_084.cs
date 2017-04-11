@@ -9,6 +9,11 @@ namespace HREngine.Bots
 
         //Battlecry: Deal 2 damage.
 
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+            p.minionGetDamageOrHeal(target, 2);
+        }
+
     }
 
 }

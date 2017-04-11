@@ -9,6 +9,32 @@ namespace HREngine.Bots
 
         //Your spells cost (1) less.
 
+
+        public override void onAuraStarts(Playfield p, Minion own)
+        {
+            if (own.own)
+            {
+                p.anzOwnSorcerersApprentice++;
+            }
+            else
+            {
+                p.anzEnemysorcerersapprentice++;
+
+            }
+
+        }
+
+        public override void onAuraEnds(Playfield p, Minion own)
+        {
+            if (own.own)
+            {
+                p.anzOwnSorcerersApprentice--;
+            }
+            else
+            {
+                p.anzEnemysorcerersapprentice--;
+            }
+        }
     }
 
 }

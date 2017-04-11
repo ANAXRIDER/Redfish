@@ -9,6 +9,12 @@ namespace HREngine.Bots
 
         //Deathrattle: Add two 1/2 Elementals to your hand.
 
+        public override void onDeathrattle(Playfield p, Minion m)
+        {
+            p.CardToHand(CardDB.cardName.flameelemental, m.own);
+            p.CardToHand(CardDB.cardName.flameelemental, m.own);
+        }
+
     }
 
 }

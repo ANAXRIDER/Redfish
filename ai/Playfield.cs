@@ -262,6 +262,8 @@ namespace HREngine.Bots
         public List<Handmanager.Handcard> owncards;
         public int owncarddraw;
 
+        public int ownCardToHandcount;
+
         public List<Action> playactions;
 
         public int enemycarddraw;
@@ -283,6 +285,7 @@ namespace HREngine.Bots
         public int anzPintSizedSummoner;
         public int anzManaWraith;
         public int anzVentureCoMercenary;
+        public int anzEmeraldHiveQueen;
         public int anzSummoningPortal;
         public int myCardsCostLess;
         public int allSpellCostLess;
@@ -559,6 +562,7 @@ namespace HREngine.Bots
             this.ownWeaponAttack = prozis.heroWeaponAttack;
             this.ownWeaponName = prozis.ownHeroWeapon;
             this.owncarddraw = 0;
+            this.ownCardToHandcount = 0;
 
 
             this.enemyWeaponAttack = prozis.enemyWeaponAttack;//dont know jet
@@ -604,6 +608,7 @@ namespace HREngine.Bots
             this.anzPintSizedSummoner = 0;
             this.anzManaWraith = 0;
             this.anzVentureCoMercenary = 0;
+            this.anzEmeraldHiveQueen = 0;
             this.anzSummoningPortal = 0;
             this.anzNerubarWeblord = 0;
 
@@ -691,6 +696,9 @@ namespace HREngine.Bots
                         continue;
                     case CardDB.cardName.venturecomercenary:
                         this.anzVentureCoMercenary++;
+                        continue;
+                    case CardDB.cardName.emeraldhivequeen:
+                        this.anzEmeraldHiveQueen++;
                         continue;
                     case CardDB.cardName.summoningportal:
                         this.anzSummoningPortal++;
@@ -1046,6 +1054,7 @@ namespace HREngine.Bots
             this.attackFaceHP = p.attackFaceHP;
 
             this.owncarddraw = p.owncarddraw;
+            this.ownCardToHandcount = p.ownCardToHandcount;
 
             this.enemyWeaponAttack = p.enemyWeaponAttack;
             this.enemyWeaponDurability = p.enemyWeaponDurability;
@@ -1112,6 +1121,7 @@ namespace HREngine.Bots
             this.anzPintSizedSummoner = p.anzPintSizedSummoner;
             this.anzManaWraith = p.anzManaWraith;
             this.anzVentureCoMercenary = p.anzVentureCoMercenary;
+            this.anzEmeraldHiveQueen = p.anzEmeraldHiveQueen;
             this.anzOwnLoatheb = p.anzOwnLoatheb;
             this.anzEnemyLoatheb = p.anzEnemyLoatheb;
 
@@ -1303,6 +1313,7 @@ namespace HREngine.Bots
 
             anzMinionsDiedThisTurn = 0;
             owncarddraw = 0;
+            ownCardToHandcount = 0;
             enemycarddraw = 0;
             playactions.Clear();
             enemyAnzCards = owncards.Count;
@@ -1350,6 +1361,7 @@ namespace HREngine.Bots
 
             //count...
             anzVentureCoMercenary = 0;
+            anzEmeraldHiveQueen = 0;
             anzSummoningPortal = 0;
             anzNerubarWeblord = 0;
 
@@ -1361,6 +1373,7 @@ namespace HREngine.Bots
                 if (m.name == CardDB.cardName.nerubarweblord) anzNerubarWeblord++;
                 if (m.name == CardDB.cardName.summoningportal) anzSummoningPortal++;
                 if (m.name == CardDB.cardName.venturecomercenary) anzVentureCoMercenary++;
+                if (m.name == CardDB.cardName.emeraldhivequeen) anzEmeraldHiveQueen++;
             }
 
             foreach (Minion m in this.enemyMinions)
@@ -3015,6 +3028,7 @@ namespace HREngine.Bots
                 this.anzOwnSaboteur = 0;
                 
                 this.owncarddraw = 0;//todo: realy?
+                this.ownCardToHandcount = 0;
                 this.sEnemTurn = false;
 
             }
@@ -3474,6 +3488,7 @@ namespace HREngine.Bots
 
                     this.triggerAMinionDealedDmg(attacker, oldhp - defender.Hp, attackerAngr);
                 }
+                if (!attacker.silenced && attacker.name == CardDB.cardName.frozencrusher) attacker.frozen = true;
                 doDmgTriggers();
                 return;
             }
@@ -3584,6 +3599,11 @@ namespace HREngine.Bots
                             }
                         }
                     }
+                    break;
+                case CardDB.cardName.frozencrusher:
+                    {
+                        attacker.frozen = true;
+                    }                    
                     break;
             }
 
@@ -4399,6 +4419,11 @@ namespace HREngine.Bots
                     this.minionGetDamageOrHeal(this.enemyHero, 2 * m.anzGotDmg, true);
                 }
 
+                if (m.name == CardDB.cardName.bittertidehydra && m.anzGotDmg >= 1)
+                {
+                    this.minionGetDamageOrHeal(this.ownHero, 3 * m.anzGotDmg, true);
+                }
+
                 if (m.name == CardDB.cardName.wrathguard && m.anzGotDmg >= 1)
                 {
                     m.handcard.card.sim_card.onMinionGotDmgTrigger(this, m, m.own);
@@ -4505,6 +4530,11 @@ namespace HREngine.Bots
                 if (m.name == CardDB.cardName.axeflinger && m.anzGotDmg >= 1)
                 {
                     this.minionGetDamageOrHeal(this.ownHero, 2 * m.anzGotDmg, true);
+                }
+
+                if (m.name == CardDB.cardName.bittertidehydra && m.anzGotDmg >= 1)
+                {
+                    this.minionGetDamageOrHeal(this.enemyHero, 3 * m.anzGotDmg, true);
                 }
 
                 if (m.name == CardDB.cardName.wrathguard && m.anzGotDmg >= 1)
@@ -6990,6 +7020,38 @@ namespace HREngine.Bots
                 if (this.enemyAnzCards != oldenemyanz) this.triggerCardsChanged(false);
             }
 
+        }
+
+        public void CardToHand(CardDB.cardName ss, bool own)
+        {
+            CardDB.cardName s = ss;
+
+            // cant hold more than 10 cards
+            if (own)
+            {
+                if (this.owncards.Count >= 10)
+                {
+                    this.evaluatePenality += 5;
+                    return;
+                }
+            }
+
+            if (s == CardDB.cardName.unknown)
+            {
+                CardDB.Card plchldr = new CardDB.Card { name = CardDB.cardName.unknown };
+                Handmanager.Handcard hc = new Handmanager.Handcard { card = plchldr, position = this.owncards.Count + 1, manacost = 1000, entity = this.getNextEntity() };
+                this.owncards.Add(hc);
+                this.triggerCardsChanged(true);
+                this.evaluatePenality -= 0.5f;
+                this.ownCardToHandcount++;
+            }
+            else
+            {
+                CardDB.Card c = CardDB.Instance.getCardData(s);
+                Handmanager.Handcard hc = new Handmanager.Handcard { card = c, position = this.owncards.Count + 1, manacost = c.calculateManaCost(this), entity = this.getNextEntity() };
+                this.owncards.Add(hc);
+                this.triggerCardsChanged(true);
+            }
         }
 
 

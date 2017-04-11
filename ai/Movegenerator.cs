@@ -181,7 +181,12 @@
                         if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CFM_602a);
                         if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CFM_602b);
                     }
-                    
+                    if (c.name == CardDB.cardName.shellshifter)
+                    {
+                        if (i == 1) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.UNG_101t);
+                        if (i == 2) c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.UNG_101t2);
+                    }
+
 
                 }
                 else if (hasfandral)
@@ -596,6 +601,11 @@
                     foreach (Minion trgt in trgts)
                     {
                         if (!m.silenced && m.name == CardDB.cardName.icehowl && trgt.isHero)
+                        {
+                            continue; //this minion cant attack heros!
+                        }
+
+                        if (!m.silenced && m.playedThisTurn && m.name == CardDB.cardName.chargeddevilsaur && trgt.isHero)
                         {
                             continue; //this minion cant attack heros!
                         }

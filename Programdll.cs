@@ -1323,7 +1323,8 @@ namespace HREngine.Bots
                     || card == CardDB.cardName.tuskarrtotemic
                     || card == CardDB.cardName.callofthewild
                     || card == CardDB.cardName.quickshot
-                    || card == CardDB.cardName.unleashthehounds)
+                    || card == CardDB.cardName.unleashthehounds
+                    || card == CardDB.cardName.southseadeckhand)
                 {
                     return false;
                 }
@@ -1903,7 +1904,7 @@ namespace HREngine.Bots
                                     }
                                 }
 
-                                if (hashyena && daum.bestmove.own.Hp <= daum.bestmove.target.Angr && !daum.bestmove.target.isHero && (TAG_RACE)daum.bestmove.own.handcard.card.race == TAG_RACE.PET)
+                                if (hashyena && daum.bestmove.own.Hp <= daum.bestmove.target.Angr && !daum.bestmove.target.isHero && (TAG_RACE)daum.bestmove.own.handcard.card.race == TAG_RACE.BEAST)
                                 {
                                     System.Threading.Thread.Sleep(1500);
                                 }
@@ -3236,7 +3237,7 @@ namespace HREngine.Bots
                 try
                 {
                     string data = "";
-                    System.Threading.Thread.Sleep(10);
+                    System.Threading.Thread.Sleep(5);
                     if (network)
                     {
                         KeyValuePair<string, string> msg = FishNet.Instance.readMessage();
@@ -3276,7 +3277,7 @@ namespace HREngine.Bots
                             {
                                 if (passiveWaiting)
                                 {
-                                    System.Threading.Thread.Sleep(10);
+                                    System.Threading.Thread.Sleep(5);
                                     return false;
                                 }
                                 continue;
@@ -3311,7 +3312,7 @@ namespace HREngine.Bots
                 }
                 catch
                 {
-                    System.Threading.Thread.Sleep(10);
+                    System.Threading.Thread.Sleep(5);
                 }
             }
             this.waitingForSilver = false;
@@ -3427,7 +3428,7 @@ namespace HREngine.Bots
             {
                 Instance.flushLogg();
                 Instance.flushErrorLog();
-                await Task.Delay(250, cancellationToken);
+                await Task.Delay(50, cancellationToken);
             }
         }
 

@@ -9,6 +9,11 @@ namespace HREngine.Bots
 
         //Can't be targeted by spells or Hero Powers.
 
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+            own.cantBeTargetedBySpellsOrHeroPowers = true;
+        }
+
     }
 
 }

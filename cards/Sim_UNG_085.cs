@@ -9,6 +9,16 @@ namespace HREngine.Bots
 
         //Your minions cost (2) more.
 
+        public override void onAuraStarts(Playfield p, Minion own)
+        {
+            if (own.own) p.anzEmeraldHiveQueen++;
+        }
+
+        public override void onAuraEnds(Playfield p, Minion own)
+        {
+            if (own.own) p.anzEmeraldHiveQueen--;
+        }
+
     }
 
 }

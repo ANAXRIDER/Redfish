@@ -6760,6 +6760,7 @@ namespace HREngine.Bots
                         if (p.anzOwnAviana > 0) retval = 1;
 
                         offset += p.anzVentureCoMercenary * 3;
+                        offset += p.anzEmeraldHiveQueen * 2;
 
                         offset += p.anzManaWraith;
 
@@ -6949,6 +6950,7 @@ namespace HREngine.Bots
                     case cardtype.MOB:
                         //Manacosts changes with Venture Co. Mercenary
                         offset += p.anzVentureCoMercenary * 3;
+                        offset += p.anzEmeraldHiveQueen * 2;
                         //Manacosts changes with mana wraith
                         offset += p.anzManaWraith;
 
@@ -7161,6 +7163,7 @@ namespace HREngine.Bots
 
                     //Manacosts changes with soeldner der venture co.
                     offset += -p.anzVentureCoMercenary * 3;
+                    offset += -p.anzEmeraldHiveQueen * 2;
                     //Manacosts changes with mana-ghost
                     offset += -p.anzManaWraith;
                     //weblord

@@ -9,6 +9,12 @@ namespace HREngine.Bots
 
         //Taunt Battlecry: Discover a Taunt_minion.
 
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+            p.CardToHand(CardDB.cardName.unknown, own.own);
+        }
+
+
     }
 
 }

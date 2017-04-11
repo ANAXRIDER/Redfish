@@ -1036,9 +1036,9 @@
             {
                 if (!ExistAttackedMinionCount)
                 {
-                    if (lethalmissing <= 5 && !p.enemyHero.immune) retval += p.owncarddraw * 2;
-                    if (lethalmissing <= 4 && p.ownMinions.Count >= 1 && !p.enemyHero.immune) retval += p.owncarddraw * 3;
-                    if (lethalmissing <= 2 && p.ownMinions.Count >= 1 && !p.enemyHero.immune) retval += p.owncarddraw * 5;
+                    if (lethalmissing <= 5 && !p.enemyHero.immune) retval += (p.owncarddraw + p.ownCardToHandcount) * 2;
+                    if (lethalmissing <= 4 && p.ownMinions.Count >= 1 && !p.enemyHero.immune) retval += (p.owncarddraw + p.ownCardToHandcount) * 3;
+                    if (lethalmissing <= 2 && p.ownMinions.Count >= 1 && !p.enemyHero.immune) retval += (p.owncarddraw + p.ownCardToHandcount) * 5;
                 }
             }
 
@@ -1346,7 +1346,7 @@
                     if (m.name == CardDB.cardName.manatidetotem && !m.silenced) p.owncarddraw -= 1;
                 }
 
-                if (p.owncarddraw >= 1) retval += 4500;
+                if (p.owncarddraw >= 1 || p.ownCardToHandcount >= 1) retval += 4500;
                 if (p.enemyHero.immune) retval += 4800;
                 retval -= 5000;
 

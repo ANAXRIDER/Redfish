@@ -9,6 +9,11 @@ namespace HREngine.Bots
 
         //Battlecry: Add a 1/2 Elemental to your hand.
 
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+            p.CardToHand(CardDB.cardName.flameelemental, own.own);
+        }
+
     }
 
 }

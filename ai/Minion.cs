@@ -65,15 +65,18 @@
 
         public bool concedal;
         public int ancestralspirit;
+        public int spikeridgedteed;
         public int souloftheforest;
         public int explorershat;
         public int infest;
+        public int spiritecho;
 
         public int ownBlessingOfWisdom;
         public int enemyBlessingOfWisdom;
         public int ownPowerWordGlory;
         public int enemyPowerWordGlory;
         public int spellpower;
+        public int ReturnSpellCount;
 
         public bool cantBeTargetedBySpellsOrHeroPowers;
 
@@ -141,6 +144,7 @@
             this.shadowmadnessed = m.shadowmadnessed;
 
             this.ancestralspirit = m.ancestralspirit;
+            this.spikeridgedteed = m.spikeridgedteed;
             this.destroyOnOwnTurnStart = m.destroyOnOwnTurnStart; // depends on own!
             this.destroyOnEnemyTurnStart = m.destroyOnEnemyTurnStart; // depends on own!
             this.destroyOnOwnTurnEnd = m.destroyOnOwnTurnEnd; // depends on own!
@@ -150,12 +154,14 @@
             this.souloftheforest = m.souloftheforest;
             this.explorershat = m.explorershat;
             this.infest = m.infest;
+            this.spiritecho = m.spiritecho;
 
             this.ownBlessingOfWisdom = m.ownBlessingOfWisdom;
             this.enemyBlessingOfWisdom = m.enemyBlessingOfWisdom;
             this.ownPowerWordGlory = m.ownPowerWordGlory;
             this.enemyPowerWordGlory = m.enemyPowerWordGlory;
             this.spellpower = m.spellpower;
+            this.ReturnSpellCount = m.ReturnSpellCount;
 
             this.Hp = m.Hp;
             this.maxHp = m.maxHp;
@@ -224,6 +230,7 @@
             this.shadowmadnessed = m.shadowmadnessed;
 
             this.ancestralspirit = m.ancestralspirit;
+            this.spikeridgedteed = m.spikeridgedteed;
             this.destroyOnOwnTurnStart = m.destroyOnOwnTurnStart; // depends on own!
             this.destroyOnEnemyTurnStart = m.destroyOnEnemyTurnStart; // depends on own!
             this.destroyOnOwnTurnEnd = m.destroyOnOwnTurnEnd; // depends on own!
@@ -233,12 +240,14 @@
             this.souloftheforest = m.souloftheforest;
             this.explorershat = m.explorershat;
             this.infest = m.infest;
+            this.spiritecho = m.spiritecho;
 
             this.ownBlessingOfWisdom = m.ownBlessingOfWisdom;
             this.enemyBlessingOfWisdom = m.enemyBlessingOfWisdom;
             this.ownPowerWordGlory = m.ownPowerWordGlory;
             this.enemyPowerWordGlory = m.enemyPowerWordGlory;
             this.spellpower = m.spellpower;
+            this.ReturnSpellCount = m.ReturnSpellCount;
 
             this.Hp = m.Hp;
             this.maxHp = m.maxHp;
@@ -580,7 +589,11 @@
                 return;
             }
 
-            if (!silenced && (name == CardDB.cardName.ragnarosthefirelord || name == CardDB.cardName.ancientwatcher || (name == CardDB.cardName.argentwatchman && !this.canAttackNormal) || (name == CardDB.cardName.eeriestatue && !this.canAttackNormal))) return;
+            if (!silenced && (name == CardDB.cardName.ragnarosthefirelord ||
+                name == CardDB.cardName.ancientwatcher ||
+                name == CardDB.cardName.humongousrazorleaf ||
+                (name == CardDB.cardName.argentwatchman && !this.canAttackNormal) ||
+                (name == CardDB.cardName.eeriestatue && !this.canAttackNormal))) return;
 
             if (!frozen && ((charge >= 1 && playedThisTurn) || !playedThisTurn || shadowmadnessed) && (numAttacksThisTurn == 0 || (numAttacksThisTurn == 1 && windfury) || (!silenced && this.name == CardDB.cardName.v07tr0n && numAttacksThisTurn <= 3))) Ready = true;
 
@@ -596,7 +609,10 @@
                 return;
             }
 
-            if (!silenced && (name == CardDB.cardName.ragnarosthefirelord || name == CardDB.cardName.ancientwatcher || (name == CardDB.cardName.argentwatchman && !this.canAttackNormal))) return;
+            if (!silenced && (name == CardDB.cardName.ragnarosthefirelord || 
+                name == CardDB.cardName.ancientwatcher ||
+                name == CardDB.cardName.humongousrazorleaf ||
+                (name == CardDB.cardName.argentwatchman && !this.canAttackNormal))) return;
 
             if (!silenced && (name == CardDB.cardName.eeriestatue))
             {
@@ -642,6 +658,7 @@
             p.minionGetOrEraseAllAreaBuffs(this, false);
             //buffs
             ancestralspirit = 0;
+            spikeridgedteed = 0;
             destroyOnOwnTurnStart = false;
             destroyOnEnemyTurnStart = false;
             destroyOnOwnTurnEnd = false;
@@ -654,6 +671,8 @@
             enemyBlessingOfWisdom = 0;
             ownPowerWordGlory = 0;
             enemyPowerWordGlory = 0;
+            ReturnSpellCount = 0;
+            spiritecho = 0;
 
             cantBeTargetedBySpellsOrHeroPowers = false;
 
@@ -791,6 +810,7 @@
                         continue;
                     case CardDB.cardIDEnum.AT_109e: this.canAttackNormal = true; continue; //Argent Watchman
                     case CardDB.cardIDEnum.EX1_334e: this.shadowmadnessed = true; continue; //Dark Command
+                    case CardDB.cardIDEnum.UNG_953e: this.ReturnSpellCount++; continue; //Inspired (Primalfin Champion Deathrattle: Return any spells you cast on this minion to your hand.)
 
                     // destroy-------------------------------------------------
                     case CardDB.cardIDEnum.CS2_063e:
@@ -809,9 +829,11 @@
                     // deathrattles-------------------------------------------------
                     case CardDB.cardIDEnum.LOE_105e: this.explorershat++; continue;
                     case CardDB.cardIDEnum.CS2_038e: this.ancestralspirit++; continue;
+                    case CardDB.cardIDEnum.UNG_952e: this.spikeridgedteed++; continue;
                     case CardDB.cardIDEnum.EX1_158e: this.souloftheforest++; continue;
                     case CardDB.cardIDEnum.OG_045a: this.infest++; continue;
                     case CardDB.cardIDEnum.LOE_019e: this.extraParam2 = me.copyDeathrattle; continue; //unearthedraptor
+                    case CardDB.cardIDEnum.UNG_956e: this.spiritecho++; continue; //Echoed Spirit
 
 
                     //concedal-------------------------------------------------

@@ -9,6 +9,18 @@ namespace HREngine.Bots
 
         //Deal $2 damage to a minion and $1 damage to adjacent ones.
 
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        {
+            int dmg1 = (ownplay) ? p.getSpellDamageDamage(2) : p.getEnemySpellDamageDamage(2);
+            int dmg2 = (ownplay) ? p.getSpellDamageDamage(1) : p.getEnemySpellDamageDamage(1);
+            List<Minion> temp = (target.own) ? p.ownMinions : p.enemyMinions;
+            p.minionGetDamageOrHeal(target, dmg1);
+            foreach (Minion m in temp)
+            {
+                if (m.zonepos + 1 == target.zonepos || m.zonepos - 1 == target.zonepos) p.minionGetDamageOrHeal(m, dmg2);
+            }
+        }
+
     }
 
 }

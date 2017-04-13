@@ -9,6 +9,11 @@ namespace HREngine.Bots
 
         //Battlecry: Freeze an_enemy.
 
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+            if (!target.own) target.frozen = true;
+        }
+
     }
 
 }

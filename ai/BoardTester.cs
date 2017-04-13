@@ -731,6 +731,9 @@ namespace HREngine.Bots
                         int ancestralspirit = 0;//adjadmg
                         if (s.Contains(" ancstrl(")) ancestralspirit = Convert.ToInt32(s.Split(new string[] { " ancstrl(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
+                        int spikeridgedteed = 0;//adjadmg
+                        if (s.Contains(" spikeridged(")) spikeridgedteed = Convert.ToInt32(s.Split(new string[] { " spikeridged(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
                         int ownBlessingOfWisdom = 0;//adjadmg
                         if (s.Contains(" ownBlssng(")) ownBlessingOfWisdom = Convert.ToInt32(s.Split(new string[] { " ownBlssng(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
@@ -752,6 +755,11 @@ namespace HREngine.Bots
                         int infest = 0;//adjadmg
                         if (s.Contains(" infest(")) infest = Convert.ToInt32(s.Split(new string[] { " infest(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
+                        int returnspellcount = 0;//adjadmg
+                        if (s.Contains(" ReturnSpellCNT(")) returnspellcount = Convert.ToInt32(s.Split(new string[] { " ReturnSpellCNT(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int spiritecho = 0;
+                        if (s.Contains(" spiritecho(")) spiritecho = Convert.ToInt32(s.Split(new string[] { " spiritecho(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
                         tempminion = createNewMinion(new Handmanager.Handcard(CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(minionid))), zp, true);
                         tempminion.own = true;
@@ -788,6 +796,7 @@ namespace HREngine.Bots
                         tempminion.spellpower = spllpwr;
 
                         tempminion.ancestralspirit = ancestralspirit;
+                        tempminion.spikeridgedteed = spikeridgedteed;
                         tempminion.ownBlessingOfWisdom = ownBlessingOfWisdom;
                         tempminion.enemyBlessingOfWisdom = enemyBlessingOfWisdom;
                         tempminion.ownPowerWordGlory = ownPwordGlory;
@@ -795,6 +804,8 @@ namespace HREngine.Bots
                         tempminion.souloftheforest = souloftheforest;
                         tempminion.explorershat = explorersHat;
                         tempminion.infest = infest;
+                        tempminion.ReturnSpellCount = returnspellcount;
+                        tempminion.spiritecho = spiritecho;
 
                         tempminion.canAttackNormal = false;
                         if (ready == true) tempminion.canAttackNormal = true;
@@ -864,6 +875,9 @@ namespace HREngine.Bots
                         int ancestralspirit = 0;//adjadmg
                         if (s.Contains(" ancstrl(")) ancestralspirit = Convert.ToInt32(s.Split(new string[] { " ancstrl(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
+                        int spikeridgedteed = 0;//adjadmg
+                        if (s.Contains(" spikeridged(")) spikeridgedteed = Convert.ToInt32(s.Split(new string[] { " spikeridged(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
                         int ownBlessingOfWisdom = 0;//adjadmg
                         if (s.Contains(" ownBlssng(")) ownBlessingOfWisdom = Convert.ToInt32(s.Split(new string[] { " ownBlssng(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
@@ -884,6 +898,12 @@ namespace HREngine.Bots
 
                         int infest = 0;//adjadmg
                         if (s.Contains(" infest(")) infest = Convert.ToInt32(s.Split(new string[] { " infest(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int returnspellcount = 0;//adjadmg
+                        if (s.Contains(" ReturnSpellCNT(")) returnspellcount = Convert.ToInt32(s.Split(new string[] { " ReturnSpellCNT(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int spiritecho = 0;
+                        if (s.Contains(" spiritecho(")) spiritecho = Convert.ToInt32(s.Split(new string[] { " spiritecho(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
                         tempminion = createNewMinion(new Handmanager.Handcard(CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(minionid))), zp, false);
                         tempminion.own = false;
@@ -920,6 +940,7 @@ namespace HREngine.Bots
                         tempminion.spellpower = spllpwr;
 
                         tempminion.ancestralspirit = ancestralspirit;
+                        tempminion.spikeridgedteed = spikeridgedteed;
                         tempminion.ownBlessingOfWisdom = ownBlessingOfWisdom;
                         tempminion.enemyBlessingOfWisdom = enemyBlessingOfWisdom;
                         tempminion.ownPowerWordGlory = ownPwordGlory;
@@ -927,6 +948,9 @@ namespace HREngine.Bots
                         tempminion.souloftheforest = souloftheforest;
                         tempminion.explorershat = explorersHat;
                         tempminion.infest = infest;
+                        tempminion.ReturnSpellCount = returnspellcount;
+                        tempminion.spiritecho = spiritecho;
+
 
                         if (maxhp > hp) tempminion.wounded = true;
                         tempminion.updateReadyness();

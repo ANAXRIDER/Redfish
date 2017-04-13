@@ -9,6 +9,15 @@ namespace HREngine.Bots
 
         //Battlecry: Destroy a Pirate and gain +1/+1.
 
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+            if (target != null && target.handcard.card.race == TAG_RACE.PIRATE)
+            {
+                p.minionGetDestroyed(target);
+                p.minionGetBuffed(own, 1, 1);
+            }
+        }
+
     }
 
 }

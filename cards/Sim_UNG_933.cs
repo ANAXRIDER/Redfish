@@ -9,6 +9,17 @@ namespace HREngine.Bots
 
         //Battlecry: Destroy all damaged minions.
 
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+            foreach (Minion m in p.ownMinions)
+            {
+                if (m.wounded) p.minionGetDestroyed(m);
+            }
+            foreach (Minion m in p.enemyMinions)
+            {
+                if (m.wounded) p.minionGetDestroyed(m);
+            }
+        }
     }
 
 }

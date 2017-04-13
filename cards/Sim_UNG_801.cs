@@ -9,6 +9,12 @@ namespace HREngine.Bots
 
         //Battlecry: If you control at_least 2 other minions, gain Taunt.
 
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+
+            if (p.ownMinions.Count >= 2) own.taunt = true;
+        }
+
     }
 
 }

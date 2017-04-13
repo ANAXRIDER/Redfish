@@ -3208,7 +3208,7 @@ namespace HREngine.Bots
             alleycat,
             almsoflight,
             amaniberserker,
-            amara, wardenofhope,
+            amarawardenofhope,
             ambercarapace,
             ambush,
             amgamrager,
@@ -4154,7 +4154,7 @@ namespace HREngine.Bots
             hellbovinechampion,
             hellfire,
             hellohellohello,
-            hemet, junglehunter,
+            hemetjunglehunter,
             hemetnesingwary,
             henryho,
             heraldvolazj,
@@ -4305,7 +4305,7 @@ namespace HREngine.Bots
             kabalsongstealer,
             kabaltalonpriest,
             kabaltrafficker,
-            kalimos, primallord,
+            kalimosprimallord,
             karakazham,
             kazakus,
             kazakuspotion,
@@ -5559,12 +5559,12 @@ namespace HREngine.Bots
 
         public enum ErrorType2
         {
-            NONE = 0,
+            INVALID = -1,
             REQ_MINION_TARGET = 1,
             REQ_FRIENDLY_TARGET = 2,
             REQ_ENEMY_TARGET = 3,
             REQ_DAMAGED_TARGET = 4,
-            REQ_ENCHANTED_TARGET = 5,
+            REQ_MAX_SECRETS = 5,
             REQ_FROZEN_TARGET = 6,
             REQ_CHARGE_TARGET = 7,
             REQ_TARGET_MAX_ATTACK = 8,
@@ -5577,7 +5577,7 @@ namespace HREngine.Bots
             REQ_YOUR_TURN = 15,
             REQ_NONSTEALTH_ENEMY_TARGET = 16,
             REQ_HERO_TARGET = 17,
-            REQ_SECRET_CAP = 18,
+            REQ_SECRET_ZONE_CAP = 18,
             REQ_MINION_CAP_IF_TARGET_AVAILABLE = 19,
             REQ_MINION_CAP = 20,
             REQ_TARGET_ATTACKED_THIS_TURN = 21,
@@ -5585,7 +5585,7 @@ namespace HREngine.Bots
             REQ_MINIMUM_ENEMY_MINIONS = 23,
             REQ_TARGET_FOR_COMBO = 24,
             REQ_NOT_EXHAUSTED_ACTIVATE = 25,
-            REQ_UNIQUE_SECRET = 26,
+            REQ_UNIQUE_SECRET_OR_QUEST = 26,
             REQ_TARGET_TAUNTER = 27,
             REQ_CAN_BE_ATTACKED = 28,
             REQ_ACTION_PWR_IS_MASTER_PWR = 29,
@@ -5619,7 +5619,7 @@ namespace HREngine.Bots
             REQ_TARGET_WITH_BATTLECRY = 57,
             REQ_TARGET_WITH_DEATHRATTLE = 58,
             REQ_TARGET_IF_AVAILABLE_AND_MINIMUM_FRIENDLY_SECRETS = 59,
-            REQ_SECRET_CAP_FOR_NON_SECRET = 60,
+            REQ_SECRET_ZONE_CAP_FOR_NON_SECRET = 60,
             REQ_TARGET_EXACT_COST = 61,
             REQ_STEALTHED_TARGET = 62,
             REQ_MINION_SLOT_OR_MANA_CRYSTAL_SLOT = 63,
@@ -7654,6 +7654,7 @@ namespace HREngine.Bots
                     temp = temp.Replace(" ", "");
                     temp = temp.Replace(":", "");
                     temp = temp.Replace(".", "");
+                    temp = temp.Replace(",", "");
                     temp = temp.Replace("!", "");
                     temp = temp.Replace("?", "");
                     temp = temp.Replace("-", "");

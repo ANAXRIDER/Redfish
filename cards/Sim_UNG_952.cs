@@ -9,6 +9,13 @@ namespace HREngine.Bots
 
         //Give a minion +2/+6 and Taunt. When it dies, summon a Stegodon.
 
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        {
+            p.minionGetBuffed(target, 2, 6);
+            target.taunt = true;
+            target.spikeridgedteed++;
+        }
+
     }
 
 }

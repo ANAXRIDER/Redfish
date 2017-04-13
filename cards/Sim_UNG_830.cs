@@ -9,6 +9,13 @@ namespace HREngine.Bots
 
         //Deathrattle: Summon arandom minion youdiscarded this game.
 
+        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_306);//Succubus .. assummed.
+
+        public override void onDeathrattle(Playfield p, Minion m)
+        {
+            p.callKid(kid, m.zonepos - 1, m.own);
+        }
+
     }
 
 }

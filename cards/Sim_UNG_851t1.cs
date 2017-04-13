@@ -9,6 +9,15 @@ namespace HREngine.Bots
 
         //Add 5 Journey to Un'Goro cards to your hand.
 
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        {
+            p.CardToHand(CardDB.cardName.unknown, ownplay);
+            p.CardToHand(CardDB.cardName.unknown, ownplay);
+            p.CardToHand(CardDB.cardName.unknown, ownplay);
+            p.CardToHand(CardDB.cardName.unknown, ownplay);
+            p.CardToHand(CardDB.cardName.unknown, ownplay);
+        }
+
     }
 
 }

@@ -1024,7 +1024,7 @@
                     m.name == CardDB.cardName.oldmurkeye)) return true;
 
 
-                if (m.souloftheforest >= 1 || m.ancestralspirit >= 1) spawnMinions = true;
+                if (m.souloftheforest >= 1 || m.ancestralspirit >= 1 || m.spikeridgedteed >= 1) spawnMinions = true;
                 if (m.name == CardDB.cardName.frothingberserker && !m.silenced) return true;
                 switch (m.name)
                 {
@@ -1129,7 +1129,7 @@
 
                     if (m.name == CardDB.cardName.scavenginghyena) hasHyena = true;
                     if (m.handcard.card.race == TAG_RACE.BEAST) hasBeasts++;
-                    if (m.souloftheforest >= 1 || m.ancestralspirit >= 1) spawnMinions = true;
+                    if (m.souloftheforest >= 1 || m.ancestralspirit >= 1 || m.spikeridgedteed >= 1 || m.spiritecho >= 1) spawnMinions = true;
 
                     switch (m.name)
                     {

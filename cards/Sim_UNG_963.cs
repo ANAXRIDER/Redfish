@@ -9,6 +9,14 @@ namespace HREngine.Bots
 
         //Whenever you cast a spell, add a random Priest spell to your hand.
 
+        public override void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion, Minion target, int choice)
+        {
+            if (triggerEffectMinion.own == wasOwnCard && c.type == CardDB.cardtype.SPELL)
+            {
+                p.CardToHand(CardDB.cardName.unknown, wasOwnCard);
+            }
+        }
+
     }
 
 }

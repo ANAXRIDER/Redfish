@@ -9,6 +9,17 @@ namespace HREngine.Bots
 
         //Taunt. Battlecry: Summon three 1/1 Raptors for your_opponent.
 
+        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.UNG_076t1);//Raptor
+
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+
+            int pos = (own.own) ? p.enemyMinions.Count : p.ownMinions.Count;
+            p.callKid(kid, pos, !own.own);
+            p.callKid(kid, pos, !own.own);
+            p.callKid(kid, pos, !own.own);
+        }
+
     }
 
 }

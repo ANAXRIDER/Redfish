@@ -1511,9 +1511,9 @@ namespace HREngine.Bots
                 if (dis.silenced != pis.silenced || dis.stealth != pis.stealth || dis.taunt != pis.taunt || dis.windfury != pis.windfury || dis.zonepos != pis.zonepos) minionbool = false;
                 if (dis.divineshild != pis.divineshild || dis.cantLowerHPbelowONE != pis.cantLowerHPbelowONE || dis.immune != pis.immune) minionbool = false;
                 if (dis.ownBlessingOfWisdom != pis.ownBlessingOfWisdom || dis.enemyBlessingOfWisdom != pis.enemyBlessingOfWisdom) minionbool = false;
-                if (dis.ownPowerWordGlory != pis.ownPowerWordGlory || dis.enemyPowerWordGlory != pis.enemyPowerWordGlory) minionbool = false;
+                if (dis.ownPowerWordGlory != pis.ownPowerWordGlory || dis.enemyPowerWordGlory != pis.enemyPowerWordGlory || dis.ReturnSpellCount != pis.ReturnSpellCount) minionbool = false;
                 if (dis.destroyOnEnemyTurnStart != pis.destroyOnEnemyTurnStart || dis.destroyOnEnemyTurnEnd != pis.destroyOnEnemyTurnEnd || dis.destroyOnOwnTurnEnd != pis.destroyOnOwnTurnEnd || dis.destroyOnOwnTurnStart != pis.destroyOnOwnTurnStart) minionbool = false;
-                if (dis.ancestralspirit != pis.ancestralspirit || dis.souloftheforest != pis.souloftheforest) minionbool = false;
+                if (dis.ancestralspirit != pis.ancestralspirit || dis.spikeridgedteed != pis.spikeridgedteed || dis.souloftheforest != pis.souloftheforest || dis.infest != pis.infest || dis.spiritecho != pis.spiritecho) minionbool = false;
                 if (dis.charge >= 1 && dis.playedThisTurn) minionbool = false;
             }
             if (minionbool == false)
@@ -1534,9 +1534,9 @@ namespace HREngine.Bots
                 if (dis.silenced != pis.silenced || dis.stealth != pis.stealth || dis.taunt != pis.taunt || dis.windfury != pis.windfury || dis.zonepos != pis.zonepos) minionbool = false;
                 if (dis.divineshild != pis.divineshild || dis.cantLowerHPbelowONE != pis.cantLowerHPbelowONE || dis.immune != pis.immune) minionbool = false;
                 if (dis.ownBlessingOfWisdom != pis.ownBlessingOfWisdom || dis.enemyBlessingOfWisdom != pis.enemyBlessingOfWisdom) minionbool = false;
-                if (dis.ownPowerWordGlory != pis.ownPowerWordGlory || dis.enemyPowerWordGlory != pis.enemyPowerWordGlory) minionbool = false;
+                if (dis.ownPowerWordGlory != pis.ownPowerWordGlory || dis.enemyPowerWordGlory != pis.enemyPowerWordGlory || dis.ReturnSpellCount != pis.ReturnSpellCount) minionbool = false;
                 if (dis.destroyOnEnemyTurnStart != pis.destroyOnEnemyTurnStart || dis.destroyOnEnemyTurnEnd != pis.destroyOnEnemyTurnEnd || dis.destroyOnOwnTurnEnd != pis.destroyOnOwnTurnEnd || dis.destroyOnOwnTurnStart != pis.destroyOnOwnTurnStart) minionbool = false;
-                if (dis.ancestralspirit != pis.ancestralspirit || dis.souloftheforest != pis.souloftheforest) minionbool = false;
+                if (dis.ancestralspirit != pis.ancestralspirit || dis.spikeridgedteed != pis.spikeridgedteed || dis.souloftheforest != pis.souloftheforest || dis.infest != pis.infest || dis.spiritecho != pis.spiritecho) minionbool = false;
             }
             if (minionbool == false)
             {
@@ -1618,9 +1618,9 @@ namespace HREngine.Bots
                 if (dis.silenced != pis.silenced || dis.stealth != pis.stealth || dis.taunt != pis.taunt || dis.windfury != pis.windfury || dis.zonepos != pis.zonepos) minionbool = false;
                 if (dis.divineshild != pis.divineshild || dis.cantLowerHPbelowONE != pis.cantLowerHPbelowONE || dis.immune != pis.immune) minionbool = false;
                 if (dis.ownBlessingOfWisdom != pis.ownBlessingOfWisdom || dis.enemyBlessingOfWisdom != pis.enemyBlessingOfWisdom) minionbool = false;
-                if (dis.ownPowerWordGlory != pis.ownPowerWordGlory || dis.enemyPowerWordGlory != pis.enemyPowerWordGlory) minionbool = false;
+                if (dis.ownPowerWordGlory != pis.ownPowerWordGlory || dis.enemyPowerWordGlory != pis.enemyPowerWordGlory || dis.ReturnSpellCount != pis.ReturnSpellCount) minionbool = false;
                 if (dis.destroyOnEnemyTurnStart != pis.destroyOnEnemyTurnStart || dis.destroyOnEnemyTurnEnd != pis.destroyOnEnemyTurnEnd || dis.destroyOnOwnTurnEnd != pis.destroyOnOwnTurnEnd || dis.destroyOnOwnTurnStart != pis.destroyOnOwnTurnStart) minionbool = false;
-                if (dis.ancestralspirit != pis.ancestralspirit || dis.souloftheforest != pis.souloftheforest) minionbool = false;
+                if (dis.ancestralspirit != pis.ancestralspirit || dis.spikeridgedteed != pis.spikeridgedteed || dis.souloftheforest != pis.souloftheforest || dis.infest != pis.infest || dis.spiritecho != pis.spiritecho) minionbool = false;
                 if (dis.charge >= 1 && dis.playedThisTurn) minionbool = false;
                 if (minionbool == false) break;
             }
@@ -1642,9 +1642,9 @@ namespace HREngine.Bots
                 if (dis.silenced != pis.silenced || dis.stealth != pis.stealth || dis.taunt != pis.taunt || dis.windfury != pis.windfury || dis.zonepos != pis.zonepos) minionbool = false;
                 if (dis.divineshild != pis.divineshild || dis.cantLowerHPbelowONE != pis.cantLowerHPbelowONE || dis.immune != pis.immune) minionbool = false;
                 if (dis.ownBlessingOfWisdom != pis.ownBlessingOfWisdom || dis.enemyBlessingOfWisdom != pis.enemyBlessingOfWisdom) minionbool = false;
-                if (dis.ownPowerWordGlory != pis.ownPowerWordGlory || dis.enemyPowerWordGlory != pis.enemyPowerWordGlory) minionbool = false;
+                if (dis.ownPowerWordGlory != pis.ownPowerWordGlory || dis.enemyPowerWordGlory != pis.enemyPowerWordGlory || dis.ReturnSpellCount != pis.ReturnSpellCount) minionbool = false;
                 if (dis.destroyOnEnemyTurnStart != pis.destroyOnEnemyTurnStart || dis.destroyOnEnemyTurnEnd != pis.destroyOnEnemyTurnEnd || dis.destroyOnOwnTurnEnd != pis.destroyOnOwnTurnEnd || dis.destroyOnOwnTurnStart != pis.destroyOnOwnTurnStart) minionbool = false;
-                if (dis.ancestralspirit != pis.ancestralspirit || dis.souloftheforest != pis.souloftheforest) minionbool = false;
+                if (dis.ancestralspirit != pis.ancestralspirit || dis.spikeridgedteed != pis.spikeridgedteed || dis.souloftheforest != pis.souloftheforest || dis.infest != pis.infest || dis.spiritecho != pis.spiritecho) minionbool = false;
                 if (minionbool == false) break;
             }
             if (minionbool == false)
@@ -3617,16 +3617,15 @@ namespace HREngine.Bots
         public void attackWithWeapon(Minion hero, Minion target, float penality)
         {
             bool own = hero.own;
-            CardDB.Card weapon = own ? this.ownWeaponCard : this.enemyWeaponCard;
+            //CardDB.Card weapon = own ? this.ownWeaponCard : this.enemyWeaponCard;
             this.attacked = true;
             this.evaluatePenality += penality;
             hero.numAttacksThisTurn++;
 
             //hero will end his readyness
             hero.updateReadyness();
-            if (weapon.name == CardDB.cardName.foolsbane && !hero.frozen) hero.Ready = true;
 
-            switch (weapon.name)
+            switch (own ? this.ownWeaponName : this.enemyWeaponName)
             {
                 case CardDB.cardName.truesilverchampion:
                     int heal = own ? this.getMinionHeal(2) : this.getEnemyMinionHeal(2);
@@ -3636,6 +3635,11 @@ namespace HREngine.Bots
                 case CardDB.cardName.piranhalauncher:
                     int pos = (own) ? this.ownMinions.Count : this.enemyMinions.Count;
                     this.callKid(CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CFM_337t), pos, own);
+                    break;
+                case CardDB.cardName.vinecleaver:
+                    int pos1 = (own) ? this.ownMinions.Count : this.enemyMinions.Count;
+                    this.callKid(CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_101t), pos1, own);
+                    this.callKid(CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_101t), pos1, own);//silver hand recruit
                     break;
                 case CardDB.cardName.foolsbane:
                     if (!hero.frozen) hero.Ready = true;
@@ -4063,6 +4067,7 @@ namespace HREngine.Bots
                     this.ownWeaponAttack = 0;
                     this.ownWeaponName = CardDB.cardName.unknown;
                     this.ownHero.windfury = false;
+                    this.ownHero.poisonous = false;
 
                     foreach (Minion m in this.ownMinions)
                     {
@@ -5299,6 +5304,25 @@ namespace HREngine.Bots
                     }
 
                 }
+
+                if (this.enemyMinions.Find(a => a.name == CardDB.cardName.swampkingdred && !a.silenced) != null)
+                {
+                    Minion attacker;
+                    Minion deffender = m;
+                    foreach (Minion ATK in this.enemyMinions)
+                    {
+                        if (ATK.name == CardDB.cardName.swampkingdred && !ATK.silenced)
+                        {
+                            attacker = ATK;
+                            this.minionAttacksMinion(attacker, deffender, false);
+                            if (attacker.Angr >= deffender.Hp && !deffender.divineshild ||
+                                deffender.Angr >= attacker.Hp && !attacker.divineshild ||
+                                attacker.poisonous && !deffender.divineshild ||
+                                deffender.poisonous && !attacker.divineshild) break; //when 2+ swampkingdred & died first action
+                        }                       
+                    }                    
+                }
+
             }
             else
             {
@@ -5453,7 +5477,9 @@ namespace HREngine.Bots
             this.nextSpellThisTurnCostHealth = false;
             this.optionsPlayedThisTurn = 0;
             this.enemyOptionsDoneThisTurn = 0;
-            
+
+            if (this.ownWeaponName == CardDB.cardName.unknown || this.ownWeaponDurability == 0) this.ownHero.poisonous = false; // breaked weapon when enemy turns.. 
+
             if (ownturn)
             {
                 int at073 = 0;
@@ -6151,6 +6177,24 @@ namespace HREngine.Bots
                     callKid(kid, pos, m.own);
                 }
 
+                for (int i = 0; i < m.spikeridgedteed; i++)
+                {
+                    CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.UNG_810);//Stegodon
+                    int pos = (m.own) ? this.ownMinions.Count : this.enemyMinions.Count;
+                    callKid(kid, pos, m.own);
+                }
+
+                for (int i = 0; i < m.spiritecho; i++)
+                {
+                    CardDB.cardName getback = m.handcard.card.name;
+                    CardToHand(getback, m.own);
+                }
+
+                for (int i = 0; i < m.infest; i++)
+                {
+                    CardToHand(CardDB.cardName.unknown, m.own);
+                }
+
                 for (int i = 0; i < m.explorershat; i++)
                 {
                     this.drawACard(CardDB.cardIDEnum.LOE_105, m.own, true);
@@ -6175,11 +6219,28 @@ namespace HREngine.Bots
                         callKid(kid, pos, m.own);
                     }
 
+                    for (int i = 0; i < m.spikeridgedteed; i++)
+                    {
+                        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.UNG_810);//Stegodon
+                        int pos = (m.own) ? this.ownMinions.Count : this.enemyMinions.Count;
+                        callKid(kid, pos, m.own);
+                    }
+
                     for (int i = 0; i < m.explorershat; i++)
                     {
                         this.drawACard(CardDB.cardIDEnum.LOE_105, m.own, true);
                     }
 
+                    for (int i = 0; i < m.spiritecho; i++)
+                    {
+                        CardDB.cardName getback = m.handcard.card.name;
+                        CardToHand(getback, m.own);
+                    }
+
+                    for (int i = 0; i < m.infest; i++)
+                    {
+                        CardToHand(CardDB.cardName.unknown, m.own);
+                    }
                 }
             }
 
@@ -6221,7 +6282,7 @@ namespace HREngine.Bots
                             minionOwnReviving = true;
                         }
 
-                        if ((!m.silenced && m.handcard.card.deathrattle) || m.ancestralspirit >= 1 || m.souloftheforest >= 1 || m.explorershat >= 1)
+                        if ((!m.silenced && m.handcard.card.deathrattle) || m.ancestralspirit >= 1 || m.spikeridgedteed >= 1 || m.souloftheforest >= 1 || m.explorershat >= 1 || m.infest >= 1 || m.spiritecho >= 1)
                         {
                             deathrattles.Add(m);
                         }
@@ -6270,7 +6331,7 @@ namespace HREngine.Bots
                             minionEnemyReviving = true;
                         }
 
-                        if ((!m.silenced && m.handcard.card.deathrattle) || m.ancestralspirit >= 1 || m.souloftheforest >= 1 || m.explorershat>=1)
+                        if ((!m.silenced && m.handcard.card.deathrattle) || m.ancestralspirit >= 1 || m.spikeridgedteed >= 1 || m.souloftheforest >= 1 || m.explorershat>=1 || m.infest >= 1 || m.spiritecho >= 1)
                         {
                             deathrattles.Add(m);
                         }
@@ -6555,7 +6616,7 @@ namespace HREngine.Bots
             //create the new minion + trigger Summon effects + buffs it
             Minion m = createNewMinion(hc, mobplace, true);
 
-
+            
             //trigger the battlecry!
             m.handcard.card.sim_card.getBattlecryEffect(this, m, target, choice);
             if (m.own)
@@ -6572,8 +6633,10 @@ namespace HREngine.Bots
                     m.handcard.card.sim_card.getBattlecryEffect(this, m, target, choice);
                 }
             }
+            //simcard - non - battlecry
+            m.handcard.card.sim_card.onCardPlay(this, true, target, choice);
 
-            
+
 
             //add minion to list + do triggers + do secret trigger +  minion was played trigger
             addMinionToBattlefield(m);
@@ -7432,7 +7495,8 @@ namespace HREngine.Bots
 
             Handmanager.Handcard hc = new Handmanager.Handcard(c){ entity = this.getNextEntity() }; // m.entityID;
             int ancestral = m.ancestralspirit;
-            if (m.handcard.card.name == CardDB.cardName.cairnebloodhoof || m.handcard.card.name == CardDB.cardName.harvestgolem || ancestral >= 1)
+            int spiked = m.spikeridgedteed;
+            if (m.handcard.card.name == CardDB.cardName.cairnebloodhoof || m.handcard.card.name == CardDB.cardName.harvestgolem || ancestral >= 1 || spiked >= 1)
             {
                 if (Ai.Instance.botBase != null) this.evaluatePenality += Ai.Instance.botBase.getEnemyMinionValue(m, this) - 1;
             }
@@ -8580,15 +8644,19 @@ namespace HREngine.Bots
             if (m.spellpower != 0) mini += " spllpwr(" + m.spellpower + ")";
 
             if (m.ancestralspirit >= 1) mini += " ancstrl(" + m.ancestralspirit + ")";
+            if (m.spikeridgedteed >= 1) mini += " spikeridged(" + m.spikeridgedteed + ")";
             if (m.ownBlessingOfWisdom >= 1) mini += " ownBlssng(" + m.ownBlessingOfWisdom + ")";
             if (m.enemyBlessingOfWisdom >= 1) mini += " enemyBlssng(" + m.enemyBlessingOfWisdom + ")";
             if (m.souloftheforest >= 1) mini += " souloffrst(" + m.souloftheforest + ")";
+            if (m.infest >= 1) mini += " infest(" + m.souloftheforest + ")";
+            if (m.spiritecho >= 1) mini += " spiritecho(" + m.souloftheforest + ")";
 
             if (m.ownPowerWordGlory >= 1) mini += " ownPWG(" + m.ownPowerWordGlory + ")";
             if (m.enemyPowerWordGlory >= 1) mini += " enemyPWG(" + m.enemyPowerWordGlory + ")";
 
             if (m.explorershat >= 1) mini += " explht(" + m.explorershat + ")";
 
+            if (m.ReturnSpellCount >= 1) mini += " ReturnSpellCNT(" + m.ReturnSpellCount + ")";
 
             return mini;
         }

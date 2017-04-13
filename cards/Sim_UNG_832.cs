@@ -9,6 +9,14 @@ namespace HREngine.Bots
 
         //The next spell you cast this turn costs Health instead of Mana.
 
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        {
+            if (ownplay)
+            {
+                p.nextSpellThisTurnCostHealth = true;
+            }
+        }
+
     }
 
 }

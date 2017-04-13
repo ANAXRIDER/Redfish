@@ -9,6 +9,12 @@ namespace HREngine.Bots
 
         //Give your weapon Poisonous.
 
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        {
+            if (p.ownWeaponDurability >= 1) p.ownHero.poisonous = true;
+        }
+
+
     }
 
 }

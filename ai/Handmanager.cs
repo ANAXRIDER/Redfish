@@ -17,6 +17,7 @@
             public int extraParam = 0;
             public int extraParam2 = 0;
             public bool extraParam3 = false;
+            public int elemPoweredUp = 0;
 
             public Handcard()
             {
@@ -31,6 +32,7 @@
                 this.addattack = hc.addattack;
                 this.addHp = hc.addHp;
                 this.isChoiceTemp = hc.isChoiceTemp;
+                this.elemPoweredUp = hc.elemPoweredUp;
             }
             public Handcard(CardDB.Card c)
             {
@@ -172,7 +174,7 @@
             help.logg("Own Handcards: ");
             foreach (Handmanager.Handcard c in this.handCards)
             {
-                help.logg("pos " + c.position + " " + c.card.name + " " + c.manacost + " entity " + c.entity + " " + c.card.cardIDenum + " " + c.addattack);
+                help.logg("pos " + c.position + " " + c.card.name + " " + c.manacost + " entity " + c.entity + " " + c.card.cardIDenum + " " + c.addattack +" " + c.elemPoweredUp);
             }
             help.logg("Enemy cards: " + this.enemyAnzCards);
 

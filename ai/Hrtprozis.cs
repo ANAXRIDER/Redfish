@@ -105,6 +105,10 @@
         public int anzOgOwnCThunTaunt;
         public int anzOwnJadeGolem;
         public int anzEnemyJadeGolem;
+        public int ownCrystalCore = 0;
+        public bool ownMinionsCost0 = false;
+        public int anzOwnElementalsThisTurn = 0;
+        public int anzOwnElementalsLastTurn = 0;
 
         public int ownDragonConsort;
         public int enemyDragonConsort;
@@ -262,6 +266,23 @@
             anzOwnJadeGolem = anzOwnJG;
             anzEnemyJadeGolem = anzEmemyJG;
         }
+
+        public void updateCrystalCore(int num)
+        {
+            ownCrystalCore = num;
+        }
+
+        public void updateOwnMinionsCost0(bool tmp)
+        {
+            ownMinionsCost0 = tmp;
+        }
+
+        public void updateElementals(int anzOwnElemTT, int anzOwnElemLT)
+        {
+            anzOwnElementalsThisTurn = anzOwnElemTT;
+            anzOwnElementalsLastTurn = anzOwnElemLT;
+        }
+
 
         public string heroIDtoName(string s)
         {
@@ -584,7 +605,7 @@
                 m.charge = 1;
             }
             if (hc.card.Shield) m.divineshild = true;
-            if (hc.card.poisionous) m.poisonous = true;
+            if (hc.card.poisonous) m.poisonous = true;
 
             if (hc.card.Stealth) m.stealth = true;
 

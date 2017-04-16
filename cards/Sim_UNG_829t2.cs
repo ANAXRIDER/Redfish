@@ -9,6 +9,16 @@ namespace HREngine.Bots
 
         //At the end of your turn, summon two 3/2 Imps.
 
-    }
+        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.UNG_829t3); //Nether Imp
 
+        public override void onTurnEndsTrigger(Playfield p, Minion triggerEffectMinion, bool turnEndOfOwner)
+        {
+            if (triggerEffectMinion.own == turnEndOfOwner)
+            {
+                int pos = triggerEffectMinion.zonepos;
+                p.callKid(kid, pos, triggerEffectMinion.own);
+                p.callKid(kid, pos-1, triggerEffectMinion.own);
+            }
+        }
+	}
 }

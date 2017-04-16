@@ -9,6 +9,11 @@ namespace HREngine.Bots
 
         //Taunt Battlecry: Deal 2 damageto all other minions.
 
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+            p.allMinionsGetDamage(2);
+        }
+
     }
 
 }

@@ -4,14 +4,13 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-	class Sim_OG_080e : SimTemplate //* Fadeleaf Toxin
+	class Sim_UNG_999t4 : SimTemplate //* Rocky Carapace
 	{
-		//Give a friendly minion Stealth until your next turn.
-		
+		//+3 Health
+
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            target.stealth = true;
-            target.conceal = true;
+            p.minionGetBuffed(target, 0, 3);
         }
     }
 }

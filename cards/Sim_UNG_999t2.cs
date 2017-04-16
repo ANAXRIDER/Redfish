@@ -4,14 +4,13 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-	class Sim_OG_080e : SimTemplate //* Fadeleaf Toxin
+	class Sim_UNG_999t2 : SimTemplate //* Living Spores
 	{
-		//Give a friendly minion Stealth until your next turn.
-		
+		//Deathrattle: Summon two 1/1 Plants.
+
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            target.stealth = true;
-            target.conceal = true;
+            target.livingspores++;
         }
     }
 }

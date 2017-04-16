@@ -66,6 +66,10 @@ namespace HREngine.Bots
         int anzOgOwnCThunTaunt;
         int anzOwnJadeGolem;
         int anzEnemyJadeGolem;
+        int anzOwnElementalsThisTurn = 0;
+        int anzOwnElementalsLastTurn = 0;
+        int ownCrystalCore = 0;
+        bool ownMinionsCost0 = false;
 
         int ownDecksize = 30;
         int enemyDecksize = 30;
@@ -399,6 +403,28 @@ namespace HREngine.Bots
                     anzOwnJadeGolem = Convert.ToInt32(ss[1]);
                     anzEnemyJadeGolem = Convert.ToInt32(ss[2]);
                 }
+
+                if (s.StartsWith("elementals: "))
+                {
+                    String[] ss = s.Split(' ');
+                    anzOwnElementalsThisTurn = Convert.ToInt32(ss[1]);
+                    anzOwnElementalsLastTurn = Convert.ToInt32(ss[2]);
+                }
+
+                if (s.StartsWith("quests: "))
+                {
+                    String[] ss = s.Split(' ');
+                    Questmanager.Instance.updateQuestStuff(ss[1], Convert.ToInt32(ss[2]), Convert.ToInt32(ss[3]), true);
+                    Questmanager.Instance.updateQuestStuff(ss[4], Convert.ToInt32(ss[5]), Convert.ToInt32(ss[6]), false);
+                }
+
+                if (s.StartsWith("advanced: "))
+                {
+                    String[] ss = s.Split(' ');
+                    this.ownCrystalCore = Convert.ToInt32(ss[1]);
+                    this.ownMinionsCost0 = Convert.ToInt32(ss[2]) == 1 ? true : false;
+                }
+
 
                 if (s.StartsWith("ownDiedMinions: "))
                 {
@@ -755,6 +781,9 @@ namespace HREngine.Bots
                         int infest = 0;//adjadmg
                         if (s.Contains(" infest(")) infest = Convert.ToInt32(s.Split(new string[] { " infest(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
+                        int livingspores = 0;//adjadmg
+                        if (s.Contains(" lspores(")) livingspores = Convert.ToInt32(s.Split(new string[] { " lspores(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
                         int returnspellcount = 0;//adjadmg
                         if (s.Contains(" ReturnSpellCNT(")) returnspellcount = Convert.ToInt32(s.Split(new string[] { " ReturnSpellCNT(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
@@ -781,7 +810,7 @@ namespace HREngine.Bots
                         tempminion.poisonous = pois;
                         tempminion.immune = immn;
 
-                        tempminion.concedal = cncdl;
+                        tempminion.conceal = cncdl;
                         tempminion.destroyOnOwnTurnStart = destroyOnOwnTurnStart;
                         tempminion.destroyOnOwnTurnEnd = destroyOnOwnTurnEnd;
                         tempminion.destroyOnEnemyTurnStart = destroyOnEnemyTurnStart;
@@ -806,6 +835,7 @@ namespace HREngine.Bots
                         tempminion.infest = infest;
                         tempminion.ReturnSpellCount = returnspellcount;
                         tempminion.spiritecho = spiritecho;
+                        tempminion.livingspores = livingspores;
 
                         tempminion.canAttackNormal = false;
                         if (ready == true) tempminion.canAttackNormal = true;
@@ -905,6 +935,9 @@ namespace HREngine.Bots
                         int spiritecho = 0;
                         if (s.Contains(" spiritecho(")) spiritecho = Convert.ToInt32(s.Split(new string[] { " spiritecho(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
+                        int livingspores = 0;//adjadmg
+                        if (s.Contains(" lspores(")) livingspores = Convert.ToInt32(s.Split(new string[] { " lspores(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
                         tempminion = createNewMinion(new Handmanager.Handcard(CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(minionid))), zp, false);
                         tempminion.own = false;
                         tempminion.entityID = ent;
@@ -925,7 +958,7 @@ namespace HREngine.Bots
                         tempminion.poisonous = pois;
                         tempminion.immune = immn;
 
-                        tempminion.concedal = cncdl;
+                        tempminion.conceal = cncdl;
                         tempminion.destroyOnOwnTurnStart = destroyOnOwnTurnStart;
                         tempminion.destroyOnOwnTurnEnd = destroyOnOwnTurnEnd;
                         tempminion.destroyOnEnemyTurnStart = destroyOnEnemyTurnStart;
@@ -950,6 +983,7 @@ namespace HREngine.Bots
                         tempminion.infest = infest;
                         tempminion.ReturnSpellCount = returnspellcount;
                         tempminion.spiritecho = spiritecho;
+                        tempminion.livingspores = livingspores;
 
 
                         if (maxhp > hp) tempminion.wounded = true;
@@ -982,6 +1016,7 @@ namespace HREngine.Bots
                     try
                     {
                         card.addHp = Convert.ToInt32(s.Split(' ')[8]);
+                        if (s.Length > 10) card.elemPoweredUp = Convert.ToInt32(s[9]);
                     }
                     catch
                     {
@@ -1020,7 +1055,9 @@ namespace HREngine.Bots
             Hrtprozis.Instance.setPlayereffects(this.ownDragonConsort, this.enemyDragonConsort, this.ownLoathebs, this.enemyLoathebs, this.ownMillhouse, this.enemyMillhouse, this.ownKirintor, this.ownPrep, this.ownSab, this.enemySab, this.ownFenci, this.enemyCursedCards);
             Hrtprozis.Instance.updateCThunInfo(this.anzOgOwnCThunAngrBonus, this.anzOgOwnCThunHpBonus, this.anzOgOwnCThunTaunt);
             Hrtprozis.Instance.updateJadeGolemsInfo(this.anzOwnJadeGolem, this.anzEnemyJadeGolem);
-
+            Hrtprozis.Instance.updateElementals(this.anzOwnElementalsThisTurn, this.anzOwnElementalsLastTurn);
+            Hrtprozis.Instance.updateCrystalCore(this.ownCrystalCore);
+            Hrtprozis.Instance.updateOwnMinionsCost0(this.ownMinionsCost0);
             Hrtprozis.Instance.updateSecretStuff(this.ownsecretlist, enemySecretAmount);
 
             bool herowindfury = false;
@@ -1141,7 +1178,7 @@ namespace HREngine.Bots
             m.taunt = hc.card.tank;
             m.charge = (hc.card.Charge) ? 1 : 0;
             m.divineshild = hc.card.Shield;
-            m.poisonous = hc.card.poisionous;
+            m.poisonous = hc.card.poisonous;
             m.stealth = hc.card.Stealth;
 
             m.updateReadyness();

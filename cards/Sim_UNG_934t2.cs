@@ -27,8 +27,13 @@ namespace HREngine.Bots
                                                                //{
                                                                //    temp2.Reverse();//damage the highest if mine
                                                                //}
+                    int playablecardnum = 0;
+                    foreach (Handmanager.Handcard hcc in p.owncards)
+                    {
+                        if (hcc.getManaCost(p) <= p.manaTurnEnd && hcc.card.name != CardDB.cardName.dieinsect) playablecardnum++;
+                    }
 
-                    if (p.isEnemyHasLethal())
+                    if (p.isEnemyHasLethal() && playablecardnum == 0)
                     {
                         temp2.Sort((a, b) => b.Angr.CompareTo(a.Angr));//damage the Highest Angr
                         foreach (Minion mins in temp2)
@@ -58,12 +63,6 @@ namespace HREngine.Bots
                 }
                 else //chance to lethal
                 {
-                    int playablecardnum = 0;
-                    foreach (Handmanager.Handcard hcc in p.owncards)
-                    {
-                        if (hcc.getManaCost(p) <= p.manaTurnEnd) playablecardnum++;
-                    }
-                    if (p.ownHeroAblility.card.getManaCost(p, 2) <= p.manaTurnEnd && p.ownAbilityReady) playablecardnum++;
                     int attackablecardnum = 0;
                     foreach (Minion mnn in p.ownMinions)
                     {
@@ -84,11 +83,15 @@ namespace HREngine.Bots
                         }
                     }
 
-                    if (playablecardnum == 0 && attackablecardnum == 0)// && ((cankillandkilled && p.enemyMinions.Count <= 1) || (count == 1 && p.ownHero.Hp >= 10) || (!cankillandkilled && p.enemyMinions.Count >= 3)))
+                    if (attackablecardnum == 0)// && ((cankillandkilled && p.enemyMinions.Count <= 1) || (count == 1 && p.ownHero.Hp >= 10) || (!cankillandkilled && p.enemyMinions.Count >= 3)))
                     {
                         if (ownplay == true) // if mine
                         {
-                            if (!p.enemyHero.immune) p.minionGetDamageOrHeal(ownplay ? p.enemyHero : p.ownHero, 8);
+                            if (!p.enemyHero.immune)
+                            {
+                                p.minionGetDamageOrHeal(ownplay ? p.enemyHero : p.ownHero, 8);
+                                p.evaluatePenality += 10000 - (8 - p.enemyMinions.Count) * 100;
+                            }
                             else
                             {
                                 List<Minion> temp2 = (ownplay) ? new List<Minion>(p.enemyMinions) : new List<Minion>(p.ownMinions);

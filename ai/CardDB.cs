@@ -95,6 +95,7 @@ namespace HREngine.Bots
         {
             None,
             aiextra1,
+            hero,
             AT_001,
             AT_002,
             AT_003,
@@ -290,7 +291,9 @@ namespace HREngine.Bots
             AT_132_PALADIN,
             AT_132_PRIEST,
             AT_132_ROGUE,
+            AT_132_ROGUE_H1,
             AT_132_ROGUEt,
+            AT_132_ROGUEt_H1,
             AT_132_SHAMAN,
             AT_132_SHAMANa,
             AT_132_SHAMANb,
@@ -5648,7 +5651,7 @@ namespace HREngine.Bots
             public bool Silence;
             public bool choice;
             public bool windfury;
-            public bool poisionous;
+            public bool poisonous;
             public bool deathrattle;
             public bool battlecry;
             public bool discover;
@@ -5668,6 +5671,7 @@ namespace HREngine.Bots
             public bool Shield;
             public bool Charge;
             public bool Secret;
+            public bool Quest;
             public bool Morph;
             public bool Spellpower;
             public bool GrantCharge;
@@ -5748,12 +5752,13 @@ namespace HREngine.Bots
                 this.needWithMinAttackValueOf = c.needWithMinAttackValueOf;
                 this.oneTurnEffect = c.oneTurnEffect;
                 this.playrequires = new List<ErrorType2>(c.playrequires);
-                this.poisionous = c.poisionous;
+                this.poisonous = c.poisonous;
                 this.race = c.race;
                 this.overload = c.overload;
                 this.Recall = c.Recall;
                 this.recallValue = c.recallValue;
                 this.Secret = c.Secret;
+                this.Quest = c.Quest;
                 this.Shield = c.Shield;
                 this.Silence = c.Silence;
                 this.Spellpower = c.Spellpower;
@@ -6757,6 +6762,7 @@ namespace HREngine.Bots
                 switch (this.type)
                 {
                     case cardtype.MOB:
+                        if (p.ownMinionsCost0) retval = 0;
                         if (p.anzOwnAviana > 0) retval = 1;
 
                         offset += p.anzVentureCoMercenary * 3;
@@ -7725,7 +7731,7 @@ namespace HREngine.Bots
                     string temp = s.Split(new string[] { "value=\"" }, StringSplitOptions.RemoveEmptyEntries)[1];
                     temp = temp.Split('\"')[0];
                     int ti = Convert.ToInt32(temp);
-                    if (ti == 1) c.poisionous = true;
+                    if (ti == 1) c.poisonous = true;
                     continue;
                 }
                 //enrage
@@ -7869,6 +7875,15 @@ namespace HREngine.Bots
                     temp = temp.Split('\"')[0];
                     int ti = Convert.ToInt32(temp);
                     if (ti == 1) c.Secret = true;
+                    continue;
+                }
+                //quest
+                if (s.Contains("<Tag enumID=\"462\""))
+                {
+                    string temp = s.Split(new string[] { "value=\"" }, StringSplitOptions.RemoveEmptyEntries)[1];
+                    temp = temp.Split('\"')[0];
+                    int ti = Convert.ToInt32(temp);
+                    if (ti == 1) c.Quest = true;
                     continue;
                 }
                 //freeze
@@ -9479,6 +9494,11 @@ namespace HREngine.Bots
                 case cardIDEnum.UNG_205: return new Sim_UNG_205();
                 case cardIDEnum.UNG_208: return new Sim_UNG_208();
                 case cardIDEnum.UNG_211: return new Sim_UNG_211();
+                case cardIDEnum.UNG_211a: return new Sim_UNG_211a();
+                case cardIDEnum.UNG_211aa: return new Sim_UNG_211aa();
+                case cardIDEnum.UNG_211b: return new Sim_UNG_211b();
+                case cardIDEnum.UNG_211c: return new Sim_UNG_211c();
+                case cardIDEnum.UNG_211d: return new Sim_UNG_211d();
                 case cardIDEnum.UNG_800: return new Sim_UNG_800();
                 case cardIDEnum.UNG_801: return new Sim_UNG_801();
                 case cardIDEnum.UNG_803: return new Sim_UNG_803();
@@ -9560,6 +9580,17 @@ namespace HREngine.Bots
                 case cardIDEnum.UNG_961: return new Sim_UNG_961();
                 case cardIDEnum.UNG_962: return new Sim_UNG_962();
                 case cardIDEnum.UNG_963: return new Sim_UNG_963();
+                case cardIDEnum.UNG_999t10: return new Sim_UNG_999t10();
+                case cardIDEnum.UNG_999t13: return new Sim_UNG_999t13();
+                case cardIDEnum.UNG_999t14: return new Sim_UNG_999t14();
+                case cardIDEnum.UNG_999t2: return new Sim_UNG_999t2();
+                case cardIDEnum.UNG_999t2t1: return new Sim_UNG_999t2t1();
+                case cardIDEnum.UNG_999t3: return new Sim_UNG_999t3();
+                case cardIDEnum.UNG_999t4: return new Sim_UNG_999t4();
+                case cardIDEnum.UNG_999t5: return new Sim_UNG_999t5();
+                case cardIDEnum.UNG_999t6: return new Sim_UNG_999t6();
+                case cardIDEnum.UNG_999t7: return new Sim_UNG_999t7();
+                case cardIDEnum.UNG_999t8: return new Sim_UNG_999t8();
 
                 case cardIDEnum.ds1_whelptoken: return new Sim_ds1_whelptoken();
                 case cardIDEnum.hexfrog: return new Sim_hexfrog();

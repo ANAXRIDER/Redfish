@@ -63,13 +63,14 @@
         public bool destroyOnOwnTurnEnd; // depends on own!
         public bool destroyOnEnemyTurnEnd; // depends on own!
 
-        public bool concedal;
+        public bool conceal;
         public int ancestralspirit;
         public int spikeridgedteed;
         public int souloftheforest;
         public int explorershat;
         public int infest;
         public int spiritecho;
+        public int livingspores;
 
         public int ownBlessingOfWisdom;
         public int enemyBlessingOfWisdom;
@@ -79,6 +80,7 @@
         public int ReturnSpellCount;
 
         public bool cantBeTargetedBySpellsOrHeroPowers;
+        public bool cantAttack = false;
 
         public int Hp;
         public int maxHp;
@@ -150,11 +152,12 @@
             this.destroyOnOwnTurnEnd = m.destroyOnOwnTurnEnd; // depends on own!
             this.destroyOnEnemyTurnEnd = m.destroyOnEnemyTurnEnd; // depends on own!
 
-            this.concedal = m.concedal;
+            this.conceal = m.conceal;
             this.souloftheforest = m.souloftheforest;
             this.explorershat = m.explorershat;
             this.infest = m.infest;
             this.spiritecho = m.spiritecho;
+            this.livingspores = m.livingspores;
 
             this.ownBlessingOfWisdom = m.ownBlessingOfWisdom;
             this.enemyBlessingOfWisdom = m.enemyBlessingOfWisdom;
@@ -190,6 +193,7 @@
             this.silenced = m.silenced;
 
             this.cantBeTargetedBySpellsOrHeroPowers = m.cantBeTargetedBySpellsOrHeroPowers;
+            this.cantAttack = m.cantAttack;
 
             if (m.deathrattles != null)
             {
@@ -236,11 +240,12 @@
             this.destroyOnOwnTurnEnd = m.destroyOnOwnTurnEnd; // depends on own!
             this.destroyOnEnemyTurnEnd = m.destroyOnEnemyTurnEnd; // depends on own!
 
-            this.concedal = m.concedal;
+            this.conceal = m.conceal;
             this.souloftheforest = m.souloftheforest;
             this.explorershat = m.explorershat;
             this.infest = m.infest;
             this.spiritecho = m.spiritecho;
+            this.livingspores = m.livingspores;
 
             this.ownBlessingOfWisdom = m.ownBlessingOfWisdom;
             this.enemyBlessingOfWisdom = m.enemyBlessingOfWisdom;
@@ -276,6 +281,7 @@
             this.silenced = m.silenced;
 
             this.cantBeTargetedBySpellsOrHeroPowers = m.cantBeTargetedBySpellsOrHeroPowers;
+            this.cantAttack = m.cantAttack;
 
             if (m.deathrattles != null)
             {
@@ -582,6 +588,7 @@
         public void updateReadyness()
         {
             Ready = false;
+            if (cantAttack) return;
             //default test (minion must be unfrozen!)
             if (isHero)
             {
@@ -663,7 +670,7 @@
             destroyOnEnemyTurnStart = false;
             destroyOnOwnTurnEnd = false;
             destroyOnEnemyTurnEnd = false;
-            concedal = false;
+            conceal = false;
             souloftheforest = 0;
             explorershat = 0;
             infest = 0;
@@ -673,8 +680,10 @@
             enemyPowerWordGlory = 0;
             ReturnSpellCount = 0;
             spiritecho = 0;
+            livingspores = 0;
 
             cantBeTargetedBySpellsOrHeroPowers = false;
+            cantAttack = false;
 
             charge = 0;
             taunt = false;
@@ -834,13 +843,13 @@
                     case CardDB.cardIDEnum.OG_045a: this.infest++; continue;
                     case CardDB.cardIDEnum.LOE_019e: this.extraParam2 = me.copyDeathrattle; continue; //unearthedraptor
                     case CardDB.cardIDEnum.UNG_956e: this.spiritecho++; continue; //Echoed Spirit
+                    case CardDB.cardIDEnum.UNG_999t2e: this.livingspores++; continue;
 
-
-                    //concedal-------------------------------------------------
-                    case CardDB.cardIDEnum.EX1_128e: this.concedal = true; continue;
-                    case CardDB.cardIDEnum.NEW1_014e: this.concedal = true; continue;
-                    case CardDB.cardIDEnum.PART_004e: this.concedal = true; continue;
-                    case CardDB.cardIDEnum.OG_080de: this.concedal = true; continue;
+                    //conceal-------------------------------------------------
+                    case CardDB.cardIDEnum.EX1_128e: this.conceal = true; continue;
+                    case CardDB.cardIDEnum.NEW1_014e: this.conceal = true; continue;
+                    case CardDB.cardIDEnum.PART_004e: this.conceal = true; continue;
+                    case CardDB.cardIDEnum.OG_080de: this.conceal = true; continue;
 
                     //cantLowerHPbelowONE-------------------------------------------------
                     case CardDB.cardIDEnum.NEW1_036e: this.cantLowerHPbelowONE = true; continue; //commandingshout

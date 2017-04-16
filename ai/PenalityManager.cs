@@ -32,7 +32,7 @@ namespace HREngine.Bots
         Dictionary<CardDB.cardName, int> tauntBuffDatabase = new Dictionary<CardDB.cardName, int>();
 
         Dictionary<CardDB.cardName, int> lethalHelpers = new Dictionary<CardDB.cardName, int>();
-
+        Dictionary<CardDB.cardName, int> elementalLastTurnDependentDatabase = new Dictionary<CardDB.cardName, int>();
 
         Dictionary<CardDB.cardName, int> backToHandDatabase = new Dictionary<CardDB.cardName, int>();
 
@@ -1326,6 +1326,7 @@ namespace HREngine.Bots
             }
             if (!target.own && !target.isHero)
             {
+                if (target.poisonous) return 0;
                 if (DamageTargetSpecialDatabase.ContainsKey(name) || DamageTargetDatabase.ContainsKey(name))
                 {
                     Minion m = target;
@@ -2050,19 +2051,38 @@ namespace HREngine.Bots
             if (name == CardDB.cardName.brawl || name == CardDB.cardName.deathwing || name == CardDB.cardName.twistingnether || name == CardDB.cardName.doomsayer || name == CardDB.cardName.doom)
             {
                 int penalty = 0;
-                if (p.mobsPlayedThisTurn >= 1) return 20;
+                if (p.mobsPlayedThisTurn >= 1 && name != CardDB.cardName.brawl) return 20;
                 if (name == CardDB.cardName.brawl && p.ownMinions.Count + p.enemyMinions.Count <= 1) return 500;
                 int highminion = 0;
                 int veryhighminion = 0;
                 int readyAngr = 0;
+
+                int minionvalue = 0;
+
                 foreach (Minion m in p.enemyMinions)
                 {
                     if (!m.frozen)
                     {
                         readyAngr += m.Angr;
+                        if (enrageDatabase.ContainsKey(m.name) && m.wounded)
+                        {
+                            readyAngr -= enrageDatabase[m.name];
+                        }
                     }
-                    if (m.Angr >= 5 || m.Hp >= 5) highminion++;
-                    if (m.Angr >= 8 || m.Hp >= 8) veryhighminion++;
+                    
+                    if (enrageDatabase.ContainsKey(m.name) && !m.wounded)
+                    {
+                        if (m.Angr + enrageDatabase[m.name] >= 5) highminion++;
+                        if (m.Angr + enrageDatabase[m.name] >= 8) veryhighminion++;
+                    }
+                    else
+                    {
+                        if (m.Angr >= 5 || m.Hp >= 5 && m.Angr >= 3) highminion++;
+                        if (m.Angr >= 8 || m.Hp >= 8 && m.Angr >= 5) veryhighminion++;
+                    }
+
+                    minionvalue += m.Angr * 2 + m.Hp;
+                    if (priorityTargets.ContainsKey(m.name)) minionvalue += priorityTargets[m.name];
                 }
 
                 if (name == CardDB.cardName.doomsayer)
@@ -2071,20 +2091,19 @@ namespace HREngine.Bots
                     else if (p.enemyMinions.Count <= 2 || p.enemyMinions.Count + 2 <= p.ownMinions.Count || p.ownMinions.Count >= 3) return 30;
                     else return 0;
                 }
+
+
+
+                penalty = 35;
+
+                if (highminion >= 3 || veryhighminion >= 2 || readyAngr >= 9)
+                {
+                    penalty = 15;
+                }
+
                 
-
-
-                if (p.enemyMinions.Count <= 2 || p.enemyMinions.Count + 2 <= p.ownMinions.Count || p.ownMinions.Count >= 3)
-                {
-                    penalty = 30;
-                }
-
-                if (highminion >= 2 || veryhighminion >= 1 || p.enemyMinions.Count >= 3)
-                {
-                    penalty = 0;
-                }
-
                 if (name == CardDB.cardName.brawl) penalty -= p.ownMinions.Count;
+                if (name == CardDB.cardName.brawl && p.ownMinions.Find(a => a.name == CardDB.cardName.dirtyrat && a.playedThisTurn ) != null && p.enemyDeckSize >= 1) penalty -= 5;
 
                 return penalty;
             }
@@ -2158,6 +2177,8 @@ namespace HREngine.Bots
                     pen = 20 - m.Angr - m.Hp;
                     if (p.ownHero.Hp <= 10) pen = 0;
                 }
+
+                if (m.poisonous && p.ownMinions.Count >= 1) pen = 0;
 
                 if ( m.name == CardDB.cardName.doomsayer)
                 {
@@ -2375,8 +2396,8 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.armorup || name == CardDB.cardName.tankup)
             {
-                if (name == CardDB.cardName.armorup) return 2;
-                if (name == CardDB.cardName.tankup) return 4;
+                if (name == CardDB.cardName.armorup) return 0.5f;
+                if (name == CardDB.cardName.tankup) return 1;
             }
 
 			bool juggleron = false;
@@ -2406,6 +2427,11 @@ namespace HREngine.Bots
                 {
                     return p.playactions.Count * 0.5f;
                 }
+            }
+
+            if (name == CardDB.cardName.dieinsect)
+            {
+                return -p.playactions.Count * 0.05f;
             }
 
             if (name == CardDB.cardName.thesilverhand || name == CardDB.cardName.reinforce)
@@ -4040,7 +4066,7 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.deathwing)
             {
-                return (p.owncards.Count - 1) * 10;
+                return (p.owncards.Count - 1) * 15;
             }
 
             if (name == CardDB.cardName.potionofmadness)
@@ -4159,6 +4185,21 @@ namespace HREngine.Bots
             if (name == CardDB.cardName.backstab) return 2;
             if (name == CardDB.cardName.innerfire) return 4;
             if (name == CardDB.cardName.forbiddenflame) return 5;
+
+            if (name == CardDB.cardName.openthewaygate ||
+                name == CardDB.cardName.awakenthemakers ||
+                name == CardDB.cardName.themarshqueen ||
+                name == CardDB.cardName.lakkarisacrifice ||
+                name == CardDB.cardName.thelastkaleidosaur ||
+                name == CardDB.cardName.unitethemurlocs ||
+                name == CardDB.cardName.junglegiants ||
+                name == CardDB.cardName.fireplumesheart ||
+                name == CardDB.cardName.thecavernsbelow)
+            {
+                if (p.ownMaxMana == 1 && p.mana == 1) return -10; //always use quest first
+            }
+
+            if (name == CardDB.cardName.dirtyrat) return p.playactions.Count * 0.01f;
 
             return pen;
         }
@@ -5328,8 +5369,16 @@ namespace HREngine.Bots
             cardDrawBattleCryDatabase.Add(CardDB.cardName.lunarvisions, 2);
             cardDrawBattleCryDatabase.Add(CardDB.cardName.smalltimerecruits, 3);
 
+            //ungoro
+            cardDrawBattleCryDatabase.Add(CardDB.cardName.arcanologist, 1);
+            cardDrawBattleCryDatabase.Add(CardDB.cardName.brighteyedscout, 1);
+            cardDrawBattleCryDatabase.Add(CardDB.cardName.tolvirwarden, 1); //0-2
+            cardDrawBattleCryDatabase.Add(CardDB.cardName.mimicpod, 2);
+
 
             
+
+
             cardDrawDeathrattleDatabase.Add(CardDB.cardName.bloodmagethalnos, 1);
             cardDrawDeathrattleDatabase.Add(CardDB.cardName.clockworkgnome, 1);
             cardDrawDeathrattleDatabase.Add(CardDB.cardName.dancingswords, 1);
@@ -5347,6 +5396,9 @@ namespace HREngine.Bots
             cardDrawDeathrattleDatabase.Add(CardDB.cardName.deadlyfork, 1);
             cardDrawDeathrattleDatabase.Add(CardDB.cardName.runicegg, 1);
             cardDrawDeathrattleDatabase.Add(CardDB.cardName.meanstreetmarshal, 1);
+
+            //ungoro
+            cardDrawDeathrattleDatabase.Add(CardDB.cardName.crystallineoracle, 1);
 
 
 
@@ -6355,6 +6407,16 @@ namespace HREngine.Bots
             discoverCards.Add(CardDB.cardName.grimestreetinformant, 1);
             discoverCards.Add(CardDB.cardName.kabalcourier, 1);
             discoverCards.Add(CardDB.cardName.lotusagents, 1);
+
+            //ungoro
+            discoverCards.Add(CardDB.cardName.chitteringtunneler, 1);
+            discoverCards.Add(CardDB.cardName.stonehilldefender, 1);
+            discoverCards.Add(CardDB.cardName.hydrologist, 1);
+            discoverCards.Add(CardDB.cardName.shadowvisions, 1);
+            discoverCards.Add(CardDB.cardName.primalfinlookout, 1);
+            discoverCards.Add(CardDB.cardName.servantofkalimos, 1); // when drop elemental last turn 
+            discoverCards.Add(CardDB.cardName.primordialglyph, 1);
+            discoverCards.Add(CardDB.cardName.hallucination, 1);
         }
 
 

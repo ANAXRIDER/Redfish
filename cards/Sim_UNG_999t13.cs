@@ -4,14 +4,13 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-	class Sim_OG_080e : SimTemplate //* Fadeleaf Toxin
+	class Sim_UNG_999t13 : SimTemplate //* Poison Spit
 	{
-		//Give a friendly minion Stealth until your next turn.
-		
+		//Poisonous
+
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            target.stealth = true;
-            target.conceal = true;
+            target.poisonous= true;
         }
     }
 }

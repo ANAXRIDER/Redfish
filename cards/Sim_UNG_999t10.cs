@@ -4,10 +4,10 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-	class Sim_OG_080e : SimTemplate //* Fadeleaf Toxin
+	class Sim_UNG_999t10 : SimTemplate //* Shrouding Mist
 	{
-		//Give a friendly minion Stealth until your next turn.
-		
+		//Stealth until your next turn.
+
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             target.stealth = true;

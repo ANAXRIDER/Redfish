@@ -11,7 +11,7 @@ namespace HREngine.Bots
 
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-
+            List<Minion> temp2 = (ownplay) ? new List<Minion>(p.enemyMinions) : new List<Minion>(p.ownMinions);
             int dmg = 8;
             if (ownplay)
             {
@@ -27,7 +27,7 @@ namespace HREngine.Bots
             int count = (ownplay) ? p.enemyMinions.Count : p.ownMinions.Count;
             if (count >= 1)
             {
-                List<Minion> temp2 = (ownplay) ? new List<Minion>(p.enemyMinions) : new List<Minion>(p.ownMinions);
+                
                 temp2.Sort((a, b) => a.Hp.CompareTo(b.Hp));//damage the lowest
                 foreach (Minion mins in temp2)
                 {
@@ -45,7 +45,7 @@ namespace HREngine.Bots
             count = (ownplay) ? p.enemyMinions.Count : p.ownMinions.Count;
             if (count >= 1)
             {
-                List<Minion> temp2 = (ownplay) ? new List<Minion>(p.enemyMinions) : new List<Minion>(p.ownMinions);
+                
                 temp2.Sort((a, b) => a.Hp.CompareTo(b.Hp));//damage the lowest
                 foreach (Minion mins in temp2)
                 {

@@ -796,6 +796,17 @@
                         if (m.zonepos == p.ownMinions.Count || m.zonepos == 1) retval -= 2;
                     }
 
+                    //attack buff when enemy turn
+                    if (!m.silenced)
+                    {
+                        switch (m.name)
+                        {
+                            case CardDB.cardName.tarcreeper: retval += 2; break;
+                            case CardDB.cardName.tarlord: retval += 4; break;
+                            case CardDB.cardName.tarlurker: retval += 3; break;
+                        }
+                    }
+                    
 
                 }
             }

@@ -2431,7 +2431,7 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.dieinsect)
             {
-                return -p.playactions.Count * 0.05f;
+                if (p.enemyMinions.Find (a => a.Hp >= 5) == null) return -p.playactions.Count * 0.05f;
             }
 
             if (name == CardDB.cardName.thesilverhand || name == CardDB.cardName.reinforce)
@@ -4196,10 +4196,10 @@ namespace HREngine.Bots
                 name == CardDB.cardName.fireplumesheart ||
                 name == CardDB.cardName.thecavernsbelow)
             {
-                if (p.ownMaxMana == 1 && p.mana == 1) return -10; //always use quest first
+                if (p.ownMaxMana == 1 && p.mana == 1) return -15; //always use quest first
             }
 
-            if (name == CardDB.cardName.dirtyrat) return p.playactions.Count * 0.01f;
+            if (name == CardDB.cardName.dirtyrat) return  - 1 + p.playactions.Count * 0.01f;
 
             return pen;
         }

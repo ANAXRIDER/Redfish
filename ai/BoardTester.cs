@@ -790,6 +790,9 @@ namespace HREngine.Bots
                         int spiritecho = 0;
                         if (s.Contains(" spiritecho(")) spiritecho = Convert.ToInt32(s.Split(new string[] { " spiritecho(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
+                        int AdaptedCantBeTargetedBySpellsOrHeroPowers = 0;
+                        if (s.Contains(" AdaptedCantTgt(")) AdaptedCantBeTargetedBySpellsOrHeroPowers = Convert.ToInt32(s.Split(new string[] { " AdaptedCantTgt(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
                         tempminion = createNewMinion(new Handmanager.Handcard(CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(minionid))), zp, true);
                         tempminion.own = true;
                         tempminion.entityID = ent;
@@ -836,6 +839,8 @@ namespace HREngine.Bots
                         tempminion.ReturnSpellCount = returnspellcount;
                         tempminion.spiritecho = spiritecho;
                         tempminion.livingspores = livingspores;
+                        tempminion.AdaptedCantBeTargetedBySpellsOrHeroPowers = AdaptedCantBeTargetedBySpellsOrHeroPowers;
+
 
                         tempminion.canAttackNormal = false;
                         if (ready == true) tempminion.canAttackNormal = true;
@@ -938,6 +943,9 @@ namespace HREngine.Bots
                         int livingspores = 0;//adjadmg
                         if (s.Contains(" lspores(")) livingspores = Convert.ToInt32(s.Split(new string[] { " lspores(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
+                        int AdaptedCantBeTargetedBySpellsOrHeroPowers = 0;
+                        if (s.Contains(" AdaptedCantTgt(")) AdaptedCantBeTargetedBySpellsOrHeroPowers = Convert.ToInt32(s.Split(new string[] { " AdaptedCantTgt(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
                         tempminion = createNewMinion(new Handmanager.Handcard(CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(minionid))), zp, false);
                         tempminion.own = false;
                         tempminion.entityID = ent;
@@ -984,7 +992,7 @@ namespace HREngine.Bots
                         tempminion.ReturnSpellCount = returnspellcount;
                         tempminion.spiritecho = spiritecho;
                         tempminion.livingspores = livingspores;
-
+                        tempminion.AdaptedCantBeTargetedBySpellsOrHeroPowers = AdaptedCantBeTargetedBySpellsOrHeroPowers;
 
                         if (maxhp > hp) tempminion.wounded = true;
                         tempminion.updateReadyness();

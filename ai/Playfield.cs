@@ -6481,7 +6481,12 @@ namespace HREngine.Bots
                     //delete adjacent buffs
                     this.minionGetAdjacentBuff(m, -m.AdjacentAngr, 0);
                     m.cantBeTargetedBySpellsOrHeroPowers = false;
-                    if ((m.name == CardDB.cardName.faeriedragon || m.name == CardDB.cardName.spectralknight || m.name == CardDB.cardName.laughingsister || m.name == CardDB.cardName.arcanenullifierx21 || m.name == CardDB.cardName.soggoththeslitherer) && !m.silenced)
+                    if ((m.name == CardDB.cardName.faeriedragon ||
+                        m.name == CardDB.cardName.spectralknight ||
+                        m.name == CardDB.cardName.laughingsister ||
+                        m.name == CardDB.cardName.arcanenullifierx21 ||
+                        m.name == CardDB.cardName.soggoththeslitherer ||
+                        m.name == CardDB.cardName.airelemental) && !m.silenced || m.AdaptedCantBeTargetedBySpellsOrHeroPowers >= 1)
                     {
                         m.cantBeTargetedBySpellsOrHeroPowers = true;
                     }
@@ -6530,7 +6535,12 @@ namespace HREngine.Bots
                     //delete adjacent buffs
                     this.minionGetAdjacentBuff(m, -m.AdjacentAngr, 0);
                     m.cantBeTargetedBySpellsOrHeroPowers = false;
-                    if ((m.name == CardDB.cardName.faeriedragon || m.name == CardDB.cardName.spectralknight || m.name == CardDB.cardName.laughingsister || m.name == CardDB.cardName.arcanenullifierx21 || m.name == CardDB.cardName.soggoththeslitherer) && !m.silenced)
+                    if ((m.name == CardDB.cardName.faeriedragon ||
+                        m.name == CardDB.cardName.spectralknight ||
+                        m.name == CardDB.cardName.laughingsister ||
+                        m.name == CardDB.cardName.arcanenullifierx21 ||
+                        m.name == CardDB.cardName.soggoththeslitherer ||
+                        m.name == CardDB.cardName.airelemental) && !m.silenced || m.AdaptedCantBeTargetedBySpellsOrHeroPowers >= 1)
                     {
                         m.cantBeTargetedBySpellsOrHeroPowers = true;
                     }
@@ -6544,7 +6554,7 @@ namespace HREngine.Bots
                             minionEnemyReviving = true;
                         }
 
-                        if ((!m.silenced && m.handcard.card.deathrattle) || m.ancestralspirit >= 1 || m.spikeridgedteed >= 1 || m.souloftheforest >= 1 || m.explorershat>=1 || m.infest >= 1 || m.spiritecho >= 1)
+                        if ((!m.silenced && m.handcard.card.deathrattle) || m.ancestralspirit >= 1 || m.spikeridgedteed >= 1 || m.souloftheforest >= 1 || m.explorershat>=1 || m.infest >= 1 || m.spiritecho >= 1 || m.livingspores >= 1)
                         {
                             deathrattles.Add(m);
                         }
@@ -8879,6 +8889,7 @@ namespace HREngine.Bots
             if (m.livingspores >= 1) mini += " lspores(" + m.livingspores + ")";
             if (m.ownPowerWordGlory >= 1) mini += " ownPWG(" + m.ownPowerWordGlory + ")";
             if (m.enemyPowerWordGlory >= 1) mini += " enemyPWG(" + m.enemyPowerWordGlory + ")";
+            if (m.AdaptedCantBeTargetedBySpellsOrHeroPowers >= 1) mini += " AdaptedCantTgt(" + m.enemyPowerWordGlory + ")";
 
             if (m.explorershat >= 1) mini += " explht(" + m.explorershat + ")";
 

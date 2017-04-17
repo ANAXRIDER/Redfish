@@ -13,7 +13,7 @@ namespace HREngine.Bots
         {
             Minion target = (m.own) ? p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchLowestHP) : p.searchRandomMinion(p.ownMinions, Playfield.searchmode.searchLowestHP);
             //Helpfunctions.Instance.ErrorLog("target = " + target.entityID);
-            p.minionGetDamageOrHeal(target, 3);
+            if (target != null ) p.minionGetDamageOrHeal(target, 3);
         }
 
     }

@@ -7,5 +7,5 @@ C:\Users\haemi\Desktop\silver\redfish\redfish\redfish\bin\Debug\Redfish.pdb
 C:\Users\haemi\Desktop\silver\redfish\redfish\redfish\bin\Debug\HSRangerLib.dll
 C:\Users\haemi\Desktop\silver\redfish\redfish\redfish\obj\Debug\redfish.csprojResolveAssemblyReference.cache
 C:\Users\haemi\Desktop\silver\redfish\redfish\redfish\obj\Debug\Redfish.pdb
-C:\Users\haemi\Desktop\silver\redfish\redfish\redfish\bin\Debug\Redfish.exe
-C:\Users\haemi\Desktop\silver\redfish\redfish\redfish\obj\Debug\Redfish.exe
+C:\Users\haemi\Desktop\silver\redfish\redfish\redfish\bin\Debug\Redfish.dll
+C:\Users\haemi\Desktop\silver\redfish\redfish\redfish\obj\Debug\Redfish.dll

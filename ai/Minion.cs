@@ -80,6 +80,7 @@
         public int ReturnSpellCount;
 
         public bool cantBeTargetedBySpellsOrHeroPowers;
+        public int AdaptedCantBeTargetedBySpellsOrHeroPowers;
         public bool cantAttack = false;
 
         public int Hp;
@@ -193,6 +194,7 @@
             this.silenced = m.silenced;
 
             this.cantBeTargetedBySpellsOrHeroPowers = m.cantBeTargetedBySpellsOrHeroPowers;
+            this.AdaptedCantBeTargetedBySpellsOrHeroPowers = m.AdaptedCantBeTargetedBySpellsOrHeroPowers;
             this.cantAttack = m.cantAttack;
 
             if (m.deathrattles != null)
@@ -281,6 +283,7 @@
             this.silenced = m.silenced;
 
             this.cantBeTargetedBySpellsOrHeroPowers = m.cantBeTargetedBySpellsOrHeroPowers;
+            this.AdaptedCantBeTargetedBySpellsOrHeroPowers = m.AdaptedCantBeTargetedBySpellsOrHeroPowers;
             this.cantAttack = m.cantAttack;
 
             if (m.deathrattles != null)
@@ -683,6 +686,7 @@
             livingspores = 0;
 
             cantBeTargetedBySpellsOrHeroPowers = false;
+            AdaptedCantBeTargetedBySpellsOrHeroPowers = 0;
             cantAttack = false;
 
             charge = 0;
@@ -892,6 +896,8 @@
                     case CardDB.cardIDEnum.CS2_188o: this.tempAttack += 2; continue;
                     case CardDB.cardIDEnum.CS2_017o: this.tempAttack += 1; continue;
 
+                    //adapt can't target
+                    case CardDB.cardIDEnum.UNG_999t5e: this.AdaptedCantBeTargetedBySpellsOrHeroPowers += 1; continue;
                 }
             }
 

@@ -1008,25 +1008,6 @@ namespace HREngine.Bots
                 //todo find better solution
                 if (!this.doMultipleThingsAtATime)
                 {
-                    // fake move causes missing turns in the log, default ai takes over???
-                    /*if (shouldSendFakeAction)
-                    {
-                        System.Threading.Thread.Sleep(200);
-                        //do fake action
-                        BotAction fakemove = new HSRangerLib.BotAction();
-                        fakemove.Type = BotActionType.HERO_ATTACK;
-                        fakemove.Actor = base.EnemyHero;
-                        fakemove.Target = this.EnemyHero;
-                        e.action_list.Add(fakemove);
-                        shouldSendFakeAction = false;
-                        Helpfunctions.Instance.logg("Sent fake action...");
-                        Helpfunctions.Instance.ErrorLog("Sent fake action...");
-                        return;
-                    }
-                    else
-                    {
-                        e.action_list.Clear(); //clear fake actions
-                    }*/
 
                     //better test... we checked if isprocessing is true.. after that, we wait little time and test it again.
                     if (this.gameState.IsProcessingPowers || this.gameState.IsBlockingServer)
@@ -1173,6 +1154,7 @@ namespace HREngine.Bots
                         if (POWERFULSINGLEACTION >= 1)
                         {
                             POWERFULSINGLEACTION = 0;
+                            this.dontmultiactioncount = 0;
                             Helpfunctions.Instance.ErrorLog("찾는거종료1" + POWERFULSINGLEACTION);
                             Helpfunctions.Instance.logg("찾는거종료1" + POWERFULSINGLEACTION);
                         }
@@ -1213,12 +1195,6 @@ namespace HREngine.Bots
                             endturnmove.Type = BotActionType.END_TURN;
                             e.action_list.Add(endturnmove);
                             hasMoreActions = false;
-                            if (POWERFULSINGLEACTION >= 1)
-                            {
-                                POWERFULSINGLEACTION = 0;
-                                Helpfunctions.Instance.ErrorLog("찾는거종료2" + POWERFULSINGLEACTION);
-                                Helpfunctions.Instance.logg("찾는거종료2" + POWERFULSINGLEACTION);
-                            }
                         }
                         else
                         {
@@ -1241,12 +1217,6 @@ namespace HREngine.Bots
                     numActionsSent = e.action_list.Count();
                     Helpfunctions.Instance.ErrorLog("sending HR " + numActionsSent + " queued actions");
                     numExecsReceived = 0;
-                    //if (POWERFULSINGLEACTION >= 1)
-                    //{
-                    //    POWERFULSINGLEACTION = 0;
-                    //    Helpfunctions.Instance.ErrorLog("찾는거종료3" + POWERFULSINGLEACTION);
-                    //    Helpfunctions.Instance.logg("찾는거종료3" + POWERFULSINGLEACTION);
-                    //}
                 }//##########################################################################
 
 
@@ -1478,7 +1448,7 @@ namespace HREngine.Bots
 
     public sealed class Silverfish
     {
-        public string versionnumber = "125.3SE + redfish";
+        public string versionnumber = "130.0SE + redfish";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1674,23 +1644,15 @@ namespace HREngine.Bots
 
                                 if (targethasdamageeffect && !daum.bestmove.target.isHero)
                                 {
-                                    System.Threading.Thread.Sleep(5200);
-                                    //Helpfunctions.Instance.logg("타겟 맞을떄마다 소환합니다 sleep 3500ms");
-                                    //Helpfunctions.Instance.logg("타겟 맞을떄마다 소환합니다 1200ms");
-                                    //Helpfunctions.Instance.ErrorLog("타겟 맞을떄마다 소환합니다 3500ms");
-                                    //Helpfunctions.Instance.ErrorLog("타겟 맞을떄마다 소환합니다 1200ms");
+                                    System.Threading.Thread.Sleep(3500);
                                 }
 
                                 if (daum.bestmove.target.hasDeathrattle() && daum.bestmove.own.Angr >= daum.bestmove.target.Hp && !daum.bestmove.target.isHero)
                                 {
-                                    System.Threading.Thread.Sleep(3500);
-                                    //Helpfunctions.Instance.logg("Target deathrattle detected sleep 2200ms");
-                                    //Helpfunctions.Instance.logg("Target deathrattle detected sleep 1500ms");
-                                    //Helpfunctions.Instance.ErrorLog("Target deathrattle detected sleep 2200ms");
-                                    //Helpfunctions.Instance.ErrorLog("Target deathrattle detected sleep 1500ms");
+                                    System.Threading.Thread.Sleep(2200);
                                 }
 
-                                if (daum.bestmove.target.taunt && !daum.bestmove.target.isHero)
+                                if (daum.bestmove.target.taunt && daum.bestmove.own.Angr >= daum.bestmove.target.Hp && !daum.bestmove.target.isHero)
                                 {
                                     System.Threading.Thread.Sleep(800);
                                     //Helpfunctions.Instance.logg("Target Taunt detected sleep 800ms");
@@ -2295,7 +2257,7 @@ namespace HREngine.Bots
 
             Hrtprozis.Instance.updateFatigueStats(this.ownDecksize, this.ownHeroFatigue, this.enemyDecksize, this.enemyHeroFatigue);
             Hrtprozis.Instance.updateJadeGolemsInfo(ownPlayer.GetTagValue((int)GAME_TAG.JADE_GOLEM), enemyPlayer.GetTagValue((int)GAME_TAG.JADE_GOLEM));
-
+            Hrtprozis.Instance.updateElementals(ownPlayer.GetTagValue(532), enemyPlayer.GetTagValue(532)); //ELEMENTAL_POWERED_UP = 532,
             Probabilitymaker.Instance.getEnemySecretGuesses(this.enemySecretList, Hrtprozis.Instance.heroNametoEnum(this.enemyHeroname));
 
             //learnmode :D
@@ -2466,6 +2428,18 @@ namespace HREngine.Bots
 
             foreach (var item in rangerbot.EnemySecrets)
             {
+                switch (item.CardId)
+                {
+                    case "UNG_028":
+                    case "UNG_067":
+                    case "UNG_116":
+                    case "UNG_829":
+                    case "UNG_920":
+                    case "UNG_934":
+                    case "UNG_940":
+                    case "UNG_942":
+                    case "UNG_954": continue;
+                }
                 enemySecretList.Add(item.EntityId);
             }
             enemySecretCount = enemySecretList.Count;

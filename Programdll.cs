@@ -478,6 +478,7 @@ namespace HREngine.Bots
             {
                 Hrtprozis.Instance.addCardToDecks(CardDB.Instance.cardIdstringToEnum(card.card_id), card.num);
             }
+
         }
 
         /// <summary>
@@ -1525,6 +1526,7 @@ namespace HREngine.Bots
         int ownHeroPowerUsesThisGame = 0;
         int enemyHeroPowerUsesThisGame = 0;
         int lockandload = 0;
+        int Stampede = 0;
         int ownsabo=0;//number of saboteurplays  of our player (so enemy has the buff)
         int enemysabo = 0;//number of saboteurplays  of enemy player (so we have the buff)
         int ownFenciCoaches = 0; // number of Fencing Coach-debuffs on our player 
@@ -2244,7 +2246,7 @@ namespace HREngine.Bots
                 if (m.Hp >= 1) this.numOptionPlayedThisTurn += m.numAttacksThisTurn;
             }
 
-            Hrtprozis.Instance.updatePlayer(this.ownMaxMana, this.currentMana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.ownOverload, ownHero.entityID, enemyHero.entityID, this.numberMinionsDiedThisTurn, this.ownCurrentOverload, this.enemyOverload, this.heroPowerUsesThisTurn,this.lockandload);
+            Hrtprozis.Instance.updatePlayer(this.ownMaxMana, this.currentMana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.ownOverload, ownHero.entityID, enemyHero.entityID, this.numberMinionsDiedThisTurn, this.ownCurrentOverload, this.enemyOverload, this.heroPowerUsesThisTurn,this.lockandload,this.Stampede);
             Hrtprozis.Instance.setPlayereffects(this.ownDragonConsort, this.enemyDragonConsort, this.ownLoathebs, this.enemyLoathebs, this.ownMillhouse, this.enemyMillhouse, this.ownKirintor, this.ownPrepa, this.ownsabo, this.enemysabo, this.ownFenciCoaches, this.enemyCursedCardsInHand);
             Hrtprozis.Instance.updateSecretStuff(this.ownSecretList, this.enemySecretCount);
 
@@ -2257,7 +2259,6 @@ namespace HREngine.Bots
 
             Hrtprozis.Instance.updateFatigueStats(this.ownDecksize, this.ownHeroFatigue, this.enemyDecksize, this.enemyHeroFatigue);
             Hrtprozis.Instance.updateJadeGolemsInfo(ownPlayer.GetTagValue((int)GAME_TAG.JADE_GOLEM), enemyPlayer.GetTagValue((int)GAME_TAG.JADE_GOLEM));
-            Hrtprozis.Instance.updateElementals(ownPlayer.GetTagValue(532), enemyPlayer.GetTagValue(532)); //ELEMENTAL_POWERED_UP = 532,
             Probabilitymaker.Instance.getEnemySecretGuesses(this.enemySecretList, Hrtprozis.Instance.heroNametoEnum(this.enemyHeroname));
 
             //learnmode :D
@@ -2397,6 +2398,7 @@ namespace HREngine.Bots
             this.ownKirintor = 0;
             this.ownPrepa = 0;
             this.lockandload = 0;
+            this.Stampede = 0;
             this.enemysabo = 0;
             this.ownFenciCoaches = 0;
             this.ownMillhouse = 0;
@@ -2428,29 +2430,27 @@ namespace HREngine.Bots
 
             foreach (var item in rangerbot.EnemySecrets)
             {
-                switch (item.CardId)
+                if (item.GetTagValue((int)GAME_TAG.QUEST) >= 1)
                 {
-                    case "UNG_028":
-                    case "UNG_067":
-                    case "UNG_116":
-                    case "UNG_829":
-                    case "UNG_920":
-                    case "UNG_934":
-                    case "UNG_940":
-                    case "UNG_942":
-                    case "UNG_954": continue;
+                    Questmanager.Instance.Reset();
+                    Questmanager.Instance.updateQuestStuff(item.CardId, item.GetTagValue((int)GAME_TAG.QUEST_PROGRESS), item.GetTagValue((int)GAME_TAG.QUEST_PROGRESS_TOTAL), false);
+                    continue;
                 }
                 enemySecretList.Add(item.EntityId);
             }
             enemySecretCount = enemySecretList.Count;
 
             this.ownSecretList.Clear();
-
             foreach (var item in rangerbot.FriendSecrets)
             {
+                if (item.GetTagValue((int)GAME_TAG.QUEST) >= 1)
+                {
+                    Questmanager.Instance.Reset();
+                    Questmanager.Instance.updateQuestStuff(item.CardId, item.GetTagValue((int)GAME_TAG.QUEST_PROGRESS), item.GetTagValue((int)GAME_TAG.QUEST_PROGRESS_TOTAL), true);
+                    continue;
+                }
                 this.ownSecretList.Add(item.CardId);
             }
-
 
             this.numMinionsPlayedThisTurn = rangerbot.gameState.NumMinionsPlayedThisTurn;
             this.cardsPlayedThisTurn = rangerbot.gameState.NumCardsPlayedThisTurn;
@@ -2636,6 +2636,7 @@ namespace HREngine.Bots
                     if (id == CardDB.cardIDEnum.EX1_612o) this.ownKirintor++;
                     if (id == CardDB.cardIDEnum.EX1_145o) this.ownPrepa++;
                     if (id == CardDB.cardIDEnum.AT_061e) this.lockandload++;
+                    if (id == CardDB.cardIDEnum.UNG_916e) this.Stampede++;
                     if (id == CardDB.cardIDEnum.AT_086e) this.enemysabo++;
                     if (id == CardDB.cardIDEnum.AT_115e) this.ownFenciCoaches++;
 
@@ -2655,6 +2656,7 @@ namespace HREngine.Bots
 
             }
             this.lockandload = (rangerbot.gameState.LocalPlayerLockAndLoad)? 1 : 0;
+            //this.Stampede = (rangerbot.gameState.LocalPlayerLockAndLoad) ? 1 : 0;
 
             //saboteur test:
             if (ownHeroAbility.Cost >= 3) Helpfunctions.Instance.ErrorLog("heroabilitymana " + ownHeroAbility.Cost);
@@ -2938,11 +2940,12 @@ namespace HREngine.Bots
             this.enemyAnzCards = 0;
             List<Entity> list = rangerbot.FriendHand;
 
+            int elementalLastturn = 0;
             foreach (Entity item in list)
             {
 
                 Entity entitiy = item;
-
+           
                 if (entitiy.ControllerId == this.ownPlayerController && entitiy.ZonePosition >= 1) // own handcard
                 {
                     CardDB.Card c = CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(entitiy.CardId));
@@ -2961,6 +2964,8 @@ namespace HREngine.Bots
                     int hpchange = entitiy.Health - c.Health;
                     hc.addattack = attackchange;
                     hc.addHp = hpchange;
+                    hc.elemPoweredUp = entitiy.GetTagValue((int)GAME_TAG.ELEMENTAL_POWERED_UP);
+                    if (hc.elemPoweredUp > 0) elementalLastturn = 1;
 
                     handCards.Add(hc);
                     this.anzcards++;
@@ -2968,6 +2973,7 @@ namespace HREngine.Bots
 
 
             }
+            if (elementalLastturn > 0) Hrtprozis.Instance.updateElementals(elementalLastturn);
 
             Dictionary<int, Entity> allEntitys = new Dictionary<int, Entity>();
 

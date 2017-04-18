@@ -9,6 +9,11 @@ namespace HREngine.Bots
 
         //Battlecry: Adapt a friendly_Beast.
 
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+            if (target != null) p.getBestAdapt(own);
+        }
+
     }
 
 }

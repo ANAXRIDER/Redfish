@@ -8,7 +8,12 @@ namespace HREngine.Bots
     {
 
         //Take an extra turn.
-
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        {
+            if (p.ownMaxMana <= 9) p.ownMaxMana++;
+            p.mana = p.ownMaxMana;
+            p.triggerStartTurn(true);
+        }
     }
 
 }

@@ -8,7 +8,15 @@ namespace HREngine.Bots
     {
 
         //Battlecry: If you played anElemental last turn, gain_Taunt and Divine_Shield.
-
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+            if (p.anzOwnElementalsLastTurn > 0 && own.own)
+            {
+                own.divineshild = true;
+                own.taunt = true;
+                p.anzOwnTaunt++;
+            }
+        }
     }
 
 }

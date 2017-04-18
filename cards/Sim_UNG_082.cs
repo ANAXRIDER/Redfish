@@ -9,6 +9,11 @@ namespace HREngine.Bots
 
         //Battlecry: If you played an_Elemental last turn, Adapt.
 
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+            if (p.anzOwnElementalsLastTurn > 0 && own.own) p.getBestAdapt(own);
+        }
+
     }
 
 }

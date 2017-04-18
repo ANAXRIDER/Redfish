@@ -70,6 +70,7 @@
         public int ownHeroPowerUsesThisGame;
         public int enemyHeroPowerUsesThisGame;
         public int lockAndLoads;
+        public int Stampede;
 
         public int numberMinionsDiedThisTurn;
         
@@ -105,10 +106,9 @@
         public int anzOgOwnCThunTaunt;
         public int anzOwnJadeGolem;
         public int anzEnemyJadeGolem;
-        public int ownCrystalCore = 0;
+        public int ownCrystalCore;
         public bool ownMinionsCost0 = false;
-        public int anzOwnElementalsThisTurn = 0;
-        public int anzOwnElementalsLastTurn = 0;
+        public int anzOwnElementalsLastTurn;
 
         public int ownDragonConsort;
         public int enemyDragonConsort;
@@ -181,6 +181,7 @@
             this.ownHeroWeapon = CardDB.cardName.unknown;
             this.enemyHeroWeapon = CardDB.cardName.unknown;
             noDuplicates = false;
+            anzOwnElementalsLastTurn = 0;
         }
 
         public void clearDecks()
@@ -277,9 +278,8 @@
             ownMinionsCost0 = tmp;
         }
 
-        public void updateElementals(int anzOwnElemTT, int anzOwnElemLT)
+        public void updateElementals(int anzOwnElemLT)
         {
-            anzOwnElementalsThisTurn = anzOwnElemTT;
             anzOwnElementalsLastTurn = anzOwnElemLT;
         }
 
@@ -458,7 +458,7 @@
             this.enemySecretCount = numEnemSec;
         }
 
-        public void updatePlayer(int maxmana, int currentmana, int cardsplayedthisturn, int numMinionsplayed, int optionsPlayedThisTurn, int recall, int heroentity, int enemyentity, int numMinsDied, int currentRecall, int enemRecall, int hrpwrUsesThisTurn, int locknload)
+        public void updatePlayer(int maxmana, int currentmana, int cardsplayedthisturn, int numMinionsplayed, int optionsPlayedThisTurn, int recall, int heroentity, int enemyentity, int numMinsDied, int currentRecall, int enemRecall, int hrpwrUsesThisTurn, int locknload, int stampd)
         {
             this.currentMana = currentmana;
             this.ownMaxMana = maxmana;
@@ -476,7 +476,9 @@
 
             this.heroPowerUsesThisTurn = hrpwrUsesThisTurn;
             this.lockAndLoads = locknload;
-            
+            this.Stampede = stampd;
+
+
         }
 
         public void setPlayereffects(int ownDragonConsorts, int enemyDragonConsorts, int ownLoathebs, int enemyLoathebs, int ownMillhouses, int enemyMillhouses, int nextSecretThisTurnCost0, int ownPrep, int ownSabo, int enemySabo, int ownFenciCoachess, int enemycurses)

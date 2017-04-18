@@ -154,8 +154,7 @@ namespace HREngine.Bots
         public int anzOgOwnCThunTaunt;
         public int anzOwnJadeGolem;
         public int anzEnemyJadeGolem;
-        public int anzOwnElementalsThisTurn = 0;
-        public int anzOwnElementalsLastTurn = 0;
+        public int anzOwnElementalsLastTurn;
 
         public int ownVioletIllusionist;
         public int enemyVioletIllusionist;
@@ -164,8 +163,8 @@ namespace HREngine.Bots
         public int anzBlackwaterPirate;
         public int blackwaterpirateStarted;
         public int embracetheshadow;
-        public int ownCrystalCore = 0;
-        public bool ownMinionsCost0 = false;
+        public int ownCrystalCore;
+        public bool ownMinionsCost0;
 
         public int anzEnemyTaunt;
         public int anzOwnTaunt;
@@ -340,6 +339,7 @@ namespace HREngine.Bots
 
         public int heroPowerActivationsThisTurn;//new----------
         public int lockAndLoads;//new------------
+        public int Stampede;//new------------
 
         public bool ownAbilityReady;
         public Handmanager.Handcard ownHeroAblility;
@@ -478,7 +478,6 @@ namespace HREngine.Bots
             this.anzOgOwnCThunTaunt = prozis.anzOgOwnCThunTaunt;
             this.anzOwnJadeGolem = prozis.anzOwnJadeGolem;
             this.anzEnemyJadeGolem = prozis.anzEnemyJadeGolem;
-            this.anzOwnElementalsThisTurn = prozis.anzOwnElementalsThisTurn;
             this.anzOwnElementalsLastTurn = prozis.anzOwnElementalsLastTurn;
 
             this.ownVioletIllusionist = 0;
@@ -593,6 +592,7 @@ namespace HREngine.Bots
             this.enemyHeroPowerUses = prozis.enemyHeroPowerUsesThisGame;
             this.heroPowerActivationsThisTurn = prozis.heroPowerUsesThisTurn;
             this.lockAndLoads = prozis.lockAndLoads;
+            this.Stampede = prozis.Stampede;
 
             this.ownQuest = Questmanager.Instance.ownQuest;
             this.enemyQuest = Questmanager.Instance.enemyQuest; 
@@ -1031,7 +1031,6 @@ namespace HREngine.Bots
             this.anzOgOwnCThunTaunt = p.anzOgOwnCThunTaunt;
             this.anzOwnJadeGolem = p.anzOwnJadeGolem;
             this.anzEnemyJadeGolem = p.anzEnemyJadeGolem;
-            this.anzOwnElementalsThisTurn = p.anzOwnElementalsThisTurn;
             this.anzOwnElementalsLastTurn = p.anzOwnElementalsLastTurn;
 
             this.attacked = p.attacked;
@@ -1100,6 +1099,7 @@ namespace HREngine.Bots
             this.enemyHeroPowerUses = p.enemyHeroPowerUses;
             this.heroPowerActivationsThisTurn = p.heroPowerActivationsThisTurn;
             this.lockAndLoads = p.lockAndLoads;
+            this.Stampede = p.Stampede;
             this.anzOwnSaboteur = p.anzOwnSaboteur;//dont ask...
             this.anzEnemySaboteur = p.anzEnemySaboteur;//dont ask... :D
             this.anzOwnFencingCoach = p.anzOwnFencingCoach;
@@ -3268,6 +3268,7 @@ namespace HREngine.Bots
 
             this.heroPowerActivationsThisTurn = 0;
             this.lockAndLoads = 0;
+            this.Stampede = 0;
 
             this.anzMinionsDiedThisTurn = 0;
 
@@ -5158,7 +5159,15 @@ namespace HREngine.Bots
             {
                 for (int i = 0; i < this.lockAndLoads; i++)
                 {
-                        this.drawACard(CardDB.cardIDEnum.None, own, true);
+                    this.CardToHand(CardDB.cardName.unknown, own);
+                }
+            }
+
+            if (this.isOwnTurn == own && this.Stampede >= 1 && hc.card.type == CardDB.cardtype.MOB && hc.card.race == TAG_RACE.BEAST)
+            {
+                for (int i = 0; i < this.Stampede; i++)
+                {
+                    this.CardToHand(CardDB.cardName.unknown, own);
                 }
             }
 
@@ -6806,13 +6815,12 @@ namespace HREngine.Bots
             {
                 m.Angr = hc.card.Attack + hc.addattack;
                 m.Hp = hc.card.Health + hc.addHp;
-                m.maxHp = hc.card.Health;
+                m.maxHp = hc.card.Health + hc.addHp;
             }
 
             hc.addattack = 0;
             hc.addHp = 0;
 
-            m.maxHp = hc.card.Health;
             m.name = hc.card.name;
             m.playedThisTurn = true;
             m.numAttacksThisTurn = 0;
@@ -8776,7 +8784,7 @@ namespace HREngine.Bots
             int ownKirinTorEffect = (this.nextSecretThisTurnCost0) ? 1:0;
             int ownPreparation = (this.playedPreparation) ? 1:0;
 
-            data += this.mobsPlayedThisTurn + " " + this.cardsPlayedThisTurn + " " + this.owedRecall + " " + ownPlayerController + " " + this.anzMinionsDiedThisTurn + " " + this.currentRecall + " " + this.enemyRecall + " " + this.heroPowerActivationsThisTurn +  " " +  this.lockAndLoads +"\r\n";
+            data += this.mobsPlayedThisTurn + " " + this.cardsPlayedThisTurn + " " + this.owedRecall + " " + ownPlayerController + " " + this.anzMinionsDiedThisTurn + " " + this.currentRecall + " " + this.enemyRecall + " " + this.heroPowerActivationsThisTurn +  " " +  this.lockAndLoads + " " + this.Stampede + "\r\n";
             data += this.anzOwnDragonConsort + " " + this.anzEnemyDragonConsort + " " + this.anzOwnLoatheb + " " + this.anzEnemyLoatheb + " " + ownmillhouse + " " + enemymillhouse + " " + ownKirinTorEffect + " " + ownPreparation+  " " + this.anzOwnSaboteur + " " + this.anzEnemySaboteur + " " +  this.anzOwnFencingCoach + "\r\n";
             data += "ownhero:" + "\r\n";
             data += Hrtprozis.heroEnumtoName(this.ownHeroName)+ " " + this.ownHero.Hp + " " + this.ownHero.maxHp + " " + this.ownHero.armor + " " + this.ownHero.immuneWhileAttacking + " " + this.ownHero.immune + " " + this.ownHero.entityID + " " + this.ownHero.Ready + " " + this.ownHero.numAttacksThisTurn + " " + this.ownHero.frozen + " " + this.ownHero.Angr + " " + this.ownHero.tempAttack+ "\r\n";
@@ -8790,7 +8798,7 @@ namespace HREngine.Bots
             data += "osecrets: " + secs + "\r\n";
             data += "cthunbonus: " + this.anzOgOwnCThunAngrBonus + " " + this.anzOgOwnCThunHpBonus + " " + this.anzOgOwnCThunTaunt + "\r\n";
             data += "jadegolems: " + this.anzOwnJadeGolem + " " + this.anzEnemyJadeGolem + "\r\n";
-            data += "elementals: " + this.anzOwnElementalsThisTurn + " " + this.anzOwnElementalsLastTurn +"\r\n";
+            data += "elementals: " + this.anzOwnElementalsLastTurn +"\r\n";
             data += Questmanager.Instance.getQuestsString() + "\r\n";
             data += "advanced: " + this.ownCrystalCore + " " + (this.ownMinionsCost0 ? 1 : 0) + "\r\n";
             data += "enemyhero:"+ "\r\n";
@@ -8889,7 +8897,7 @@ namespace HREngine.Bots
             if (m.livingspores >= 1) mini += " lspores(" + m.livingspores + ")";
             if (m.ownPowerWordGlory >= 1) mini += " ownPWG(" + m.ownPowerWordGlory + ")";
             if (m.enemyPowerWordGlory >= 1) mini += " enemyPWG(" + m.enemyPowerWordGlory + ")";
-            if (m.AdaptedCantBeTargetedBySpellsOrHeroPowers >= 1) mini += " AdaptedCantTgt(" + m.enemyPowerWordGlory + ")";
+            if (m.AdaptedCantBeTargetedBySpellsOrHeroPowers >= 1) mini += " AdaptedCantTgt(" + m.AdaptedCantBeTargetedBySpellsOrHeroPowers + ")";
 
             if (m.explorershat >= 1) mini += " explht(" + m.explorershat + ")";
 
@@ -8909,7 +8917,9 @@ namespace HREngine.Bots
                     {
                         //this.owncarddraw -= 1;
                         Handmanager.Handcard removedCard = this.owncards[0];
-                        if (removedCard.card.cardIDenum == CardDB.cardIDEnum.AT_022 || removedCard.card.cardIDenum == CardDB.cardIDEnum.KAR_205)
+                        if (removedCard.card.cardIDenum == CardDB.cardIDEnum.AT_022 ||
+                            removedCard.card.cardIDenum == CardDB.cardIDEnum.KAR_205 ||
+                            removedCard.card.cardIDenum == CardDB.cardIDEnum.UNG_836)
                         {
                             removedCard.card.sim_card.onCardIsDiscarded(this, removedCard.card, true);
                         }

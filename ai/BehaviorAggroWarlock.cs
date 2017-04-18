@@ -290,6 +290,10 @@
             retval += enemyherohpvalue;
 
             retval += p.ownMaxMana * 10 - p.enemyMaxMana * 10;
+            foreach (Minion m in p.ownMinions)
+            {
+                if (m.name == CardDB.cardName.manatreant)  retval += 5;
+            }
 
             if (p.ownMaxMana <= 6 && p.owncards.Count >= 4) retval -= p.manaTurnEnd * 3;
             else if (p.owncards.Count >= 4) retval -= p.manaTurnEnd;

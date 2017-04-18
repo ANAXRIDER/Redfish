@@ -11,19 +11,20 @@ namespace HREngine.Bots
 
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            List<Minion> temp = (ownplay) ? p.ownMinions : p.enemyMinions;
-            List<Minion> tempBeast = new List<Minion>();
-            foreach (Minion m in temp)
-            {
-                if ((TAG_RACE)m.handcard.card.race == TAG_RACE.BEAST)
-                {
-                    tempBeast.Add(m);
-                }
-            }
-            if (tempBeast.Count >= 1)
-            {
-                p.minionGetBuffed(p.searchRandomMinion(tempBeast, (ownplay ? Playfield.searchmode.searchLowestHP : Playfield.searchmode.searchHighestHP)), 2, 2);
-            }
+            p.minionGetBuffed(target, 2, 2);
+            //List<Minion> temp = (ownplay) ? p.ownMinions : p.enemyMinions;
+            //List<Minion> tempBeast = new List<Minion>();
+            //foreach (Minion m in temp)
+            //{
+            //    if ((TAG_RACE)m.handcard.card.race == TAG_RACE.BEAST)
+            //    {
+            //        tempBeast.Add(m);
+            //    }
+            //}
+            //if (tempBeast.Count >= 1)
+            //{
+            //    p.minionGetBuffed(p.searchRandomMinion(tempBeast, (ownplay ? Playfield.searchmode.searchLowestHP : Playfield.searchmode.searchHighestHP)), 2, 2);
+            //}
         }
 
     }

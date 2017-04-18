@@ -9,6 +9,11 @@ namespace HREngine.Bots
 
         //Battlecry: Adapt.
 
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+            p.getBestAdapt(own);
+        }
+
     }
 
 }

@@ -9,6 +9,11 @@ namespace HREngine.Bots
 
         //Battlecry: Reduce theCost of minions in your deck to (0).
 
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+            if (own.own) p.ownMinionsCost0 = true;
+        }
+
     }
 
 }

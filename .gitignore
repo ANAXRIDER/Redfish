@@ -45,3 +45,14 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+bin/Debug/새 폴더/test.txt
+*.exe
+bin/Debug/새 폴더/Redfish.dll
+bin/Debug/test.txt
+redfish.csproj
+*.pdb
+*.dll
+obj/Debug/redfish.csproj.FileListAbsolute.txt
+*.dll
+*.csproj
+bin/Debug/mulltest.txt

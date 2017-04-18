@@ -66,8 +66,7 @@ namespace HREngine.Bots
         int anzOgOwnCThunTaunt;
         int anzOwnJadeGolem;
         int anzEnemyJadeGolem;
-        int anzOwnElementalsThisTurn = 0;
-        int anzOwnElementalsLastTurn = 0;
+        int anzOwnElementalsLastTurn;
         int ownCrystalCore = 0;
         bool ownMinionsCost0 = false;
 
@@ -110,6 +109,7 @@ namespace HREngine.Bots
         int enemyHeropowerUsesThisGame;
         int heropowerUsesThisTurn;
         int locknload;
+        int stampede;
 
         bool feugendead;
         bool stalaggdead;
@@ -407,8 +407,7 @@ namespace HREngine.Bots
                 if (s.StartsWith("elementals: "))
                 {
                     String[] ss = s.Split(' ');
-                    anzOwnElementalsThisTurn = Convert.ToInt32(ss[1]);
-                    anzOwnElementalsLastTurn = Convert.ToInt32(ss[2]);
+                    anzOwnElementalsLastTurn = Convert.ToInt32(ss[1]);
                 }
 
                 if (s.StartsWith("quests: "))
@@ -556,6 +555,7 @@ namespace HREngine.Bots
                         //for old log files a try and catch :D
                         this.heropowerUsesThisTurn = Convert.ToInt32(s.Split(' ')[7]);
                         this.locknload = Convert.ToInt32(s.Split(' ')[8]); 
+                        this.stampede = Convert.ToInt32(s.Split(' ')[9]);
 
                     }
                     catch
@@ -1059,11 +1059,11 @@ namespace HREngine.Bots
             }
 
 
-            Hrtprozis.Instance.updatePlayer(this.maxmana, this.mana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.overdrive, ownHEntity, enemyHEntity, this.numberMinionsDiedThisturn, this.owncurrentRecall, this.enemyRecall, this.heropowerUsesThisTurn, this.locknload);
+            Hrtprozis.Instance.updatePlayer(this.maxmana, this.mana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.overdrive, ownHEntity, enemyHEntity, this.numberMinionsDiedThisturn, this.owncurrentRecall, this.enemyRecall, this.heropowerUsesThisTurn, this.locknload, this.stampede);
             Hrtprozis.Instance.setPlayereffects(this.ownDragonConsort, this.enemyDragonConsort, this.ownLoathebs, this.enemyLoathebs, this.ownMillhouse, this.enemyMillhouse, this.ownKirintor, this.ownPrep, this.ownSab, this.enemySab, this.ownFenci, this.enemyCursedCards);
             Hrtprozis.Instance.updateCThunInfo(this.anzOgOwnCThunAngrBonus, this.anzOgOwnCThunHpBonus, this.anzOgOwnCThunTaunt);
             Hrtprozis.Instance.updateJadeGolemsInfo(this.anzOwnJadeGolem, this.anzEnemyJadeGolem);
-            Hrtprozis.Instance.updateElementals(this.anzOwnElementalsThisTurn, this.anzOwnElementalsLastTurn);
+            Hrtprozis.Instance.updateElementals(this.anzOwnElementalsLastTurn);
             Hrtprozis.Instance.updateCrystalCore(this.ownCrystalCore);
             Hrtprozis.Instance.updateOwnMinionsCost0(this.ownMinionsCost0);
             Hrtprozis.Instance.updateSecretStuff(this.ownsecretlist, enemySecretAmount);

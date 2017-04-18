@@ -945,7 +945,16 @@ namespace HREngine.Bots
                     }
 
                     // no pen if own is enrage
-                    if ((!target.silenced && (target.name == CardDB.cardName.darnassusaspirant || target.name == CardDB.cardName.ancientwatcher || target.name == CardDB.cardName.ragnarosthefirelord || target.name == CardDB.cardName.mogortheogre || target.name == CardDB.cardName.animagolem)) || target.Angr < target.handcard.card.Attack || target.maxHp < target.handcard.card.Health || (target.frozen && !target.playedThisTurn && target.numAttacksThisTurn == 0))
+                    if ((!target.silenced && (target.name == CardDB.cardName.darnassusaspirant ||
+                        target.name == CardDB.cardName.ancientwatcher ||
+                        target.name == CardDB.cardName.humongousrazorleaf ||
+                        target.name == CardDB.cardName.humongousrazorleaf ||
+                        target.name == CardDB.cardName.eeriestatue ||
+                        target.name == CardDB.cardName.mogortheogre ||
+                        target.name == CardDB.cardName.animagolem)) ||
+                        target.Angr < target.handcard.card.Attack ||
+                        target.maxHp < target.handcard.card.Health ||
+                        (target.frozen && !target.playedThisTurn && target.numAttacksThisTurn == 0))
                     {
                         return 0;
                     }
@@ -1055,6 +1064,11 @@ namespace HREngine.Bots
             if (this.DamageAllDatabase.ContainsKey(name) || (p.anzOwnAuchenaiSoulpriest >= 1 && HealAllDatabase.ContainsKey(name))) // aoe penality
             {
 
+                if (name == CardDB.cardName.ravagingghoul)
+                {
+                    return 5;
+                }
+
                 if (p.enemyMinions.Count == 0) return 300;
 
                 foreach (Minion m in p.enemyMinions)
@@ -1087,6 +1101,8 @@ namespace HREngine.Bots
                         return 30;
                     }
                 }
+
+
 
                 if (p.enemyMinions.Count <= 2)
                 {
@@ -1334,7 +1350,8 @@ namespace HREngine.Bots
 
                     if (name == CardDB.cardName.baneofdoom && m.Hp >= 3) pen = 10;
 
-                    if (name == CardDB.cardName.shieldslam && (m.Hp <= 4 || m.Angr <= 4)) pen = 20;
+                    if (name == CardDB.cardName.shieldslam) pen = 12;
+
 
                     if (name == CardDB.cardName.lavashock && p.owedRecall == 0 && p.currentRecall == 0) pen = 15;
 
@@ -2022,7 +2039,8 @@ namespace HREngine.Bots
             bool hasdiscardsynergy = false;
             foreach (Handmanager.Handcard hdc in p.owncards)
             {
-                if (hdc.card.name == CardDB.cardName.fistofjaraxxus || hdc.card.name == CardDB.cardName.tinyknightofevil || hdc.card.name == CardDB.cardName.silverwaregolem) hasdiscardsynergy = true;
+                if (hdc.card.name == CardDB.cardName.fistofjaraxxus || hdc.card.name == CardDB.cardName.tinyknightofevil ||
+                    hdc.card.name == CardDB.cardName.silverwaregolem || hdc.card.name == CardDB.cardName.clutchmotherzavas) hasdiscardsynergy = true;
             }
 
             if (this.discardedCardCount.ContainsKey(name))
@@ -2479,7 +2497,7 @@ namespace HREngine.Bots
                     else if (DamageAllEnemysDatabase.ContainsKey(card.card.name) && DamageAllEnemysDatabase[card.card.name] >= enemydoomsayerMaxHp) return 5;
                     else if (DamageTargetDatabase.ContainsKey(card.card.name) && DamageTargetDatabase[card.card.name] >= enemydoomsayerMaxHp) return 5;
                     else if (DamageTargetSpecialDatabase.ContainsKey(card.card.name) && DamageTargetSpecialDatabase[card.card.name] >= enemydoomsayerMaxHp) return 5;
-                    else if (heroAttackBuffDatabase.ContainsKey(card.card.name) && heroAttackBuffDatabase[card.card.name] >= enemydoomsayerMaxHp && !p.ownHero.frozen) return 25;
+                    else if (heroAttackBuffDatabase.ContainsKey(card.card.name) && heroAttackBuffDatabase[card.card.name] + p.ownWeaponAttack >= enemydoomsayerMaxHp && !p.ownHero.frozen) return 5;
                 }
                 else if (specialMinions.ContainsKey(card.card.name))
                 {
@@ -2609,7 +2627,8 @@ namespace HREngine.Bots
                 else if (DamageAllEnemysDatabase.ContainsKey(card.card.name) && DamageAllEnemysDatabase[card.card.name] >= enemydoomsayerMaxHp) return 5;
                 else if (DamageTargetDatabase.ContainsKey(card.card.name) && DamageTargetDatabase[card.card.name] >= enemydoomsayerMaxHp) return 5;
                 else if (DamageTargetSpecialDatabase.ContainsKey(card.card.name) && DamageTargetSpecialDatabase[card.card.name] >= enemydoomsayerMaxHp) return 5;
-                else if (heroAttackBuffDatabase.ContainsKey(card.card.name) && heroAttackBuffDatabase[card.card.name] >= enemydoomsayerMaxHp && !p.ownHero.frozen) return 5;
+                else if (heroAttackBuffDatabase.ContainsKey(card.card.name) && heroAttackBuffDatabase[card.card.name] + p.ownWeaponAttack >= enemydoomsayerMaxHp && !p.ownHero.frozen) return 1;
+                else if (card.card.name == CardDB.cardName.shieldslam && p.ownHero.armor >= enemydoomsayerMaxHp) return 5;
                 else return 100;
             }
 
@@ -3461,7 +3480,7 @@ namespace HREngine.Bots
 
             if (heroAttackBuffDatabase.ContainsKey(name))
             {
-                return ((p.ownHero.numAttacksThisTurn == 0) && !p.ownHero.frozen) ? heroAttackBuffDatabase[name] * 2.5f : 20;
+                return ((p.ownHero.numAttacksThisTurn == 0) && !p.ownHero.frozen) ? heroAttackBuffDatabase[name] * 2 : 20;
             }
 
             if (name == CardDB.cardName.deadlypoison)
@@ -4481,7 +4500,7 @@ namespace HREngine.Bots
                                 //if (!mnn.divineshild && !mnn.hasDeathrattle() && mnn.Hp <= 2 && mnn.Ready && p.enemyMinions.Count >= 1) pen += 5;
                             }
                             if (willbediedminionscount >= 2) pen += willbediedminionscount;
-                            if (willbediedminionscount <= 1) pen -= 4; // to trigger enemy explosive trap
+                            if (willbediedminionscount == 1) pen -= 4; // to trigger enemy explosive trap
                         }
                     }
                 }
@@ -4819,6 +4838,7 @@ namespace HREngine.Bots
             HealHeroDatabase.Add(CardDB.cardName.cultapothecary, 2);
             HealHeroDatabase.Add(CardDB.cardName.twilightdarkmender, 10);
             HealHeroDatabase.Add(CardDB.cardName.ivoryknight, 5); //heal = mana cost of discovered spell
+            HealHeroDatabase.Add(CardDB.cardName.bindingheal, 5);
 
             HealTargetDatabase.Add(CardDB.cardName.lightofthenaaru, 3);
             HealTargetDatabase.Add(CardDB.cardName.ancestralhealing, 3);
@@ -4842,6 +4862,7 @@ namespace HREngine.Bots
             HealTargetDatabase.Add(CardDB.cardName.gadgetzansocialite, 2);
             HealTargetDatabase.Add(CardDB.cardName.hozenhealer, 30); //minion to full hp
             //HealTargetDatabase.Add(CardDB.cardName.divinespirit, 2);
+            HealTargetDatabase.Add(CardDB.cardName.bindingheal, 5);
 
             HealCardButCanUseFullHP.Add(CardDB.cardName.gadgetzansocialite, 0);
             HealCardButCanUseFullHP.Add(CardDB.cardName.moongladeportal, 0);
@@ -5032,6 +5053,11 @@ namespace HREngine.Bots
             DamageTargetDatabase.Add(CardDB.cardName.jadelightning, 4);
             DamageTargetDatabase.Add(CardDB.cardName.blowgillsniper, 1);
             DamageTargetDatabase.Add(CardDB.cardName.bombsquad, 5);
+            DamageTargetDatabase.Add(CardDB.cardName.tidalsurge, 4);
+            DamageTargetDatabase.Add(CardDB.cardName.razorpetalvolley, 1);
+            DamageTargetDatabase.Add(CardDB.cardName.meteor, 15);
+            DamageTargetDatabase.Add(CardDB.cardName.grievousbite, 2);
+            DamageTargetDatabase.Add(CardDB.cardName.feedingtime, 3);
 
 
             DamageTargetSpecialDatabase.Add(CardDB.cardName.bash, 3); //+3 armor
@@ -5235,6 +5261,8 @@ namespace HREngine.Bots
             attackBuffDatabase.Add(CardDB.cardName.shadowsensei, 2); //to a stealth
             attackBuffDatabase.Add(CardDB.cardName.bloodfurypotion, 3);
             attackBuffDatabase.Add(CardDB.cardName.crystalweaver, 1); //to demons
+            attackBuffDatabase.Add(CardDB.cardName.spikeridgedsteed, 2);
+            attackBuffDatabase.Add(CardDB.cardName.earthenscales, 1);
         }
 
         private void setupHealthBuff()
@@ -5275,6 +5303,8 @@ namespace HREngine.Bots
             healthBuffDatabase.Add(CardDB.cardName.bloodfurypotion, 3); //if demon
             healthBuffDatabase.Add(CardDB.cardName.crystalweaver, 1); //to demons
             healthBuffDatabase.Add(CardDB.cardName.kabaltalonpriest, 3);
+            healthBuffDatabase.Add(CardDB.cardName.spikeridgedsteed, 6);
+            healthBuffDatabase.Add(CardDB.cardName.earthenscales, 1);
 
             tauntBuffDatabase.Add(CardDB.cardName.markofnature, 1);
             tauntBuffDatabase.Add(CardDB.cardName.markofthewild, 1);
@@ -5283,6 +5313,7 @@ namespace HREngine.Bots
             tauntBuffDatabase.Add(CardDB.cardName.mutatinginjection, 1);
             tauntBuffDatabase.Add(CardDB.cardName.ancestralhealing, 1);
             tauntBuffDatabase.Add(CardDB.cardName.sparringpartner, 1);
+            tauntBuffDatabase.Add(CardDB.cardName.spikeridgedsteed, 1);
         }
 
         private void setupCardDrawBattlecry()
@@ -5416,6 +5447,7 @@ namespace HREngine.Bots
             cardDiscardDatabase.Add(CardDB.cardName.succubus, 2);
             cardDiscardDatabase.Add(CardDB.cardName.darkbargain, 2);
             cardDiscardDatabase.Add(CardDB.cardName.darkshirelibrarian, 1);
+            cardDiscardDatabase.Add(CardDB.cardName.lakkarifelhound, 4);
 
 
             discardedCardCount.Add(CardDB.cardName.doomguard, 2);
@@ -5423,6 +5455,7 @@ namespace HREngine.Bots
             discardedCardCount.Add(CardDB.cardName.succubus, 1);
             discardedCardCount.Add(CardDB.cardName.darkbargain, 2);
             discardedCardCount.Add(CardDB.cardName.darkshirelibrarian, 1);
+            discardedCardCount.Add(CardDB.cardName.lakkarifelhound, 2);
         }
 
         private void setupTransformCards()
@@ -5801,7 +5834,13 @@ namespace HREngine.Bots
             specialMinions.Add(CardDB.cardName.redmanawyrm, 0);
             specialMinions.Add(CardDB.cardName.windupburglebot, 0);
             specialMinions.Add(CardDB.cardName.mayornoggenfogger, 0);
-            
+
+            //ungoro
+            specialMinions.Add(CardDB.cardName.radiantelemental, 0);
+            specialMinions.Add(CardDB.cardName.swampkingdred, 0);
+            specialMinions.Add(CardDB.cardName.primalfintotem, 0);
+            specialMinions.Add(CardDB.cardName.lyrathesunshard, 0);
+            specialMinions.Add(CardDB.cardName.viciousfledgling, 0);
         }
 
         public void setupBuffingMinions()
@@ -6035,9 +6074,12 @@ namespace HREngine.Bots
             priorityTargets.Add(CardDB.cardName.grimscaleoracle, 2);
 
             priorityTargets.Add(CardDB.cardName.finjatheflyingstar, 6);
-            
 
-
+            //ungoro
+            priorityTargets.Add(CardDB.cardName.radiantelemental, 6);
+            priorityTargets.Add(CardDB.cardName.primalfintotem, 8);
+            priorityTargets.Add(CardDB.cardName.lyrathesunshard, 12);
+            priorityTargets.Add(CardDB.cardName.viciousfledgling, 6);
         }
 
         private void setupLethalHelpMinions()
@@ -6362,6 +6404,9 @@ namespace HREngine.Bots
             randomEffects.Add(CardDB.cardName.netherspitehistorian, 1);
             randomEffects.Add(CardDB.cardName.atiesh, 1);
             randomEffects.Add(CardDB.cardName.moongladeportal, 1);
+
+            //ungoro
+            randomEffects.Add(CardDB.cardName.tortollanforager, 1);
         }
 
         private void setupTargetAbilitys()
@@ -6506,6 +6551,9 @@ namespace HREngine.Bots
             summonMinionSpellsDatabase.Add(CardDB.cardName.jadeshuriken, 1);
             summonMinionSpellsDatabase.Add(CardDB.cardName.callinthefinishers, 1);
             summonMinionSpellsDatabase.Add(CardDB.cardName.jadelightning, 1);
+            //ungoro
+            summonMinionSpellsDatabase.Add(CardDB.cardName.lostinthejungle, 2);
+            summonMinionSpellsDatabase.Add(CardDB.cardName.moltenreflection, 1);
         }
 
         private void setupAlsoEquipsWeaponDB()

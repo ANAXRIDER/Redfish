@@ -1580,6 +1580,7 @@ namespace HREngine.Bots
 
         public void setnewLoggFile()
         {
+            Questmanager.Instance.Reset();
             Helpfunctions.Instance.flushLogg(); // flush the buffer before creating a new log
             if (!singleLog)
             {
@@ -2432,7 +2433,6 @@ namespace HREngine.Bots
             {
                 if (item.GetTagValue((int)GAME_TAG.QUEST) >= 1)
                 {
-                    Questmanager.Instance.Reset();
                     Questmanager.Instance.updateQuestStuff(item.CardId, item.GetTagValue((int)GAME_TAG.QUEST_PROGRESS), item.GetTagValue((int)GAME_TAG.QUEST_PROGRESS_TOTAL), false);
                     continue;
                 }
@@ -2445,7 +2445,6 @@ namespace HREngine.Bots
             {
                 if (item.GetTagValue((int)GAME_TAG.QUEST) >= 1)
                 {
-                    Questmanager.Instance.Reset();
                     Questmanager.Instance.updateQuestStuff(item.CardId, item.GetTagValue((int)GAME_TAG.QUEST_PROGRESS), item.GetTagValue((int)GAME_TAG.QUEST_PROGRESS_TOTAL), true);
                     continue;
                 }

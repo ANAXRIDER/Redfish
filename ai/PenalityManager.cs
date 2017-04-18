@@ -6428,6 +6428,7 @@ namespace HREngine.Bots
             this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.EX1_625t, 1);  //Mind Spike r1
             this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.EX1_625t2, 1);  //Mind Spike r2
             this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.AT_050t, 1);  //Lightning Jolt
+            this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.UNG_917t1, 1); //Dinomancy
         }
 
         private void setupDiscover()

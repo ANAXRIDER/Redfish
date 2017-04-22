@@ -47,7 +47,7 @@
         public bool canBe_noblesacrifice = true;
         public bool canBe_redemption = true;
         public bool canBe_repentance = true;
-        public bool canBe_avenge = false; // Cant use anymore standard
+        public bool canBe_avenge = true;
         
 
         //new TGT---
@@ -154,6 +154,18 @@
                 }
             }
             
+            //standard - wild
+
+            if (Settings.Instance.SecretStandard)
+            {
+                this.canBe_competivespirit = false;
+                this.canBe_beartrap = false;
+                this.canBe_duplicate = false;
+                this.canBe_Trial = false;
+                this.canBe_avenge = false;
+                this.canBe_effigy = false;
+                this.canBe_Dart = false;
+            }
 
         }
 
@@ -870,45 +882,45 @@
                 
 
 
-                if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_554) && enemyGraveyard[CardDB.cardIDEnum.EX1_554] >= 2)
-                {
-                    sec.canBe_snaketrap = false;
-                }
+                //if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_554) && enemyGraveyard[CardDB.cardIDEnum.EX1_554] >= 2)
+                //{
+                //    sec.canBe_snaketrap = false;
+                //}
 
-                if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_609) && enemyGraveyard[CardDB.cardIDEnum.EX1_609] >= 2)
-                {
-                    sec.canBe_snipe = false;
-                }
+                //if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_609) && enemyGraveyard[CardDB.cardIDEnum.EX1_609] >= 2)
+                //{
+                //    sec.canBe_snipe = false;
+                //}
 
-                if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_610) && enemyGraveyard[CardDB.cardIDEnum.EX1_610] >= 2)
-                {
-                    sec.canBe_explosive = false;
-                }
+                //if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_610) && enemyGraveyard[CardDB.cardIDEnum.EX1_610] >= 2)
+                //{
+                //    sec.canBe_explosive = false;
+                //}
 
-                if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_611) && enemyGraveyard[CardDB.cardIDEnum.EX1_611] >= 2)
-                {
-                    sec.canBe_freezing = false;
-                }
+                //if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_611) && enemyGraveyard[CardDB.cardIDEnum.EX1_611] >= 2)
+                //{
+                //    sec.canBe_freezing = false;
+                //}
 
-                if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_533) && enemyGraveyard[CardDB.cardIDEnum.EX1_533] >= 2)
-                {
-                    sec.canBe_missdirection = false;
-                }
+                //if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_533) && enemyGraveyard[CardDB.cardIDEnum.EX1_533] >= 2)
+                //{
+                //    sec.canBe_missdirection = false;
+                //}
 
-                if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.AT_060) && enemyGraveyard[CardDB.cardIDEnum.AT_060] >= 2)
-                {
-                    sec.canBe_beartrap = false;
-                }
+                //if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.AT_060) && enemyGraveyard[CardDB.cardIDEnum.AT_060] >= 2)
+                //{
+                //    sec.canBe_beartrap = false;
+                //}
 
-                if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.LOE_021) && enemyGraveyard[CardDB.cardIDEnum.LOE_021] >= 2)
-                {
-                    sec.canBe_Dart = false;
-                }
+                //if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.LOE_021) && enemyGraveyard[CardDB.cardIDEnum.LOE_021] >= 2)
+                //{
+                //    sec.canBe_Dart = false;
+                //}
 
-                if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.KAR_004) && enemyGraveyard[CardDB.cardIDEnum.KAR_004] >= 2)
-                {
-                    sec.canBe_cattrick = false;
-                }
+                //if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.KAR_004) && enemyGraveyard[CardDB.cardIDEnum.KAR_004] >= 2)
+                //{
+                //    sec.canBe_cattrick = false;
+                //}
             }
 
             if (enemyHeroName == HeroEnum.mage)
@@ -933,45 +945,45 @@
 
                 sec.canBe_cattrick = false;
 
-                if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_287) && enemyGraveyard[CardDB.cardIDEnum.EX1_287] >= 2)
-                {
-                    sec.canBe_counterspell = false;
-                }
+                //if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_287) && enemyGraveyard[CardDB.cardIDEnum.EX1_287] >= 2)
+                //{
+                //    sec.canBe_counterspell = false;
+                //}
 
-                if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_289) && enemyGraveyard[CardDB.cardIDEnum.EX1_289] >= 2)
-                {
-                    sec.canBe_icebarrier = false;
-                }
+                //if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_289) && enemyGraveyard[CardDB.cardIDEnum.EX1_289] >= 2)
+                //{
+                //    sec.canBe_icebarrier = false;
+                //}
 
-                if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_295) && enemyGraveyard[CardDB.cardIDEnum.EX1_295] >= 2)
-                {
-                    sec.canBe_iceblock = false;
-                }
+                //if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_295) && enemyGraveyard[CardDB.cardIDEnum.EX1_295] >= 2)
+                //{
+                //    sec.canBe_iceblock = false;
+                //}
 
-                if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_294) && enemyGraveyard[CardDB.cardIDEnum.EX1_294] >= 2)
-                {
-                    sec.canBe_mirrorentity = false;
-                }
+                //if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_294) && enemyGraveyard[CardDB.cardIDEnum.EX1_294] >= 2)
+                //{
+                //    sec.canBe_mirrorentity = false;
+                //}
 
-                if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.tt_010) && enemyGraveyard[CardDB.cardIDEnum.tt_010] >= 2)
-                {
-                    sec.canBe_spellbender = false;
-                }
+                //if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.tt_010) && enemyGraveyard[CardDB.cardIDEnum.tt_010] >= 2)
+                //{
+                //    sec.canBe_spellbender = false;
+                //}
 
-                if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_594) && enemyGraveyard[CardDB.cardIDEnum.EX1_594] >= 2)
-                {
-                    sec.canBe_vaporize = false;
-                }
+                //if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_594) && enemyGraveyard[CardDB.cardIDEnum.EX1_594] >= 2)
+                //{
+                //    sec.canBe_vaporize = false;
+                //}
 
-                if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.FP1_018) && enemyGraveyard[CardDB.cardIDEnum.FP1_018] >= 2)
-                {
-                    sec.canBe_duplicate = false;
-                }
+                //if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.FP1_018) && enemyGraveyard[CardDB.cardIDEnum.FP1_018] >= 2)
+                //{
+                //    sec.canBe_duplicate = false;
+                //}
 
-                if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.AT_002) && enemyGraveyard[CardDB.cardIDEnum.AT_002] >= 2)
-                {
-                    sec.canBe_effigy = false;
-                }
+                //if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.AT_002) && enemyGraveyard[CardDB.cardIDEnum.AT_002] >= 2)
+                //{
+                //    sec.canBe_effigy = false;
+                //}
             }
 
             if (enemyHeroName == HeroEnum.pala)
@@ -997,40 +1009,40 @@
                 sec.canBe_cattrick = false;
 
 
-                if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_132) && enemyGraveyard[CardDB.cardIDEnum.EX1_132] >= 2)
-                {
-                    sec.canBe_eyeforaneye = false;
-                }
+                //if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_132) && enemyGraveyard[CardDB.cardIDEnum.EX1_132] >= 2)
+                //{
+                //    sec.canBe_eyeforaneye = false;
+                //}
 
-                if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_130) && enemyGraveyard[CardDB.cardIDEnum.EX1_130] >= 2)
-                {
-                    sec.canBe_noblesacrifice = false;
-                }
+                //if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_130) && enemyGraveyard[CardDB.cardIDEnum.EX1_130] >= 2)
+                //{
+                //    sec.canBe_noblesacrifice = false;
+                //}
 
-                if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_136) && enemyGraveyard[CardDB.cardIDEnum.EX1_136] >= 2)
-                {
-                    sec.canBe_redemption = false;
-                }
+                //if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_136) && enemyGraveyard[CardDB.cardIDEnum.EX1_136] >= 2)
+                //{
+                //    sec.canBe_redemption = false;
+                //}
 
-                if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_379) && enemyGraveyard[CardDB.cardIDEnum.EX1_379] >= 2)
-                {
-                    sec.canBe_repentance = false;
-                }
+                //if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.EX1_379) && enemyGraveyard[CardDB.cardIDEnum.EX1_379] >= 2)
+                //{
+                //    sec.canBe_repentance = false;
+                //}
 
-                if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.FP1_020) && enemyGraveyard[CardDB.cardIDEnum.FP1_020] >= 2)
-                {
-                    sec.canBe_avenge = false;
-                }
+                //if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.FP1_020) && enemyGraveyard[CardDB.cardIDEnum.FP1_020] >= 2)
+                //{
+                //    sec.canBe_avenge = false;
+                //}
 
-                if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.AT_073) && enemyGraveyard[CardDB.cardIDEnum.AT_073] >= 2)
-                {
-                    sec.canBe_competivespirit = false;
-                }
+                //if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.AT_073) && enemyGraveyard[CardDB.cardIDEnum.AT_073] >= 2)
+                //{
+                //    sec.canBe_competivespirit = false;
+                //}
 
-                if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.LOE_027) && enemyGraveyard[CardDB.cardIDEnum.LOE_027] >= 2)
-                {
-                    sec.canBe_Trial = false;
-                }
+                //if (enemyGraveyard.ContainsKey(CardDB.cardIDEnum.LOE_027) && enemyGraveyard[CardDB.cardIDEnum.LOE_027] >= 2)
+                //{
+                //    sec.canBe_Trial = false;
+                //}
 
             }
 

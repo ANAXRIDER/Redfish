@@ -67,8 +67,9 @@ namespace HREngine.Bots
         int anzOwnJadeGolem;
         int anzEnemyJadeGolem;
         int anzOwnElementalsLastTurn;
-        int ownCrystalCore = 0;
-        bool ownMinionsCost0 = false;
+        int ownCrystalCore;
+        int enemyCrystalCore;
+        bool ownMinionsCost0;
 
         int ownDecksize = 30;
         int enemyDecksize = 30;
@@ -421,7 +422,8 @@ namespace HREngine.Bots
                 {
                     String[] ss = s.Split(' ');
                     this.ownCrystalCore = Convert.ToInt32(ss[1]);
-                    this.ownMinionsCost0 = Convert.ToInt32(ss[2]) == 1 ? true : false;
+                    this.enemyCrystalCore = Convert.ToInt32(ss[2]);
+                    this.ownMinionsCost0 = Convert.ToInt32(ss[3]) == 1 ? true : false;
                 }
 
 
@@ -840,7 +842,7 @@ namespace HREngine.Bots
                         tempminion.spiritecho = spiritecho;
                         tempminion.livingspores = livingspores;
                         tempminion.AdaptedCantBeTargetedBySpellsOrHeroPowers = AdaptedCantBeTargetedBySpellsOrHeroPowers;
-
+                        if (AdaptedCantBeTargetedBySpellsOrHeroPowers >= 1) tempminion.cantBeTargetedBySpellsOrHeroPowers = true;
 
                         tempminion.canAttackNormal = false;
                         if (ready == true) tempminion.canAttackNormal = true;
@@ -993,6 +995,7 @@ namespace HREngine.Bots
                         tempminion.spiritecho = spiritecho;
                         tempminion.livingspores = livingspores;
                         tempminion.AdaptedCantBeTargetedBySpellsOrHeroPowers = AdaptedCantBeTargetedBySpellsOrHeroPowers;
+                        if (AdaptedCantBeTargetedBySpellsOrHeroPowers >= 1) tempminion.cantBeTargetedBySpellsOrHeroPowers = true;
 
                         if (maxhp > hp) tempminion.wounded = true;
                         tempminion.updateReadyness();
@@ -1064,7 +1067,7 @@ namespace HREngine.Bots
             Hrtprozis.Instance.updateCThunInfo(this.anzOgOwnCThunAngrBonus, this.anzOgOwnCThunHpBonus, this.anzOgOwnCThunTaunt);
             Hrtprozis.Instance.updateJadeGolemsInfo(this.anzOwnJadeGolem, this.anzEnemyJadeGolem);
             Hrtprozis.Instance.updateElementals(this.anzOwnElementalsLastTurn);
-            Hrtprozis.Instance.updateCrystalCore(this.ownCrystalCore);
+            Hrtprozis.Instance.updateCrystalCore(this.ownCrystalCore, this.enemyCrystalCore);
             Hrtprozis.Instance.updateOwnMinionsCost0(this.ownMinionsCost0);
             Hrtprozis.Instance.updateSecretStuff(this.ownsecretlist, enemySecretAmount);
 

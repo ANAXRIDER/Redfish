@@ -50,6 +50,8 @@ namespace HREngine.Bots
 
             this.logBuffer = 100; // max log messages to buffer before writing to disk
 
+            this.SecretStandard = true;
+
             //###########################################################
 
             applySettings();
@@ -126,6 +128,8 @@ namespace HREngine.Bots
         public int tcpPort = 14804;
 
         public int logBuffer = 100;
+
+        public bool SecretStandard = true;
 
         public string path = "";
         public string logpath = "";
@@ -665,7 +669,21 @@ namespace HREngine.Bots
                     }
                 }
                 */
-                
+
+                searchword = "secretstandard =";
+                if (s.StartsWith(searchword))
+                {
+                    string a = s.Replace(searchword, "");
+                    try
+                    {
+                        this.SecretStandard = Convert.ToBoolean(a);
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.ErrorLog(ignoring + searchword);
+                    }
+                }
+
 
             }
             //foreach ended----------

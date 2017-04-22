@@ -725,7 +725,6 @@ namespace HREngine.Bots
                             }
 
 
-                            this.doMultipleThingsAtATime = false;
                             this.dontmultiactioncount++;
                             bool hasenemydeathrattle = false;
                             foreach (Entity mnn in EnemyMinion)
@@ -972,7 +971,7 @@ namespace HREngine.Bots
             }
             
 
-            if (this.gameState.TimerState == TurnTimerState.COUNTDOWN && this.EnemyMinion.Count == 0 || moveTodo.actionType == actionEnum.attackWithMinion && ranger_action.Target.IsHero && this.EnemyMinion.Count == 0)
+            if (moveTodo.actionType == actionEnum.attackWithMinion && ranger_action.Target.IsHero && this.EnemyMinion.Count == 0)
             {
                 this.doMultipleThingsAtATime = true;
                 this.dontmultiactioncount = 0;
@@ -1007,49 +1006,15 @@ namespace HREngine.Bots
                 //IsProcessingPowers not good enough so always sleep
                 //System.Threading.Thread.Sleep(200);
                 //todo find better solution
-                if (!this.doMultipleThingsAtATime)
+                //better test... we checked if isprocessing is true.. after that, we wait little time and test it again.
+                if (this.gameState.IsProcessingPowers || this.gameState.IsBlockingServer || this.gameState.IsBusy || this.gameState.IsMulliganBlockingPowers)
                 {
-
-                    //better test... we checked if isprocessing is true.. after that, we wait little time and test it again.
-                    if (this.gameState.IsProcessingPowers || this.gameState.IsBlockingServer)
-                    {
-                        Helpfunctions.Instance.logg("HR is too fast...");
-                        Helpfunctions.Instance.ErrorLog("HR is too fast...");
-                        if (this.gameState.IsProcessingPowers) Helpfunctions.Instance.logg("IsProcessingPowers");
-                        if (this.gameState.IsBlockingServer) Helpfunctions.Instance.logg("IsBlockingServer");
-
-                        //bool ispropow = true;
-                        //while (ispropow == true)
-                        //{
-                        //    if (!this.gameState.IsProcessingPowers && !this.gameState.IsBlockingServer)
-                        //    {
-                        //        ispropow = false;
-                        //    }
-                        //    else
-                        //    {
-                        //        System.Threading.Thread.Sleep(50);
-                        //    }
-                        //}
-                    }
-
-                    //System.Threading.Thread.Sleep(100);
-
-                    //if (this.gameState.IsProcessingPowers || this.gameState.IsBlockingServer)
-                    //{
-
-                    //    bool ispropow = true;
-                    //    while (ispropow == true)
-                    //    {
-                    //        if (!this.gameState.IsProcessingPowers && !this.gameState.IsBlockingServer)
-                    //        {
-                    //            ispropow = false;
-                    //        }
-                    //        else
-                    //        {
-                    //            System.Threading.Thread.Sleep(100);
-                    //        }
-                    //    }
-                    //}
+                    Helpfunctions.Instance.logg("HR is too fast...");
+                    Helpfunctions.Instance.ErrorLog("HR is too fast...");
+                    if (this.gameState.IsProcessingPowers) Helpfunctions.Instance.logg("IsProcessingPowers");
+                    if (this.gameState.IsBlockingServer) Helpfunctions.Instance.logg("IsBlockingServer");
+                    if (this.gameState.IsBusy) Helpfunctions.Instance.logg("IsBusy");
+                    if (this.gameState.IsMulliganBlockingPowers) Helpfunctions.Instance.logg("IsMulliganBlockingPowers");
                 }
 
                 Helpfunctions.Instance.ErrorLog("proc check done...");
@@ -1152,14 +1117,19 @@ namespace HREngine.Bots
                         endturnmove.Type = BotActionType.END_TURN;
                         Helpfunctions.Instance.ErrorLog("end turn action");
                         e.action_list.Add(endturnmove);
-                        if (POWERFULSINGLEACTION >= 1)
+                        if (POWERFULSINGLEACTION >= 1 || dontmultiactioncount >= 1)
                         {
-                            POWERFULSINGLEACTION = 0;
-                            this.dontmultiactioncount = 0;
                             Helpfunctions.Instance.ErrorLog("찾는거종료1" + POWERFULSINGLEACTION);
                             Helpfunctions.Instance.logg("찾는거종료1" + POWERFULSINGLEACTION);
+                            Helpfunctions.Instance.ErrorLog("찾는거종료1" + dontmultiactioncount);
+                            Helpfunctions.Instance.logg("찾는거종료1" + dontmultiactioncount);
+                            Helpfunctions.Instance.ErrorLog("찾는거종료1 doMultipleThingsAtATime " + doMultipleThingsAtATime);
+                            Helpfunctions.Instance.logg("찾는거종료1 doMultipleThingsAtATime " + doMultipleThingsAtATime);
+                            POWERFULSINGLEACTION = 0;
+                            dontmultiactioncount = 0;
+                            doMultipleThingsAtATime = true;
                         }
-
+                        doMultipleThingsAtATime = true;
                         return;
                     }
                     else
@@ -1506,6 +1476,10 @@ namespace HREngine.Bots
         private int anzOgOwnCThunAngrBonus = 0;
         private int anzOgOwnCThunTaunt = 0;
 
+        private int OwnCrystalCore = 0;
+        private int EnemyCrystalCore = 0;
+        private bool ownMinionsCost0 = false;
+
         // NEW VALUES--
 
         int numberMinionsDiedThisTurn = 0;//todo need that value
@@ -1581,6 +1555,9 @@ namespace HREngine.Bots
         public void setnewLoggFile()
         {
             Questmanager.Instance.Reset();
+            OwnCrystalCore = 0;
+            EnemyCrystalCore = 0;
+            ownMinionsCost0 = false;
             Helpfunctions.Instance.flushLogg(); // flush the buffer before creating a new log
             if (!singleLog)
             {
@@ -1625,9 +1602,6 @@ namespace HREngine.Bots
                         break;
                     case actionEnum.attackWithHero:
                         {
-                            System.Threading.Thread.Sleep(1500);
-                            //Helpfunctions.Instance.logg("히어로공격 확인  ");
-
                             if (rangerbot.gameState.TimerState != TurnTimerState.COUNTDOWN)
                             {
                                 bool targethasdamageeffect = false;
@@ -2261,6 +2235,9 @@ namespace HREngine.Bots
             Hrtprozis.Instance.updateFatigueStats(this.ownDecksize, this.ownHeroFatigue, this.enemyDecksize, this.enemyHeroFatigue);
             Hrtprozis.Instance.updateJadeGolemsInfo(ownPlayer.GetTagValue((int)GAME_TAG.JADE_GOLEM), enemyPlayer.GetTagValue((int)GAME_TAG.JADE_GOLEM));
             Probabilitymaker.Instance.getEnemySecretGuesses(this.enemySecretList, Hrtprozis.Instance.heroNametoEnum(this.enemyHeroname));
+
+            Hrtprozis.Instance.updateCrystalCore(OwnCrystalCore, EnemyCrystalCore);
+            Hrtprozis.Instance.updateOwnMinionsCost0(this.ownMinionsCost0);
 
             //learnmode :D
 
@@ -3010,6 +2987,10 @@ namespace HREngine.Bots
 
         }
 
+
+
+
+
         private void getDecks(HSRangerLib.BotBase rangerbot)
         {
             Dictionary<int, Entity> allEntitys = new Dictionary<int, Entity>();
@@ -3023,7 +3004,30 @@ namespace HREngine.Bots
             foreach (Entity item in rangerbot.gameState.GameEntityList)
             {
                 allEntitys.Add(item.EntityId, item);
+                if (item.Zone == HSRangerLib.TAG_ZONE.GRAVEYARD)
+                {
+                    Helpfunctions.Instance.logg("ent.Zone FOUND" + item.Zone + item.EntityId);
+                    Helpfunctions.Instance.ErrorLog("ent.Zone FOUND" + item.Zone + item.EntityId);
+                }
+                if (item.HasTagValue((int)TAG_ZONE.GRAVEYARD))
+                {
+                    Helpfunctions.Instance.logg("ent.Zone FOUND1" + item.Zone + item.EntityId);
+                    Helpfunctions.Instance.ErrorLog("ent.Zone FOUND1" + item.Zone + item.EntityId);
+                }
+
+                if (item.GetTagValue((int)TAG_ZONE.GRAVEYARD) >= 1)
+                {
+                    Helpfunctions.Instance.logg("ent.Zone FOUND2" + item.Zone + item.EntityId);
+                    Helpfunctions.Instance.ErrorLog("ent.Zone FOUND2" + item.Zone + item.EntityId);
+                }
             }
+
+            foreach (var item1 in rangerbot.gameState.MyDeckCards)
+            {
+                Helpfunctions.Instance.logg("ent.Zone FOUND2" + item1.Key + item1.Value);
+                Helpfunctions.Instance.ErrorLog("ent.Zone FOUND2" + item1.Key + item1.Value);
+            }
+
 
             int owncontroler = rangerbot.gameState.LocalControllerId;
             int enemycontroler = rangerbot.gameState.RemoteControllerId;
@@ -3057,14 +3061,30 @@ namespace HREngine.Bots
                         if (ent.Zone == HSRangerLib.TAG_ZONE.GRAVEYARD)
                         {
                             ownCards.Add(cardid);
+                            if (cardid == CardDB.cardIDEnum.UNG_067t1) OwnCrystalCore = 5;
+                            if (cardid == CardDB.cardIDEnum.UNG_116t) ownMinionsCost0 = true;
                         }
+
+                        if (ent.Zone == HSRangerLib.TAG_ZONE.PLAY)
+                        {
+                            if (cardid == CardDB.cardIDEnum.UNG_067t1) OwnCrystalCore = 5;
+                            if (cardid == CardDB.cardIDEnum.UNG_116t) ownMinionsCost0 = true;
+                        }
+
                     }
                     else
                     {
                         if (ent.Zone == HSRangerLib.TAG_ZONE.GRAVEYARD)
                         {
                             enemyCards.Add(cardid);
+                            if (cardid == CardDB.cardIDEnum.UNG_067t1) EnemyCrystalCore = 5;
                         }
+
+                        if (ent.Zone == HSRangerLib.TAG_ZONE.PLAY)
+                        {
+                            if (cardid == CardDB.cardIDEnum.UNG_067t1) EnemyCrystalCore = 5;
+                        }
+
                     }
                 }
             }
@@ -3256,7 +3276,7 @@ namespace HREngine.Bots
                             {
                                 if (passiveWaiting)
                                 {
-                                    System.Threading.Thread.Sleep(5);
+                                    System.Threading.Thread.Sleep(50);
                                     return false;
                                 }
                                 continue;

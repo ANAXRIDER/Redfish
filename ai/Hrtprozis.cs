@@ -56,7 +56,7 @@
         public Dictionary<CardDB.cardIDEnum, int> startDeck = new Dictionary<CardDB.cardIDEnum, int>();
         public Dictionary<CardDB.cardIDEnum, int> turnDeck = new Dictionary<CardDB.cardIDEnum, int>();
         public List<Handmanager.Handcard> deckCard = new List<Handmanager.Handcard>();
-        public bool noDuplicates = false;
+        public bool noDuplicates = true;
 
 
         public HeroEnum heroname = HeroEnum.druid, enemyHeroname = HeroEnum.druid;
@@ -107,7 +107,8 @@
         public int anzOwnJadeGolem;
         public int anzEnemyJadeGolem;
         public int ownCrystalCore;
-        public bool ownMinionsCost0 = false;
+        public int enemyCrystalCore;
+        public bool ownMinionsCost0;
         public int anzOwnElementalsLastTurn;
 
         public int ownDragonConsort;
@@ -180,7 +181,7 @@
             ownCurrentRecall = 0;
             this.ownHeroWeapon = CardDB.cardName.unknown;
             this.enemyHeroWeapon = CardDB.cardName.unknown;
-            noDuplicates = false;
+            noDuplicates = true;
             anzOwnElementalsLastTurn = 0;
         }
 
@@ -201,6 +202,9 @@
             turnDeck.Clear();
             deckCard.Clear();
             string temp = td.Replace("td: ", "");
+
+            int checkDuplicate = 0;
+
             foreach (string s in temp.Split(';'))
             {
                 string ss = s.Replace(" ", "");
@@ -212,9 +216,14 @@
                 int num = 1;
                 if (pair.Length > 1) num = Convert.ToInt32(pair[1]);
 
+                if (num >= 2) checkDuplicate++; 
+
                 turnDeck.Add(card, num);
                 this.deckCard.Add(newdcard);
             }
+
+            if (checkDuplicate >= 1) this.noDuplicates = false;
+            else noDuplicates = true;
         }
 
         public void AddTurnDeck(CardDB.cardIDEnum card, int num)
@@ -268,9 +277,10 @@
             anzEnemyJadeGolem = anzEmemyJG;
         }
 
-        public void updateCrystalCore(int num)
+        public void updateCrystalCore(int ownCC, int enemyCC)
         {
-            ownCrystalCore = num;
+            ownCrystalCore = ownCC;
+            enemyCrystalCore = enemyCC;
         }
 
         public void updateOwnMinionsCost0(bool tmp)

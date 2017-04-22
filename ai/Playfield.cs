@@ -164,6 +164,7 @@ namespace HREngine.Bots
         public int blackwaterpirateStarted;
         public int embracetheshadow;
         public int ownCrystalCore;
+        public int enemyCrystalCore;
         public bool ownMinionsCost0;
 
         public int anzEnemyTaunt;
@@ -656,6 +657,7 @@ namespace HREngine.Bots
             anzEnemyAnimatedArmor = 0;
 
             this.ownCrystalCore = prozis.ownCrystalCore;
+            this.enemyCrystalCore = prozis.enemyCrystalCore;
             this.ownMinionsCost0 = prozis.ownMinionsCost0;
 
             this.spellpower = 0;
@@ -1136,6 +1138,7 @@ namespace HREngine.Bots
             this.nextMurlocThisTurnCostHealth = p.nextMurlocThisTurnCostHealth;
             this.nextSpellThisTurnCostHealth = p.nextSpellThisTurnCostHealth;
             this.ownCrystalCore = p.ownCrystalCore;
+            this.enemyCrystalCore = p.enemyCrystalCore;
             this.ownMinionsCost0 = p.ownMinionsCost0;
 
             this.anzNerubarWeblord = p.anzNerubarWeblord;
@@ -4486,6 +4489,7 @@ namespace HREngine.Bots
                     for (int i = 0; i < this.tempTrigger.minionsGotHealed; i++)
                     {
                         this.drawACard(CardDB.cardIDEnum.None, false);
+                        this.evaluatePenality += 5;
                     }
                 }
             }
@@ -5454,7 +5458,7 @@ namespace HREngine.Bots
 
         }
 
-        public void triggerAMinionIsSummoned(Minion m)
+        public void triggerAMinionIsSummoned(Minion m, bool callkid = false)
         {
             if (m.own)
             {
@@ -5508,7 +5512,7 @@ namespace HREngine.Bots
 
                 }
 
-                if (this.enemyMinions.Find(a => a.name == CardDB.cardName.swampkingdred && !a.silenced) != null)
+                if (this.enemyMinions.Find(a => a.name == CardDB.cardName.swampkingdred && !a.silenced) != null && callkid == false)
                 {
                     Minion attacker;
                     Minion deffender = m;
@@ -6796,7 +6800,7 @@ namespace HREngine.Bots
             }
         }
 
-        public Minion createNewMinion(Handmanager.Handcard hc, int zonepos, bool own)
+        public Minion createNewMinion(Handmanager.Handcard hc, int zonepos, bool own, bool callkid = false)
         {
             Minion m = new Minion();
             Handmanager.Handcard handc = new Handmanager.Handcard(hc);
@@ -6805,11 +6809,20 @@ namespace HREngine.Bots
             m.own = own;
             m.isHero = false;
             m.entityID = hc.entity;
-            if (this.ownCrystalCore > 0)
+            if (this.ownCrystalCore > 0 || this.enemyCrystalCore > 0)
             {
-                m.Angr = ownCrystalCore;
-                m.Hp = ownCrystalCore;
-                m.maxHp = ownCrystalCore;
+                if (own)
+                {
+                    m.Angr = ownCrystalCore;
+                    m.Hp = ownCrystalCore;
+                    m.maxHp = ownCrystalCore;
+                }
+                else
+                {
+                    m.Angr = enemyCrystalCore;
+                    m.Hp = enemyCrystalCore;
+                    m.maxHp = enemyCrystalCore;
+                }
             }
             else
             {
@@ -6842,7 +6855,7 @@ namespace HREngine.Bots
 
 
             //trigger on summon effect!
-            this.triggerAMinionIsSummoned(m);
+            this.triggerAMinionIsSummoned(m, callkid);
             //activate onAura effect
             m.handcard.card.sim_card.onAuraStarts(this, m);
             //buffs minion
@@ -6880,7 +6893,7 @@ namespace HREngine.Bots
 
 
             //add minion to list + do triggers + do secret trigger +  minion was played trigger
-            addMinionToBattlefield(m);
+            addMinionToBattlefield(m, false);
 
             secretTrigger_MinionIsPlayed(m);
             if (this.ownQuest.Id != CardDB.cardIDEnum.None) ownQuest.trigger_MinionWasPlayed(m);
@@ -6908,7 +6921,7 @@ namespace HREngine.Bots
             if (m.own)
             {
                 this.tempTrigger.ownMinionsChanged = true;
-                if (m.Hp == 1 && m.Angr == 1 && (m.name == CardDB.cardName.flametonguetotem || m.name == CardDB.cardName.totemgolem || m.name == CardDB.cardName.manatidetotem)) this.tempTrigger.ownTotemSummoned++;
+                if (m.Hp == 1 && m.Angr == 1 && (m.name == CardDB.cardName.flametonguetotem || m.name == CardDB.cardName.totemgolem || m.name == CardDB.cardName.manatidetotem || m.name == CardDB.cardName.primalfintotem)) this.tempTrigger.ownTotemSummoned++;
                 if (m.handcard.card.race == TAG_RACE.BEAST) this.tempTrigger.ownBeastSummoned++;
 
                 //foreach (Minion mn in temp)
@@ -7023,7 +7036,7 @@ namespace HREngine.Bots
             int mobplace = (spawnKid ? zonepos : zonepos + 1);
             //create minion (+triggers)
             Handmanager.Handcard hc = new Handmanager.Handcard(c) { entity = this.getNextEntity() };
-            Minion m = createNewMinion(hc, mobplace, own);
+            Minion m = createNewMinion(hc, mobplace, own , true);
             //put it on battle field (+triggers)
             addMinionToBattlefield(m);
 
@@ -7735,12 +7748,6 @@ namespace HREngine.Bots
             m.endAura(this);
 
             Handmanager.Handcard hc = new Handmanager.Handcard(c){ entity = this.getNextEntity() }; // m.entityID;
-            int ancestral = m.ancestralspirit;
-            int spiked = m.spikeridgedteed;
-            if (m.handcard.card.name == CardDB.cardName.cairnebloodhoof || m.handcard.card.name == CardDB.cardName.harvestgolem || ancestral >= 1 || spiked >= 1)
-            {
-                if (Ai.Instance.botBase != null) this.evaluatePenality += Ai.Instance.botBase.getEnemyMinionValue(m, this) - 1;
-            }
 
             //necessary???
             /*Minion tranform = createNewMinion(hc, m.zonepos, m.own);
@@ -8800,7 +8807,7 @@ namespace HREngine.Bots
             data += "jadegolems: " + this.anzOwnJadeGolem + " " + this.anzEnemyJadeGolem + "\r\n";
             data += "elementals: " + this.anzOwnElementalsLastTurn +"\r\n";
             data += Questmanager.Instance.getQuestsString() + "\r\n";
-            data += "advanced: " + this.ownCrystalCore + " " + (this.ownMinionsCost0 ? 1 : 0) + "\r\n";
+            data += "advanced: " + this.ownCrystalCore + " " + this.enemyCrystalCore + " " + (this.ownMinionsCost0 ? 1 : 0) + "\r\n";
             data += "enemyhero:"+ "\r\n";
             data += Hrtprozis.heroEnumtoName(this.enemyHeroName) + " " + this.enemyHero.Hp + " " + this.enemyHero.maxHp + " " + this.enemyHero.armor + " " + this.enemyHero.frozen + " " + this.enemyHero.immune + " " + this.enemyHero.entityID+ "\r\n";
             data += "weapon: " + this.enemyWeaponAttack + " " + this.enemyWeaponDurability + " " + this.enemyWeaponName + "\r\n";
@@ -8857,6 +8864,8 @@ namespace HREngine.Bots
             if (tdc != this.ownDeckSize) data += " tdc mismatch " + this.ownDeckSize + "\r\n";
             data += "\r\n"+ " ";
 
+
+
             return data;
         }
 
@@ -8892,8 +8901,8 @@ namespace HREngine.Bots
             if (m.ownBlessingOfWisdom >= 1) mini += " ownBlssng(" + m.ownBlessingOfWisdom + ")";
             if (m.enemyBlessingOfWisdom >= 1) mini += " enemyBlssng(" + m.enemyBlessingOfWisdom + ")";
             if (m.souloftheforest >= 1) mini += " souloffrst(" + m.souloftheforest + ")";
-            if (m.infest >= 1) mini += " infest(" + m.souloftheforest + ")";
-            if (m.spiritecho >= 1) mini += " spiritecho(" + m.souloftheforest + ")";
+            if (m.infest >= 1) mini += " infest(" + m.infest + ")";
+            if (m.spiritecho >= 1) mini += " spiritecho(" + m.spiritecho + ")";
             if (m.livingspores >= 1) mini += " lspores(" + m.livingspores + ")";
             if (m.ownPowerWordGlory >= 1) mini += " ownPWG(" + m.ownPowerWordGlory + ")";
             if (m.enemyPowerWordGlory >= 1) mini += " enemyPWG(" + m.enemyPowerWordGlory + ")";

@@ -46,14 +46,29 @@ namespace HREngine.Bots
                     {
                         temp2.Sort((a, b) => a.Angr.CompareTo(b.Angr));//Lowest Angr to Highest
                         int i = 1;
-                        foreach (Minion mins in temp2)
+
+                        if (count >= 3)
                         {
-                            i++;
-                            if (i <= temp2.Count / 2 + 1) continue; //damage to middle-high
-                            p.minionGetDamageOrHeal(mins, 8); 
-                            if (loggtarget) Helpfunctions.Instance.logg("/// T A R G E T ///" + mins.name);
-                            break;
+                            foreach (Minion mins in temp2)
+                            {
+                                i++;
+                                if (i <= temp2.Count / 2 + 1) continue; //damage to middle-high
+                                p.minionGetDamageOrHeal(mins, 8);
+                                if (loggtarget) Helpfunctions.Instance.logg("/// T A R G E T ///" + mins.name);
+                                break;
+                            }
                         }
+                        else if (count == 2)
+                        {
+                            if (temp2[1].taunt) p.minionGetDamageOrHeal(temp2[1], 8);
+                            else p.minionGetDamageOrHeal(temp2[0], 8);
+
+                        }
+                        else if (count == 1)
+                        {
+                            p.minionGetDamageOrHeal(temp2[0], 8);
+                        }
+                        
                     }
 
                 }

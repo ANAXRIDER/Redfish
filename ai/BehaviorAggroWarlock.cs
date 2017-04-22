@@ -106,6 +106,29 @@
 
 
 
+            bool pirateaggrowarrior = false;
+            if (p.enemyHeroName == HeroEnum.warrior)
+            {
+                int upgrade = 0;
+                int bloodsail_raider = 0;
+                int Bloodsail_Cultist = 0;
+                int southseadeckhand = 0;
+                int Small_Time_Buccanee = 0;
+                int Patches_the_Pirate = 0;
+                int Dread_Corsair = 0;
+                foreach (KeyValuePair<CardDB.cardIDEnum, int> e in Probabilitymaker.Instance.enemyGraveyard)
+                {
+                    if (e.Key == CardDB.cardIDEnum.EX1_409) upgrade = e.Value;//upgrade EX1_409
+                    if (e.Key == CardDB.cardIDEnum.NEW1_018) bloodsail_raider = e.Value;//NEW1_018 //bloodsail raider
+                    if (e.Key == CardDB.cardIDEnum.OG_315) Bloodsail_Cultist = e.Value;//OG_315 Bloodsail Cultist
+                    if (e.Key == CardDB.cardIDEnum.CS2_146) southseadeckhand = e.Value;//CS2_146 //southseadeckhand
+                    if (e.Key == CardDB.cardIDEnum.CFM_325) Small_Time_Buccanee = e.Value;//Small-Time Buccanee
+                    if (e.Key == CardDB.cardIDEnum.CFM_637) Patches_the_Pirate = e.Value;//Patches the Pirate
+                    if (e.Key == CardDB.cardIDEnum.NEW1_022) Dread_Corsair = e.Value;//Dread Corsair
+                }
+                if (upgrade >= 1 || bloodsail_raider >= 1 || Bloodsail_Cultist >= 1 || southseadeckhand >= 1 || Small_Time_Buccanee >= 1 || Patches_the_Pirate >= 1 || Dread_Corsair >= 1) pirateaggrowarrior = true; //pirate warrior
+            }
+
 
 
 
@@ -131,14 +154,10 @@
                     //11~14 11=2 12 =4 13 =6 14=8
                 case 3: hpvalue -= (10 - (p.ownHero.Hp + p.ownHero.armor)) * (10 - (p.ownHero.Hp + p.ownHero.armor)); break;
                     //~10 10=0 9면 -1 제곱으로 8이면 -4..
-                case 4: hpvalue += 8 + 2 * ((p.ownHero.Hp + p.ownHero.armor) - 14); break; 
-                    //15피이상 적냥꾼 주술 15: 10 16: 18
-                case 5: hpvalue -= (14 - p.ownHero.Hp + p.ownHero.armor) + 80; break;
-                case 6: hpvalue += 4 * (p.ownHero.Hp + p.ownHero.armor); break;
-                case 7: hpvalue += 2 * (p.ownHero.Hp + p.ownHero.armor); break;
                 default: break;
             }
             retval += hpvalue;
+            if (pirateaggrowarrior && phase == 3) retval += hpvalue;
             //Helpfunctions.Instance.ErrorLog("phase : " + phase);
             //Helpfunctions.Instance.ErrorLog("hpvalue : " + hpvalue);
 
@@ -174,8 +193,8 @@
             int enemypotentialattack = 0;
             switch (p.enemyHeroAblility.card.name)
             {
-                case CardDB.cardName.steadyshot: enemypotentialattack += 2; break; //hunter
-                case CardDB.cardName.ballistashot: enemypotentialattack += 3; break; //hunter 3 damage
+                //case CardDB.cardName.steadyshot: enemypotentialattack += 2; break; //hunter
+                //case CardDB.cardName.ballistashot: enemypotentialattack += 3; break; //hunter 3 damage
                 case CardDB.cardName.daggermastery: enemypotentialattack += 1; break; //rogue
                 case CardDB.cardName.poisoneddaggers: enemypotentialattack += 2; break; //rogue 2 att
                 case CardDB.cardName.shapeshift: enemypotentialattack += 1; break; //druid
@@ -289,7 +308,11 @@
             //Helpfunctions.Instance.ErrorLog("enemyherohpvalue : " + enemyherohpvalue);
             retval += enemyherohpvalue;
 
-            retval += p.ownMaxMana * 10 - p.enemyMaxMana * 10;
+            if (p.turnCounter == 0)
+            {
+                retval += p.ownMaxMana * 10;
+                retval -= p.enemyMaxMana * 10;
+            }
             foreach (Minion m in p.ownMinions)
             {
                 if (m.name == CardDB.cardName.manatreant)  retval += 5;
@@ -384,8 +407,7 @@
 
 
             retval += (p.anzEnemyCursed) * 5;
-            if (p.enemycarddraw >= 3) retval -= (p.enemycarddraw - 1) * 3;
-
+            if (p.enemycarddraw >= 3) retval -= (p.enemycarddraw - 1) * 3; 
 
             foreach (Handmanager.Handcard hcc in p.owncards)
             {
@@ -465,355 +487,7 @@
 
 
 
-            //aoe-spell check 
-            //druid swipe
-            int Swipe = 0; //Swipe CS2_012
-            int Holy_Nova = 0; //Holy Nova CS1_112
-            int Lightbomb = 0; //Lightbomb GVG_008
-            int Lightning_Storm = 0; //Lightning Storm EX1_259
-            int Flamestrike = 0; //Flamestrike CS2_032
-            int Consecration = 0; //Consecration CS2_093
-            int Hellfire = 0; //Hellfire CS2_062
-            int Blade_Flurry = 0; //Blade Flurry CS2_233
-            int Unleash_the_Hounds = 0; //Unleash the Hounds EX1_538
-            int Maelstrom_Portal = 0;// Maelstrom Portal KAR_073
-            int Fan_of_Knives = 0;// Fan of Knives EX1_129
-            int Execute = 0; //Execute CS2_108
-            int Ravaging_Ghoul = 0; // Ravaging Ghoul OG_149
-            foreach (KeyValuePair<CardDB.cardIDEnum, int> e in Probabilitymaker.Instance.enemyGraveyard)
-            {
-                if (e.Key == CardDB.cardIDEnum.CS2_012) Swipe = e.Value;//Swipe CS2_012
-                if (e.Key == CardDB.cardIDEnum.CS1_112) Holy_Nova = e.Value;//Holy Nova CS1_112
-                if (e.Key == CardDB.cardIDEnum.GVG_008) Lightbomb = e.Value;//Lightbomb GVG_008
-                if (e.Key == CardDB.cardIDEnum.EX1_259) Lightning_Storm = e.Value;//Lightning Storm EX1_259
-                if (e.Key == CardDB.cardIDEnum.CS2_032) Flamestrike = e.Value;//Flamestrike CS2_032
-                if (e.Key == CardDB.cardIDEnum.CS2_093) Consecration = e.Value;//Consecration CS2_093
-                if (e.Key == CardDB.cardIDEnum.CS2_062) Hellfire = e.Value;//Hellfire CS2_062
-                if (e.Key == CardDB.cardIDEnum.CS2_233) Blade_Flurry = e.Value;//Blade Flurry CS2_233
-                if (e.Key == CardDB.cardIDEnum.EX1_538) Unleash_the_Hounds = e.Value;//Unleash the Hounds EX1_538
-                if (e.Key == CardDB.cardIDEnum.KAR_073) Maelstrom_Portal = e.Value;//Maelstrom Portal KAR_073
-                if (e.Key == CardDB.cardIDEnum.EX1_129) Fan_of_Knives = e.Value;//Fan of Knives EX1_129
-                if (e.Key == CardDB.cardIDEnum.CS2_108) Execute = e.Value;//Execute CS2_108
-                if (e.Key == CardDB.cardIDEnum.OG_149) Ravaging_Ghoul = e.Value;//Ravaging Ghoul OG_149
-            }
-            //Helpfunctions.Instance.ErrorLog("Execute" + Execute + " Ravaging_Ghoul" + Ravaging_Ghoul);
 
-
-            //killcard check
-            int Big_Game_Hunter = 0;
-            foreach (KeyValuePair<CardDB.cardIDEnum, int> e in Probabilitymaker.Instance.enemyGraveyard)
-            {
-                if (e.Key == CardDB.cardIDEnum.EX1_005) Big_Game_Hunter = e.Value; //Big Game Hunter EX1_005
-            }
-
-            bool enemyDoomsayer = false;
-            bool ownDoomsayer = false;
-
-            if (p.enemyMinions.Find(m => m.name == CardDB.cardName.doomsayer && !m.silenced) != null) enemyDoomsayer = true;
-            if (p.ownMinions.Find(m => m.name == CardDB.cardName.doomsayer && !m.silenced) != null) ownDoomsayer = true;
-
-            if (enemyDoomsayer)
-            {
-                retval -= 10 * p.ownMinions.Count ;
-            }
-
-            //if (p.diedMinions != null)
-            //{
-            //    Helpfunctions.Instance.ErrorLog("*********************************************************");
-            //    foreach (GraveYardItem gy in p.diedMinions)
-            //    {
-            //        if (!gy.own && gy.cardid == CardDB.cardIDEnum.EX1_007) retval += 7 * gy.entity; //acoyte
-            //    }
-            //}
-
-
-
-
-            if (!enemyDoomsayer && !ownDoomsayer)
-            {
-                bool impgangbossgoodposition = true;
-                bool hasenemytaunt = false;
-                bool darkshirecouncilmanBadposition = false;
-                bool enemyhaschillmaw = false;
-                bool abomination = false;
-                foreach (Minion mmm in p.enemyMinions)
-                {
-                    if (mmm.Angr >= 4) impgangbossgoodposition = false;
-                    if (mmm.taunt && mmm.Angr >= 1) hasenemytaunt = true;
-                    if (mmm.Hp >= 2 && mmm.Angr >= 3) darkshirecouncilmanBadposition = true;
-                    if (!mmm.silenced && mmm.name == CardDB.cardName.chillmaw) enemyhaschillmaw = true;
-                    if (!mmm.silenced && mmm.name == CardDB.cardName.abomination) abomination = true;
-                }
-
-                int strongesthp1minion = 0;
-                foreach (Minion mmnn in p.ownMinions)
-                {
-                    if (mmnn.Hp == 1)
-                    {
-                        if (mmnn.Angr >= strongesthp1minion) strongesthp1minion = mmnn.Angr + mmnn.Hp;
-                    }
-                }
-
-                //druid attack
-                if (!hasenemytaunt && !p.enemyHero.immune && p.ownHero.Ready && p.ownHero.Angr - p.ownWeaponAttack >= 1) retval -= 5;
-
-                //mage
-                if (p.enemyHeroAblility.card.name == CardDB.cardName.fireblast && p.ownMaxMana >= 7) retval -= strongesthp1minion;
-                //druid
-                if (p.enemyHeroAblility.card.name == CardDB.cardName.shapeshift && p.ownMaxMana >= 7) retval -= strongesthp1minion;
-
-                foreach (Minion m in p.ownMinions)
-                {
-                    //aoe - spell(3 + my minion)
-                    if (p.ownMinions.Count >= 3 && p.anzOwnLoatheb == 0 && p.enemyMinions.Count == 0)
-                    {
-                        //unleash
-                        if (p.enemyHeroName == HeroEnum.hunter && p.enemyMaxMana >= 3 && Unleash_the_Hounds == 0 && (m.Hp >= 3 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
-                        //swipe hp1 minion
-                        if (p.enemyHeroName == HeroEnum.druid && p.enemyMaxMana >= 4 && Swipe == 0 && (m.Hp >= 2 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
-                        //holynova
-                        if (p.enemyHeroName == HeroEnum.priest && p.enemyMaxMana >= 4 && Holy_Nova == 0 && (m.Hp >= 3 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
-                        //Lightbomb
-                        //if (p.enemyHeroName == HeroEnum.priest && p.enemyMaxMana >= 8 && Lightbomb == 0 && m.Hp <= m.Angr) retval -= m.Hp + m.Angr * 2;
-                        //Lightning Storm EX1_259
-                        if (p.enemyHeroName == HeroEnum.shaman && p.enemyMaxMana - p.enemyRecall >= 3 && Lightning_Storm == 0 && (m.Hp >= 3 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
-                        else if (p.enemyHeroName == HeroEnum.shaman && p.enemyMaxMana - p.enemyRecall >= 2 && Maelstrom_Portal == 0 && (m.Hp >= 2 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
-                        //Flamestrike CS2_032
-                        if (p.enemyHeroName == HeroEnum.mage && p.enemyMaxMana >= 6 && Flamestrike == 0 && (m.Hp >= 5 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
-                        //Consecration CS2_093
-                        if (p.enemyHeroName == HeroEnum.pala && p.enemyMaxMana >= 3 && Consecration == 0 && (m.Hp >= 3 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
-                        //Hellfire CS2_062
-                        //if (p.enemyHeroName == HeroEnum.warlock && p.enemyMaxMana >= 6 && Hellfire == 0 && m.Hp <= 3) retval -= m.Hp + m.Angr * 2;
-                        //Blade Flurry CS2_233
-                        //if (p.enemyHeroName == HeroEnum.thief && p.enemyMaxMana >= 5 && Blade_Flurry == 0 && m.Hp <= p.enemyWeaponAttack) retval -= m.Hp + m.Angr * 2;
-                        if (p.enemyHeroName == HeroEnum.thief && p.enemyMaxMana >= 3 && Fan_of_Knives == 0 && (m.Hp >= 2 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
-
-                    }
-
-                    if (enemyhaschillmaw && (m.Hp <= 3 && !m.divineshild && !m.hasDeathrattle())) retval -= m.Angr * 2;
-                    if (abomination && (m.Hp <= 2 && !m.divineshild && !m.hasDeathrattle())) retval -= m.Angr * 2;
-
-                    if (m.souloftheforest >= 1) retval += 5;
-                    if (m.ancestralspirit >= 1) retval += m.Angr + m.maxHp;
-                    if (m.ancestralspirit >= 1 && (m.hasDeathrattle() || m.taunt)) retval += 2;
-
-                    //meta
-
-                    //switch (p.ownHeroName)
-                    //{
-                    //    case HeroEnum.warlock: break;
-                    //    default: break;
-                    //}
-
-
-
-                    //
-                    if (p.ownHeroName == HeroEnum.warlock && (TAG_RACE)m.handcard.card.race == TAG_RACE.DEMON) retval += 0.1f;
-                    //if (p.ownHeroName == HeroEnum.warlock && m.name == CardDB.cardName.darkshirecouncilman) retval += 1.5f;
-
-                    if (p.ownHeroName == HeroEnum.hunter && (TAG_RACE)m.handcard.card.race == TAG_RACE.BEAST) retval += 0.1f;
-                    if (p.ownHeroName == HeroEnum.shaman && (TAG_RACE)m.handcard.card.race == TAG_RACE.TOTEM) retval += 0.2f;
-                    if (p.ownHeroName == HeroEnum.pala && m.name == CardDB.cardName.silverhandrecruit) retval += 0.1f; ;
-                    if (p.ownHeroName == HeroEnum.mage && (TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL) retval += 0.1f;
-                    if (p.ownHeroName == HeroEnum.mage && m.name == CardDB.cardName.flamewaker) retval += 5;
-
-
-                    if (!hasenemytaunt && !p.enemyHero.immune && m.Ready && m.Angr >= 1 && !m.frozen && m.enemyBlessingOfWisdom == 0 && m.enemyPowerWordGlory == 0) retval -= 10 * m.Angr;
-                    if (m.enemyBlessingOfWisdom >= 1 || m.enemyPowerWordGlory >= 1) retval -= 8;
-
-                    //minion each
-                    if (impgangbossgoodposition && m.handcard.card.name == CardDB.cardName.impgangboss && m.Hp == 4 && p.ownMaxMana <= 3 && m.playedThisTurn) retval += 5;
-
-                    if (m.name == CardDB.cardName.darkshirecouncilman && p.enemyMinions.Count == 0 && p.ownMaxMana <= 3) retval += 5;
-                    if (p.enemyMinions.Count >= 1)
-                    {
-                        if (m.playedThisTurn && !m.stealth)
-                        {
-                            if ((m.name == CardDB.cardName.darkshirecouncilman || m.name == CardDB.cardName.tundrarhino) && m.Hp <= p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Angr && m.Angr < p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Hp) retval -= 5;
-                            if (m.name == CardDB.cardName.darkshirecouncilman && (m.Hp <= enemypotentialattacktotal) && p.ownMaxMana <= 3) retval -= 10;
-                            if (m.name == CardDB.cardName.tundrarhino && (m.Hp <= enemypotentialattacktotal) && p.ownMaxMana <= 5) retval -= 10;
-                            // 적미니언 공높은놈이랑 비교.. 
-                            // 적미니언 공높은놈보다 피 작고 (한방에죽음) + 적 미니언 공높은놈보다 공낮으면 -밸류;
-                            if (m.name == CardDB.cardName.gadgetzanauctioneer && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null) retval -= 10;
-                            if (m.name == CardDB.cardName.flametonguetotem && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null) retval -= 10;
-                            if (m.name == CardDB.cardName.manatidetotem && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null && p.owncards.Count >= 3) retval -= 13;
-                            if (m.name == CardDB.cardName.wickedwitchdoctor && (m.Hp <= enemypotentialattacktotal)) retval -= 5;
-                            if (m.name == CardDB.cardName.darnassusaspirant && (m.Hp <= enemypotentialattacktotal)) retval -= 10;
-                            if (m.name == CardDB.cardName.brannbronzebeard && (m.Hp <= enemypotentialattacktotal)) retval -= 5;
-                        }
-                    }
-
-                    if (m.name == CardDB.cardName.manatidetotem && !m.silenced && (p.ownMaxMana <= 4 || p.owncards.Count <= 2)) retval += 3;
-
-                    if (m.name == CardDB.cardName.scavenginghyena && !m.silenced)
-                    {
-                        if (m.Angr == 2) retval -= 5; // penalty 2/2 hyena
-                        if (m.taunt) retval -= 4; // penalty taunt
-                    }
-
-                    if (m.name == CardDB.cardName.tundrarhino && !m.silenced)
-                    {
-                        retval += 8;
-                    }
-
-                    if (m.name == CardDB.cardName.ysera && !m.silenced)
-                    {
-                        retval += 10;
-                    }
-
-                    if (m.name == CardDB.cardName.finjatheflyingstar && m.playedThisTurn)
-                    {
-                        int mulroccnt = 0;
-                        CardDB.Card c;
-                        foreach (KeyValuePair<CardDB.cardIDEnum, int> cid in Hrtprozis.Instance.turnDeck)
-                        {
-                            c = CardDB.Instance.getCardDataFromID(cid.Key);
-                            if ((TAG_RACE)c.race == TAG_RACE.MURLOC)
-                            {
-                                mulroccnt++;
-                            }
-                        }
-                        if (mulroccnt >= 1 && p.enemyMinions.Find(a => a.Hp <= m.Angr) != null && p.enemyMinions.Find(a => a.taunt) == null) retval += 10;
-                    }
-
-                    ////attack face when own taunt can control board
-                    //if (m.taunt)
-                    //{
-                    //    foreach (Minion mnn in p.enemyMinions)
-                    //    {
-                    //        if (mnn.Angr >= m.Hp) retval -= 1.5f * (p.enemyHero.Hp + p.enemyHero.armor);
-                    //    }
-                    //}
-
-                    //anti aoe
-                    //if (m.handcard.card.anti_aoe_minion >= 1 && !m.silenced && p.ownMinions.Count >= 2 && p.enemyMinions.Count == 0) retval += m.handcard.card.anti_aoe_minion * 0.5f;
-                    if (m.handcard.card.anti_aoe_minion >= 1 && !m.silenced)
-                    {
-                        retval += m.handcard.card.anti_aoe_minion;
-                        if (m.name == CardDB.cardName.ayablackpaw) retval += m.handcard.card.anti_aoe_minion * (p.anzOwnJadeGolem -1);
-                    }
-
-                    if (m.divineshild && p.ownMinions.Count >= 2 && p.enemyMinions.Count == 0) retval += m.Angr * 2 - m.AdjacentAngr * 2;
-
-                    //kill card
-                    //if (p.enemyMaxMana >= 5 && Big_Game_Hunter == 0 && m.Angr >= 7) retval -= (m.Angr) * 0.3f; //if enemy not uses bgh, minion value is half.
-
-                    if (p.enemyWeaponName == CardDB.cardName.deathsbite && p.enemyWeaponDurability == 1 && m.Hp == 1)
-                    {
-                        retval -= 0.5f;
-                        retval -= m.Hp * 1;
-                        retval -= m.Angr * 2;
-                    }
-                    retval += 1;
-
-
-                    retval += m.Hp * 1;
-                    if (m.Angr == 0) retval -= m.Hp * 0.3f;
-                    //if (m.Hp >= 5) retval += m.Hp * 0.5f;
-                    retval += m.Angr * 2;
-                    //retval += m.handcard.card.rarity;
-                    retval -= m.AdjacentAngr * 2;
-
-                    if (m.Angr == 1 && m.Hp == 1 && !m.divineshild) retval -= 0.5f;
-
-
-
-                    bool pirateaggrowarrior = false;
-                    if (p.enemyHeroName == HeroEnum.warrior)
-                    {
-                        int upgrade = 0;
-                        int bloodsail_raider = 0;
-                        int Bloodsail_Cultist = 0;
-                        int southseadeckhand = 0;
-                        int Small_Time_Buccanee = 0;
-                        int Patches_the_Pirate = 0;
-                        int Dread_Corsair = 0;
-                        foreach (KeyValuePair<CardDB.cardIDEnum, int> e in Probabilitymaker.Instance.enemyGraveyard)
-                        {
-                            if (e.Key == CardDB.cardIDEnum.EX1_409) upgrade = e.Value;//upgrade EX1_409
-                            if (e.Key == CardDB.cardIDEnum.NEW1_018) bloodsail_raider = e.Value;//NEW1_018 //bloodsail raider
-                            if (e.Key == CardDB.cardIDEnum.OG_315) Bloodsail_Cultist = e.Value;//OG_315 Bloodsail Cultist
-                            if (e.Key == CardDB.cardIDEnum.CS2_146) southseadeckhand = e.Value;//CS2_146 //southseadeckhand
-                            if (e.Key == CardDB.cardIDEnum.CFM_325) Small_Time_Buccanee = e.Value;//Small-Time Buccanee
-                            if (e.Key == CardDB.cardIDEnum.CFM_637) Patches_the_Pirate = e.Value;//Patches the Pirate
-                            if (e.Key == CardDB.cardIDEnum.NEW1_022) Dread_Corsair = e.Value;//Dread Corsair
-                        }
-                        if (upgrade >= 1 || bloodsail_raider >= 1 || Bloodsail_Cultist >= 1 || southseadeckhand >= 1 || Small_Time_Buccanee >= 1 || Patches_the_Pirate >= 1 || Dread_Corsair >= 1) pirateaggrowarrior = true; //pirate warrior
-                    }
-
-
-                    if (!pirateaggrowarrior)
-                    {
-                        if (p.enemyHeroName == HeroEnum.warrior && Ravaging_Ghoul == 0 && m.Hp == 1) retval -= m.Angr * 0.5f;
-                        else if (p.enemyHeroName == HeroEnum.warrior && Execute == 0 && m.wounded && (m.Angr >= 4 || m.Hp >= 5)) retval -= m.Angr * 0.5f;
-                    }
-                    
-
-                    if (m.wounded) retval += (m.maxHp - m.Hp) * 0.001f;
-
-                    if (p.enemyWeaponAttack >= 1 && p.enemyWeaponAttack >= m.Hp && !m.hasDeathrattle() && !m.divineshild) retval -= m.Angr * 0.5f;
-
-                    if (m.windfury && p.enemyMinions.Count == 0) retval += m.Angr;
-
-                    if (m.divineshild && p.enemyHeroAblility.card.name != CardDB.cardName.fireblast) retval += m.Angr * 1.5f;
-                    if (m.stealth)
-                    {
-                        retval += 1;
-                        if (m.name == CardDB.cardName.moroes && !m.silenced) retval += m.Angr * 1.25f;
-                    }
-                    if (m.taunt)
-                    {
-                        retval += m.AdjacentAngr * 0.25f;
-                    }
-                    if (m.handcard.card.isSpecialMinion && !m.silenced)
-                    {
-                        retval += 1;
-                        //if (!m.taunt && m.stealth) retval += (m.Angr < 4 ? 2 : 5);
-                    }
-                    if (m.destroyOnEnemyTurnEnd || m.destroyOnEnemyTurnStart || m.destroyOnOwnTurnEnd || m.destroyOnOwnTurnStart)
-                    {
-                        retval -= m.Hp + m.Angr * 2 + m.handcard.card.rarity;
-                        //Helpfunctions.Instance.ErrorLog("destroyOnEnemyTurnEnd: " + m.name);
-                    }
-
-                    //m.shadowmadnessed
-                    if (m.shadowmadnessed) retval -= m.Hp - 2 * m.Angr - 5;
-
-                    //zonepos
-                    if (m.name == CardDB.cardName.knifejuggler)
-                    {
-                        if (jugglercount == 1 && m.zonepos == 1) retval += 0.01f;
-                        if (jugglercount == 2 && (m.zonepos == 1 || m.zonepos == 2)) retval += 0.01f;
-                    }
-                    if (m.name == CardDB.cardName.possessedvillager)
-                    {
-                        if (deathrattlecount == 1 && m.zonepos == p.ownMinions.Count) retval += 0.01f;
-                        if (deathrattlecount == 2 && (m.zonepos == p.ownMinions.Count || m.zonepos == p.ownMinions.Count - 1)) retval += 0.01f;
-                    }
-                    if (m.name == CardDB.cardName.doomguard || m.name == CardDB.cardName.seagiant)
-                    {
-                        if (jugglercount >= 1 && m.zonepos == jugglercount + 1) retval += 0.01f;
-                        if (jugglercount == 0 && m.zonepos == 1) retval += 0.01f;
-                    }
-                    if ((m.name == CardDB.cardName.direwolfalpha || m.name == CardDB.cardName.flametonguetotem) && !m.silenced)
-                    {
-                        if (m.zonepos == p.ownMinions.Count || m.zonepos == 1) retval -= 2;
-                    }
-
-                    //attack buff when enemy turn
-                    if (!m.silenced)
-                    {
-                        switch (m.name)
-                        {
-                            case CardDB.cardName.tarcreeper: retval += 2; break;
-                            case CardDB.cardName.tarlord: retval += 4; break;
-                            case CardDB.cardName.tarlurker: retval += 3; break;
-                        }
-                    }
-                    
-
-                }
-            }
 
             //rockbiter
             bool rockbiterHero = p.playactions.Find(a => a.actionType == actionEnum.playcard && a.card.card.name == CardDB.cardName.rockbiterweapon && a.target.entityID == p.ownHero.entityID) != null;
@@ -837,7 +511,10 @@
 
             if (hasThunder && p.ownMaxMana == 6) retval -= p.owedRecall * 3;
 
-
+            foreach (Minion m in p.ownMinions)
+            {
+                retval += this.getOwnMinionValue(m, p);
+            }
 
             foreach (Minion m in p.enemyMinions)
             {
@@ -938,7 +615,17 @@
                     {
 
                     }
-                    retval += 10000;
+
+                    bool hasiceblock = false;
+                    foreach (SecretItem si in Probabilitymaker.Instance.enemySecrets)
+                    {
+                        if (si.canBe_iceblock)
+                        {
+                            hasiceblock = true;
+                        }
+                    }
+                    if (hasiceblock || p.enemyHero.immune) retval += 5000;
+                    else retval += 10000;
 
                 }
                 else
@@ -1423,6 +1110,404 @@
             //Helpfunctions.Instance.ErrorLog("retval" + retval);
             return retval;
         }
+
+
+        public override float getOwnMinionValue(Minion m, Playfield p)
+        {
+            float retval = 0;
+
+
+
+            int enemypotentialattack = 0;
+            switch (p.enemyHeroAblility.card.name)
+            {
+                //case CardDB.cardName.steadyshot: enemypotentialattack += 2; break; //hunter
+                //case CardDB.cardName.ballistashot: enemypotentialattack += 3; break; //hunter 3 damage
+                case CardDB.cardName.daggermastery: enemypotentialattack += 1; break; //rogue
+                case CardDB.cardName.poisoneddaggers: enemypotentialattack += 2; break; //rogue 2 att
+                case CardDB.cardName.shapeshift: enemypotentialattack += 1; break; //druid
+                case CardDB.cardName.direshapeshift: enemypotentialattack += 2; break; //druid 2att
+                case CardDB.cardName.fireblast: enemypotentialattack += 1; break; //mage
+                case CardDB.cardName.fireblastrank2: enemypotentialattack += 2; break; //mage 2att
+                case CardDB.cardName.mindspike: enemypotentialattack += 2; break; //dark priest
+                case CardDB.cardName.mindshatter: enemypotentialattack += 3; break; //dark priest rank2
+                case CardDB.cardName.lightningjolt: enemypotentialattack += 2; break; //2dmg shamman weapon
+                default: break;
+            }
+
+            int enemypotentialattacktotal = enemypotentialattack;
+            foreach (Minion mnn in p.enemyMinions)
+            {
+                enemypotentialattacktotal += mnn.Angr;
+                if (mnn.windfury) enemypotentialattacktotal += mnn.Angr;
+            }
+            enemypotentialattacktotal += p.enemyWeaponAttack;
+
+
+
+            //aoe-spell check 
+            //druid swipe
+            int Swipe = 0; //Swipe CS2_012
+            int Holy_Nova = 0; //Holy Nova CS1_112
+            int Lightbomb = 0; //Lightbomb GVG_008
+            int Lightning_Storm = 0; //Lightning Storm EX1_259
+            int Flamestrike = 0; //Flamestrike CS2_032
+            int Consecration = 0; //Consecration CS2_093
+            int Hellfire = 0; //Hellfire CS2_062
+            int Blade_Flurry = 0; //Blade Flurry CS2_233
+            int Unleash_the_Hounds = 0; //Unleash the Hounds EX1_538
+            int Maelstrom_Portal = 0;// Maelstrom Portal KAR_073
+            int Fan_of_Knives = 0;// Fan of Knives EX1_129
+            int Execute = 0; //Execute CS2_108
+            int Ravaging_Ghoul = 0; // Ravaging Ghoul OG_149
+            foreach (KeyValuePair<CardDB.cardIDEnum, int> e in Probabilitymaker.Instance.enemyGraveyard)
+            {
+                if (e.Key == CardDB.cardIDEnum.CS2_012) Swipe = e.Value;//Swipe CS2_012
+                if (e.Key == CardDB.cardIDEnum.CS1_112) Holy_Nova = e.Value;//Holy Nova CS1_112
+                if (e.Key == CardDB.cardIDEnum.GVG_008) Lightbomb = e.Value;//Lightbomb GVG_008
+                if (e.Key == CardDB.cardIDEnum.EX1_259) Lightning_Storm = e.Value;//Lightning Storm EX1_259
+                if (e.Key == CardDB.cardIDEnum.CS2_032) Flamestrike = e.Value;//Flamestrike CS2_032
+                if (e.Key == CardDB.cardIDEnum.CS2_093) Consecration = e.Value;//Consecration CS2_093
+                if (e.Key == CardDB.cardIDEnum.CS2_062) Hellfire = e.Value;//Hellfire CS2_062
+                if (e.Key == CardDB.cardIDEnum.CS2_233) Blade_Flurry = e.Value;//Blade Flurry CS2_233
+                if (e.Key == CardDB.cardIDEnum.EX1_538) Unleash_the_Hounds = e.Value;//Unleash the Hounds EX1_538
+                if (e.Key == CardDB.cardIDEnum.KAR_073) Maelstrom_Portal = e.Value;//Maelstrom Portal KAR_073
+                if (e.Key == CardDB.cardIDEnum.EX1_129) Fan_of_Knives = e.Value;//Fan of Knives EX1_129
+                if (e.Key == CardDB.cardIDEnum.CS2_108) Execute = e.Value;//Execute CS2_108
+                if (e.Key == CardDB.cardIDEnum.OG_149) Ravaging_Ghoul = e.Value;//Ravaging Ghoul OG_149
+            }
+            //Helpfunctions.Instance.ErrorLog("Execute" + Execute + " Ravaging_Ghoul" + Ravaging_Ghoul);
+
+
+            //killcard check
+            int Big_Game_Hunter = 0;
+            foreach (KeyValuePair<CardDB.cardIDEnum, int> e in Probabilitymaker.Instance.enemyGraveyard)
+            {
+                if (e.Key == CardDB.cardIDEnum.EX1_005) Big_Game_Hunter = e.Value; //Big Game Hunter EX1_005
+            }
+
+            bool enemyDoomsayer = false;
+            bool ownDoomsayer = false;
+
+            if (p.enemyMinions.Find(a => m.name == CardDB.cardName.doomsayer && !a.silenced) != null) enemyDoomsayer = true;
+            if (p.ownMinions.Find(a => m.name == CardDB.cardName.doomsayer && !a.silenced) != null) ownDoomsayer = true;
+
+            if (enemyDoomsayer)
+            {
+                retval -= 10 * p.ownMinions.Count;
+            }
+
+            //if (p.diedMinions != null)
+            //{
+            //    Helpfunctions.Instance.ErrorLog("*********************************************************");
+            //    foreach (GraveYardItem gy in p.diedMinions)
+            //    {
+            //        if (!gy.own && gy.cardid == CardDB.cardIDEnum.EX1_007) retval += 7 * gy.entity; //acoyte
+            //    }
+            //}
+
+
+            bool pirateaggrowarrior = false;
+            if (p.enemyHeroName == HeroEnum.warrior)
+            {
+                int upgrade = 0;
+                int bloodsail_raider = 0;
+                int Bloodsail_Cultist = 0;
+                int southseadeckhand = 0;
+                int Small_Time_Buccanee = 0;
+                int Patches_the_Pirate = 0;
+                int Dread_Corsair = 0;
+                foreach (KeyValuePair<CardDB.cardIDEnum, int> e in Probabilitymaker.Instance.enemyGraveyard)
+                {
+                    if (e.Key == CardDB.cardIDEnum.EX1_409) upgrade = e.Value;//upgrade EX1_409
+                    if (e.Key == CardDB.cardIDEnum.NEW1_018) bloodsail_raider = e.Value;//NEW1_018 //bloodsail raider
+                    if (e.Key == CardDB.cardIDEnum.OG_315) Bloodsail_Cultist = e.Value;//OG_315 Bloodsail Cultist
+                    if (e.Key == CardDB.cardIDEnum.CS2_146) southseadeckhand = e.Value;//CS2_146 //southseadeckhand
+                    if (e.Key == CardDB.cardIDEnum.CFM_325) Small_Time_Buccanee = e.Value;//Small-Time Buccanee
+                    if (e.Key == CardDB.cardIDEnum.CFM_637) Patches_the_Pirate = e.Value;//Patches the Pirate
+                    if (e.Key == CardDB.cardIDEnum.NEW1_022) Dread_Corsair = e.Value;//Dread Corsair
+                }
+                if (upgrade >= 1 || bloodsail_raider >= 1 || Bloodsail_Cultist >= 1 || southseadeckhand >= 1 || Small_Time_Buccanee >= 1 || Patches_the_Pirate >= 1 || Dread_Corsair >= 1) pirateaggrowarrior = true; //pirate warrior
+            }
+
+
+            bool hassecretkeeper = false;
+            int jugglercount = 0;
+            int deathrattlecount = 0;
+            foreach (Minion a in p.ownMinions)
+            {
+                if (a.name == CardDB.cardName.secretkeeper && !a.silenced) hassecretkeeper = true;
+                if (a.name == CardDB.cardName.knifejuggler) jugglercount++;
+                if (a.name == CardDB.cardName.possessedvillager) deathrattlecount++;
+            }
+
+            if (!enemyDoomsayer && !ownDoomsayer)
+            {
+                bool impgangbossgoodposition = true;
+                bool hasenemytaunt = false;
+                bool darkshirecouncilmanBadposition = false;
+                bool enemyhaschillmaw = false;
+                bool abomination = false;
+                foreach (Minion mmm in p.enemyMinions)
+                {
+                    if (mmm.Angr >= 4) impgangbossgoodposition = false;
+                    if (mmm.taunt && mmm.Angr >= 1) hasenemytaunt = true;
+                    if (mmm.Hp >= 2 && mmm.Angr >= 3) darkshirecouncilmanBadposition = true;
+                    if (!mmm.silenced && mmm.name == CardDB.cardName.chillmaw) enemyhaschillmaw = true;
+                    if (!mmm.silenced && mmm.name == CardDB.cardName.abomination) abomination = true;
+                }
+
+                int strongesthp1minion = 0;
+                foreach (Minion mmnn in p.ownMinions)
+                {
+                    if (mmnn.Hp == 1)
+                    {
+                        if (mmnn.Angr >= strongesthp1minion) strongesthp1minion = mmnn.Angr + mmnn.Hp;
+                    }
+                }
+
+                //druid attack
+                if (!hasenemytaunt && !p.enemyHero.immune && p.ownHero.Ready && p.ownHero.Angr - p.ownWeaponAttack >= 1) retval -= 5;
+
+                //mage
+                if (p.enemyHeroAblility.card.name == CardDB.cardName.fireblast && p.ownMaxMana >= 7) retval -= strongesthp1minion;
+                //druid
+                if (p.enemyHeroAblility.card.name == CardDB.cardName.shapeshift && p.ownMaxMana >= 7) retval -= strongesthp1minion;
+
+
+                //aoe - spell(3 + my minion)
+                if (p.ownMinions.Count >= 3 && p.anzOwnLoatheb == 0 && p.enemyMinions.Count == 0)
+                {
+                    //unleash
+                    if (p.enemyHeroName == HeroEnum.hunter && p.enemyMaxMana >= 3 && Unleash_the_Hounds == 0 && (m.Hp >= 3 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
+                    //swipe hp1 minion
+                    if (p.enemyHeroName == HeroEnum.druid && p.enemyMaxMana >= 4 && Swipe == 0 && (m.Hp >= 2 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
+                    //holynova
+                    if (p.enemyHeroName == HeroEnum.priest && p.enemyMaxMana >= 4 && Holy_Nova == 0 && (m.Hp >= 3 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
+                    //Lightbomb
+                    //if (p.enemyHeroName == HeroEnum.priest && p.enemyMaxMana >= 8 && Lightbomb == 0 && m.Hp <= m.Angr) retval -= m.Hp + m.Angr * 2;
+                    //Lightning Storm EX1_259
+                    if (p.enemyHeroName == HeroEnum.shaman && p.enemyMaxMana - p.enemyRecall >= 3 && Lightning_Storm == 0 && (m.Hp >= 3 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
+                    else if (p.enemyHeroName == HeroEnum.shaman && p.enemyMaxMana - p.enemyRecall >= 2 && Maelstrom_Portal == 0 && (m.Hp >= 2 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
+                    //Flamestrike CS2_032
+                    if (p.enemyHeroName == HeroEnum.mage && p.enemyMaxMana >= 6 && Flamestrike == 0 && (m.Hp >= 5 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
+                    //Consecration CS2_093
+                    if (p.enemyHeroName == HeroEnum.pala && p.enemyMaxMana >= 3 && Consecration == 0 && (m.Hp >= 3 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
+                    //Hellfire CS2_062
+                    //if (p.enemyHeroName == HeroEnum.warlock && p.enemyMaxMana >= 6 && Hellfire == 0 && m.Hp <= 3) retval -= m.Hp + m.Angr * 2;
+                    //Blade Flurry CS2_233
+                    //if (p.enemyHeroName == HeroEnum.thief && p.enemyMaxMana >= 5 && Blade_Flurry == 0 && m.Hp <= p.enemyWeaponAttack) retval -= m.Hp + m.Angr * 2;
+                    if (p.enemyHeroName == HeroEnum.thief && p.enemyMaxMana >= 3 && Fan_of_Knives == 0 && (m.Hp >= 2 + p.enemyspellpower || m.divineshild || m.hasDeathrattle())) retval += m.Angr;
+
+                }
+
+                if (enemyhaschillmaw && (m.Hp <= 3 && !m.divineshild && !m.hasDeathrattle())) retval -= m.Angr * 2;
+                if (abomination && (m.Hp <= 2 && !m.divineshild && !m.hasDeathrattle())) retval -= m.Angr * 2;
+
+                if (m.souloftheforest >= 1) retval += 5;
+                if (m.spiritecho >= 1)
+                {
+                    if (m.handcard.card.deathrattle || m.handcard.card.battlecry || m.taunt) retval += 5;
+                    else if (m.handcard.card.isSpecialMinion) retval += 5;
+                    else if (p.owncards.Count <= 2) retval += 5;
+                    else retval++;
+                }
+
+                if (m.ancestralspirit >= 1) retval += m.Angr + m.maxHp;
+                if (m.ancestralspirit >= 1 && (m.hasDeathrattle() || m.taunt)) retval += 2;
+
+                //meta
+
+                //switch (p.ownHeroName)
+                //{
+                //    case HeroEnum.warlock: break;
+                //    default: break;
+                //}
+
+
+
+                //
+                if (p.ownHeroName == HeroEnum.warlock && (TAG_RACE)m.handcard.card.race == TAG_RACE.DEMON) retval += 0.1f;
+                //if (p.ownHeroName == HeroEnum.warlock && m.name == CardDB.cardName.darkshirecouncilman) retval += 1.5f;
+
+                if (p.ownHeroName == HeroEnum.hunter && (TAG_RACE)m.handcard.card.race == TAG_RACE.BEAST) retval += 0.1f;
+                if (p.ownHeroName == HeroEnum.shaman && (TAG_RACE)m.handcard.card.race == TAG_RACE.TOTEM) retval += 0.2f;
+                if (p.ownHeroName == HeroEnum.pala && m.name == CardDB.cardName.silverhandrecruit) retval += 0.1f; ;
+                if (p.ownHeroName == HeroEnum.mage && (TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL) retval += 0.1f;
+                if (p.ownHeroName == HeroEnum.mage && m.name == CardDB.cardName.flamewaker) retval += 5;
+
+
+                if (!hasenemytaunt && !p.enemyHero.immune && m.Ready && m.Angr >= 1 && !m.frozen && m.enemyBlessingOfWisdom == 0 && m.enemyPowerWordGlory == 0) retval -= 10 * m.Angr;
+                if (m.enemyBlessingOfWisdom >= 1 || m.enemyPowerWordGlory >= 1) retval -= 8;
+
+                //minion each
+                if (impgangbossgoodposition && m.handcard.card.name == CardDB.cardName.impgangboss && m.Hp == 4 && p.ownMaxMana <= 3 && m.playedThisTurn) retval += 5;
+
+                if (m.name == CardDB.cardName.darkshirecouncilman && p.enemyMinions.Count == 0 && p.ownMaxMana <= 3) retval += 5;
+                if (p.enemyMinions.Count >= 1)
+                {
+                    if (m.playedThisTurn && !m.stealth)
+                    {
+                        if ((m.name == CardDB.cardName.darkshirecouncilman || m.name == CardDB.cardName.tundrarhino) && m.Hp <= p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Angr && m.Angr < p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestAttack).Hp) retval -= 5;
+                        if (m.name == CardDB.cardName.darkshirecouncilman && (m.Hp <= enemypotentialattacktotal) && p.ownMaxMana <= 3) retval -= 10;
+                        if (m.name == CardDB.cardName.tundrarhino && (m.Hp <= enemypotentialattacktotal) && p.ownMaxMana <= 5) retval -= 10;
+                        // 적미니언 공높은놈이랑 비교.. 
+                        // 적미니언 공높은놈보다 피 작고 (한방에죽음) + 적 미니언 공높은놈보다 공낮으면 -밸류;
+                        if (m.name == CardDB.cardName.gadgetzanauctioneer && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null) retval -= 10;
+                        if (m.name == CardDB.cardName.flametonguetotem && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null) retval -= 10;
+                        if (m.name == CardDB.cardName.manatidetotem && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null && p.owncards.Count >= 3) retval -= 13;
+                        if (m.name == CardDB.cardName.wickedwitchdoctor && (m.Hp <= enemypotentialattacktotal)) retval -= 5;
+                        if (m.name == CardDB.cardName.darnassusaspirant && (m.Hp <= enemypotentialattacktotal)) retval -= 10;
+                        if (m.name == CardDB.cardName.brannbronzebeard && (m.Hp <= enemypotentialattacktotal)) retval -= 5;
+                        if (m.name == CardDB.cardName.murlocwarleader && (m.Hp <= enemypotentialattacktotal)) retval -= 5;
+                    }
+                }
+
+                if (m.name == CardDB.cardName.manatidetotem && !m.silenced && (p.ownMaxMana <= 4 || p.owncards.Count <= 2)) retval += 3;
+
+                if (m.name == CardDB.cardName.scavenginghyena && !m.silenced)
+                {
+                    if (m.Angr == 2) retval -= 5; // penalty 2/2 hyena
+                    if (m.taunt) retval -= 4; // penalty taunt
+                }
+
+                if (m.name == CardDB.cardName.tundrarhino && !m.silenced)
+                {
+                    retval += 8;
+                }
+
+                if (m.name == CardDB.cardName.ysera && !m.silenced)
+                {
+                    retval += 10;
+                }
+
+                if (m.name == CardDB.cardName.finjatheflyingstar && m.playedThisTurn)
+                {
+                    int mulroccnt = 0;
+                    CardDB.Card c;
+                    foreach (KeyValuePair<CardDB.cardIDEnum, int> cid in Hrtprozis.Instance.turnDeck)
+                    {
+                        c = CardDB.Instance.getCardDataFromID(cid.Key);
+                        if ((TAG_RACE)c.race == TAG_RACE.MURLOC)
+                        {
+                            mulroccnt++;
+                        }
+                    }
+                    if (mulroccnt >= 1 && p.enemyMinions.Find(a => a.Hp <= m.Angr) != null && p.enemyMinions.Find(a => a.taunt) == null) retval += 10;
+                }
+
+                ////attack face when own taunt can control board
+                //if (m.taunt)
+                //{
+                //    foreach (Minion mnn in p.enemyMinions)
+                //    {
+                //        if (mnn.Angr >= m.Hp) retval -= 1.5f * (p.enemyHero.Hp + p.enemyHero.armor);
+                //    }
+                //}
+
+                //anti aoe
+                //if (m.handcard.card.anti_aoe_minion >= 1 && !m.silenced && p.ownMinions.Count >= 2 && p.enemyMinions.Count == 0) retval += m.handcard.card.anti_aoe_minion * 0.5f;
+                if (m.handcard.card.anti_aoe_minion >= 1 && !m.silenced)
+                {
+                    retval += m.handcard.card.anti_aoe_minion;
+                    if (m.name == CardDB.cardName.ayablackpaw) retval += m.handcard.card.anti_aoe_minion * (p.anzOwnJadeGolem - 1);
+                }
+
+                if (m.divineshild && p.ownMinions.Count >= 2 && p.enemyMinions.Count == 0) retval += m.Angr * 2 - m.AdjacentAngr * 2;
+
+                //kill card
+                //if (p.enemyMaxMana >= 5 && Big_Game_Hunter == 0 && m.Angr >= 7) retval -= (m.Angr) * 0.3f; //if enemy not uses bgh, minion value is half.
+
+                if (p.enemyWeaponName == CardDB.cardName.deathsbite && p.enemyWeaponDurability == 1 && m.Hp == 1)
+                {
+                    retval -= 0.5f;
+                    retval -= m.Hp * 1;
+                    retval -= m.Angr * 2;
+                }
+                retval += 1;
+
+
+                retval += m.Hp * 1;
+                if (m.Angr == 0) retval -= m.Hp * 0.3f;
+                //if (m.Hp >= 5) retval += m.Hp * 0.5f;
+                retval += m.Angr * 2;
+                //retval += m.handcard.card.rarity;
+                retval -= m.AdjacentAngr * 2;
+
+                if (m.Angr == 1 && m.Hp == 1 && !m.divineshild) retval -= 0.5f;
+
+
+
+
+
+
+                if (!pirateaggrowarrior)
+                {
+                    if (p.enemyHeroName == HeroEnum.warrior && Ravaging_Ghoul == 0 && m.Hp == 1) retval -= m.Angr * 0.5f;
+                    else if (p.enemyHeroName == HeroEnum.warrior && Execute == 0 && m.wounded && (m.Angr >= 4 || m.Hp >= 5)) retval -= m.Angr * 0.5f;
+                }
+
+
+                if (m.wounded) retval += (m.maxHp - m.Hp) * 0.001f;
+
+                if (p.enemyWeaponAttack >= 1 && p.enemyWeaponAttack >= m.Hp && !m.hasDeathrattle() && !m.divineshild) retval -= m.Angr * 0.5f;
+
+                if (m.windfury && p.enemyMinions.Count == 0) retval += m.Angr;
+
+                if (m.divineshild && p.enemyHeroAblility.card.name != CardDB.cardName.fireblast) retval += m.Angr * 1.5f;
+                if (m.stealth)
+                {
+                    retval += 1;
+                    if (m.name == CardDB.cardName.moroes && !m.silenced) retval += m.Angr * 1.25f;
+                }
+                if (m.taunt)
+                {
+                    retval += m.AdjacentAngr * 0.25f;
+                }
+                if (m.handcard.card.isSpecialMinion && !m.silenced)
+                {
+                    retval += 1;
+                    //if (!m.taunt && m.stealth) retval += (m.Angr < 4 ? 2 : 5);
+                }
+                if (m.destroyOnEnemyTurnEnd || m.destroyOnEnemyTurnStart || m.destroyOnOwnTurnEnd || m.destroyOnOwnTurnStart)
+                {
+                    retval -= m.Hp + m.Angr * 2 + m.handcard.card.rarity;
+                    //Helpfunctions.Instance.ErrorLog("destroyOnEnemyTurnEnd: " + m.name);
+                }
+
+                //m.shadowmadnessed
+                if (m.shadowmadnessed) retval -= m.Hp - 2 * m.Angr - 5;
+
+                //zonepos
+                if (m.name == CardDB.cardName.knifejuggler)
+                {
+                    if (jugglercount == 1 && m.zonepos == 1) retval += 0.01f;
+                    if (jugglercount == 2 && (m.zonepos == 1 || m.zonepos == 2)) retval += 0.01f;
+                }
+                if (m.name == CardDB.cardName.possessedvillager)
+                {
+                    if (deathrattlecount == 1 && m.zonepos == p.ownMinions.Count) retval += 0.01f;
+                    if (deathrattlecount == 2 && (m.zonepos == p.ownMinions.Count || m.zonepos == p.ownMinions.Count - 1)) retval += 0.01f;
+                }
+                if (m.name == CardDB.cardName.doomguard || m.name == CardDB.cardName.seagiant)
+                {
+                    if (jugglercount >= 1 && m.zonepos == jugglercount + 1) retval += 0.01f;
+                    if (jugglercount == 0 && m.zonepos == 1) retval += 0.01f;
+                }
+                if ((m.name == CardDB.cardName.direwolfalpha || m.name == CardDB.cardName.flametonguetotem) && !m.silenced)
+                {
+                    if (m.zonepos == p.ownMinions.Count || m.zonepos == 1) retval -= 2;
+                }
+
+            }
+
+
+            
+
+            return retval;
+        }
+
+
 
         //other value of the board for enemys turn? (currently the same as getplayfield value)
         public override float getPlayfieldValueEnemy(Playfield p)

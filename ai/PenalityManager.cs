@@ -2449,7 +2449,7 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.dieinsect)
             {
-                if (p.enemyMinions.Find (a => a.Hp >= 5) == null) return -p.playactions.Count * 0.05f;
+                return p.playactions.Count * 0.05f;
             }
 
             if (name == CardDB.cardName.thesilverhand || name == CardDB.cardName.reinforce)
@@ -2879,7 +2879,7 @@ namespace HREngine.Bots
                     if (hcc.card.Secret && hcc.getManaCost(p) == 1) hasPalSecret = true;
                     if (hcc.manacost == 2 && hcc.card.type != CardDB.cardtype.HEROPWR && hcc.card.type == CardDB.cardtype.MOB && (hcc.card.name != CardDB.cardName.bloodmagethalnos && hcc.card.name != CardDB.cardName.flametonguetotem && hcc.card.name != CardDB.cardName.ironbeakowl && hcc.card.name != CardDB.cardName.knifejuggler && hcc.card.name != CardDB.cardName.direwolfalpha && hcc.card.name != CardDB.cardName.scavenginghyena && hcc.card.name != CardDB.cardName.crazedalchemist && hcc.card.name != CardDB.cardName.acidicswampooze && hcc.card.name != CardDB.cardName.darkshirelibrarian)) has2manacard++;
                     if (hcc.manacost == 3 && (hcc.card.type == CardDB.cardtype.MOB || hcc.card.name == CardDB.cardName.animalcompanion || hcc.card.name == CardDB.cardName.eaglehornbow) && hcc.card.name != CardDB.cardName.biggamehunter) has3manacard++;
-                    if (hcc.card.name == CardDB.cardName.impgangboss || hcc.card.name == CardDB.cardName.darkshirecouncilman || hcc.card.name == CardDB.cardName.animalcompanion || hcc.card.name == CardDB.cardName.carriongrub || hcc.card.name == CardDB.cardName.feralspirit) hasvaluable3costminion = true;
+                    if (hcc.card.name == CardDB.cardName.impgangboss || hcc.card.name == CardDB.cardName.darkshirecouncilman || hcc.card.name == CardDB.cardName.animalcompanion || hcc.card.name == CardDB.cardName.carriongrub || hcc.card.name == CardDB.cardName.feralspirit || hcc.card.name == CardDB.cardName.tarcreeper) hasvaluable3costminion = true;
                     //check 2 mana weapon situation
                     if (hcc.card.type == CardDB.cardtype.WEAPON && p.enemyMinions.Count >= 1) hasweapon = true;
                     //Helpfunctions.Instance.ErrorLog("" + hcc.manacost + hcc.card.name);
@@ -3987,7 +3987,7 @@ namespace HREngine.Bots
                 foreach (Minion mn in p.ownMinions)
                 {
                     if (!mn.silenced && (TAG_RACE)mn.handcard.card.race == TAG_RACE.TOTEM) totemcount++;
-                    if (!mn.silenced && (mn.name == CardDB.cardName.flametonguetotem || mn.name == CardDB.cardName.manatidetotem)) specialtotemcount++;
+                    if (!mn.silenced && (mn.name == CardDB.cardName.flametonguetotem || mn.name == CardDB.cardName.manatidetotem || mn.name == CardDB.cardName.primalfintotem)) specialtotemcount++;
                     if (!mn.silenced && mn.name == CardDB.cardName.wickedwitchdoctor) haswitch = true;
                 }
 
@@ -4006,7 +4006,7 @@ namespace HREngine.Bots
                 foreach (Minion mn in p.ownMinions)
                 {
                     if (!mn.silenced && (TAG_RACE)mn.handcard.card.race == TAG_RACE.TOTEM) totemcount++;
-                    if (!mn.silenced && (mn.name == CardDB.cardName.flametonguetotem || mn.name == CardDB.cardName.manatidetotem)) specialtotemcount++;
+                    if (!mn.silenced && (mn.name == CardDB.cardName.flametonguetotem || mn.name == CardDB.cardName.manatidetotem || mn.name == CardDB.cardName.primalfintotem)) specialtotemcount++;
                     if (!mn.silenced && mn.name == CardDB.cardName.wickedwitchdoctor) haswitch = true;
                 }
 
@@ -4097,7 +4097,6 @@ namespace HREngine.Bots
             if (name == CardDB.cardName.dreadcorsair)
             {
                 float penalty = 0;
-                penalty = - p.ownWeaponAttack;
                 return penalty;
             }
 
@@ -4216,9 +4215,26 @@ namespace HREngine.Bots
                 name == CardDB.cardName.thecavernsbelow)
             {
                 if (p.ownMaxMana == 1 && p.mana == 1) return -15; //always use quest first
+                else return -10;
             }
 
             if (name == CardDB.cardName.dirtyrat) return  - 1 + p.playactions.Count * 0.01f;
+
+            if (name == CardDB.cardName.grimscalechum)
+            {
+                bool hasmurloc = false;
+                float penalty = 0;
+                foreach (Handmanager.Handcard hc in p.owncards)
+                {
+                    if (hc.card.race == TAG_RACE.MURLOC)
+                    {
+                        hasmurloc = true;
+                        break;
+                    }
+                }
+                if (hasmurloc) penalty -= 4;
+                return penalty;
+            }
 
             return pen;
         }
@@ -4518,17 +4534,13 @@ namespace HREngine.Bots
                 {
                     foreach (SecretItem si in Probabilitymaker.Instance.enemySecrets)
                     {
-                        //if (si.canBe_vaporize)
-                        //{
-                        //    if (target.isHero && !target.own && !islow)
-                        //    {
-                        //        pen += 10;
-                        //    }
-                        //    if (target.isHero && !target.own && islow && p.mobsPlayedThisTurn >= 1)
-                        //    {
-                        //        pen -= 10;
-                        //    }
-                        //}
+                        if (si.canBe_vaporize)
+                        {
+                            if (target.isHero && !target.own && m.handcard.card.cost <= 3)
+                            {
+                                pen -= 2;
+                            }
+                        }
 
                         if (si.canBe_iceblock && !si.canBe_icebarrier)
                         {
@@ -5797,7 +5809,7 @@ namespace HREngine.Bots
             specialMinions.Add(CardDB.cardName.hugetoad, 0);
             specialMinions.Add(CardDB.cardName.fierybat, 0);
             specialMinions.Add(CardDB.cardName.pollutedhoarder, 0);
-            specialMinions.Add(CardDB.cardName.darkshirelibrarian, 0);
+            //specialMinions.Add(CardDB.cardName.darkshirelibrarian, 0);
 
             
             //MSG

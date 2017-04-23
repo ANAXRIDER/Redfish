@@ -1092,7 +1092,7 @@ namespace HREngine.Bots
                     Helpfunctions.Instance.logg("discovering choice entity" + trackingchoice + " card " + trackingaction.Actor.CardId);
 
                     //DEBUG stuff
-                    //Helpfunctions.Instance.logg("actor: cardid " + trackingaction.Actor.CardId + " entity " + trackingaction.Actor.EntityId);
+                    Helpfunctions.Instance.logg("actor: cardid " + trackingaction.Actor.CardId + " entity " + trackingaction.Actor.EntityId);
                     
                     e.action_list.Add(trackingaction);
                     
@@ -2236,7 +2236,7 @@ namespace HREngine.Bots
             Hrtprozis.Instance.updateJadeGolemsInfo(ownPlayer.GetTagValue((int)GAME_TAG.JADE_GOLEM), enemyPlayer.GetTagValue((int)GAME_TAG.JADE_GOLEM));
             Probabilitymaker.Instance.getEnemySecretGuesses(this.enemySecretList, Hrtprozis.Instance.heroNametoEnum(this.enemyHeroname));
 
-            Hrtprozis.Instance.updateCrystalCore(OwnCrystalCore, EnemyCrystalCore);
+            //Hrtprozis.Instance.updateCrystalCore(OwnCrystalCore, EnemyCrystalCore);
             Hrtprozis.Instance.updateOwnMinionsCost0(this.ownMinionsCost0);
 
             //learnmode :D
@@ -3009,25 +3009,7 @@ namespace HREngine.Bots
                     Helpfunctions.Instance.logg("ent.Zone FOUND" + item.Zone + item.EntityId);
                     Helpfunctions.Instance.ErrorLog("ent.Zone FOUND" + item.Zone + item.EntityId);
                 }
-                if (item.HasTagValue((int)TAG_ZONE.GRAVEYARD))
-                {
-                    Helpfunctions.Instance.logg("ent.Zone FOUND1" + item.Zone + item.EntityId);
-                    Helpfunctions.Instance.ErrorLog("ent.Zone FOUND1" + item.Zone + item.EntityId);
-                }
-
-                if (item.GetTagValue((int)TAG_ZONE.GRAVEYARD) >= 1)
-                {
-                    Helpfunctions.Instance.logg("ent.Zone FOUND2" + item.Zone + item.EntityId);
-                    Helpfunctions.Instance.ErrorLog("ent.Zone FOUND2" + item.Zone + item.EntityId);
-                }
             }
-
-            foreach (var item1 in rangerbot.gameState.MyDeckCards)
-            {
-                Helpfunctions.Instance.logg("ent.Zone FOUND2" + item1.Key + item1.Value);
-                Helpfunctions.Instance.ErrorLog("ent.Zone FOUND2" + item1.Key + item1.Value);
-            }
-
 
             int owncontroler = rangerbot.gameState.LocalControllerId;
             int enemycontroler = rangerbot.gameState.RemoteControllerId;
@@ -3037,6 +3019,8 @@ namespace HREngine.Bots
 
             foreach (Entity ent in allEntitys.Values)
             {
+                Helpfunctions.Instance.logg("Zone=" + ent.Zone + " id=" + ent.EntityId + ent.CardState);
+                Helpfunctions.Instance.ErrorLog("Zone=" + ent.Zone + " id=" + ent.EntityId  + ent.CardState );
                 if (ent.Zone == HSRangerLib.TAG_ZONE.SECRET && ent.ControllerId == enemycontroler) continue; // cant know enemy secrets :D
                 if (ent.Zone == HSRangerLib.TAG_ZONE.DECK) continue;
                 CardDB.cardIDEnum cardid = CardDB.Instance.cardIdstringToEnum(ent.CardId);
@@ -3082,7 +3066,12 @@ namespace HREngine.Bots
 
                         if (ent.Zone == HSRangerLib.TAG_ZONE.PLAY)
                         {
-                            if (cardid == CardDB.cardIDEnum.UNG_067t1) EnemyCrystalCore = 5;
+                            if (cardid == CardDB.cardIDEnum.UNG_067t1)
+                            {
+                                EnemyCrystalCore = 5;
+                                Helpfunctions.Instance.logg("ENEMYCRYSTALCOREFOUND");
+                                Helpfunctions.Instance.ErrorLog("ENEMYCRYSTALCOREFOUND");
+                            }
                         }
 
                     }

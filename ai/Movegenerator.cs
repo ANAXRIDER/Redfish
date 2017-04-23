@@ -364,7 +364,7 @@
                     {
                         List<Minion> trgts = c.getTargetsForCard(p, false, true);
 
-                        if (isLethalCheck && trgts.Count >= 1 && (c.damagesTarget || c.damagesTargetWithSpecial))// only target enemy hero during Lethal check!
+                        if (isLethalCheck && trgts.Count >= 1 && (c.damagesTarget || c.damagesTargetWithSpecial || c.Charge || c.lethalhelper))// only target enemy hero during Lethal check!
                         {
                             if (trgts.Count >= 1 && trgts[0].isHero && !trgts[0].own) // first minion is enemy hero (or he is not in list)
                             {

@@ -5690,14 +5690,15 @@ namespace HREngine.Bots
 
 
             //additional data
-            public bool isToken;
+            public bool isToken = false;
             public int isCarddraw;
-            public bool damagesTarget;
-            public bool damagesTargetWithSpecial;
+            public bool damagesTarget = false;
+            public bool damagesTargetWithSpecial = false;
             public int targetPriority;
-            public bool isSpecialMinion;
+            public bool isSpecialMinion = false;
             public int anti_aoe_minion;
             public int Summon_Spell_Minion_Count;
+            public bool lethalhelper = false;
 
 
             public int spellpowervalue;
@@ -10633,6 +10634,15 @@ namespace HREngine.Bots
                     c.Summon_Spell_Minion_Count = pen.summonMinionSpellsDatabase[c.name];
                 }
                 
+                if (pen.buffingMinionsDatabase.ContainsKey(c.name) || 
+                    pen.attackBuffDatabase.ContainsKey(c.name) || 
+                    pen.heroAttackBuffDatabase.ContainsKey(c.name) || 
+                    pen.lethalHelpers.ContainsKey(c.name) ||
+                    pen.buffingMinionsDatabase.ContainsKey(c.name))
+                {
+                    c.lethalhelper = true;
+                }
+
                 c.trigers = new List<cardtrigers>();
                 Type trigerType = c.sim_card.GetType();
                 foreach (string trigerName in Enum.GetNames(typeof(cardtrigers)))

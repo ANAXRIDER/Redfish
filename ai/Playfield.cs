@@ -163,8 +163,8 @@ namespace HREngine.Bots
         public int anzBlackwaterPirate;
         public int blackwaterpirateStarted;
         public int embracetheshadow;
-        public int ownCrystalCore;
-        public int enemyCrystalCore;
+        public int ownCrystalCore = 0;
+        public int enemyCrystalCore = 0;
         public bool ownMinionsCost0;
 
         public int anzEnemyTaunt;
@@ -656,8 +656,20 @@ namespace HREngine.Bots
             anzOwnAnimatedArmor = 0;
             anzEnemyAnimatedArmor = 0;
 
-            this.ownCrystalCore = prozis.ownCrystalCore;
-            this.enemyCrystalCore = prozis.enemyCrystalCore;
+            //this.ownCrystalCore = prozis.ownCrystalCore;
+            //this.enemyCrystalCore = prozis.enemyCrystalCore;
+
+            this.ownCrystalCore = 0;
+            this.enemyCrystalCore = 0;
+            foreach (Minion m in this.ownMinions)
+            {
+                if (m.crystalcored >= 1) this.ownCrystalCore = m.crystalcored;
+            }
+            foreach (Minion m in this.enemyMinions)
+            {
+                if (m.crystalcored >= 1) this.enemyCrystalCore = m.crystalcored;
+            }
+
             this.ownMinionsCost0 = prozis.ownMinionsCost0;
 
             this.spellpower = 0;
@@ -6809,30 +6821,21 @@ namespace HREngine.Bots
             m.own = own;
             m.isHero = false;
             m.entityID = hc.entity;
-            if (this.ownCrystalCore > 0 || this.enemyCrystalCore > 0)
-            {
-                if (own)
-                {
-                    m.Angr = ownCrystalCore;
-                    m.Hp = ownCrystalCore;
-                    m.maxHp = ownCrystalCore;
-                }
-                else
-                {
-                    m.Angr = enemyCrystalCore;
-                    m.Hp = enemyCrystalCore;
-                    m.maxHp = enemyCrystalCore;
-                }
-            }
-            else
-            {
-                m.Angr = hc.card.Attack + hc.addattack;
-                m.Hp = hc.card.Health + hc.addHp;
-                m.maxHp = hc.card.Health + hc.addHp;
-            }
-
+            m.Angr = hc.card.Attack + hc.addattack;
+            m.Hp = hc.card.Health + hc.addHp;
+            m.maxHp = hc.card.Health + hc.addHp;
             hc.addattack = 0;
             hc.addHp = 0;
+
+            
+            if (own && this.ownCrystalCore >= 1)
+            {
+                m.crystalcored = this.ownCrystalCore;
+            }
+            if (!own && this.enemyCrystalCore >= 1)
+            {
+                m.crystalcored = this.enemyCrystalCore;
+            }
 
             m.name = hc.card.name;
             m.playedThisTurn = true;
@@ -8807,7 +8810,7 @@ namespace HREngine.Bots
             data += "jadegolems: " + this.anzOwnJadeGolem + " " + this.anzEnemyJadeGolem + "\r\n";
             data += "elementals: " + this.anzOwnElementalsLastTurn +"\r\n";
             data += Questmanager.Instance.getQuestsString() + "\r\n";
-            data += "advanced: " + this.ownCrystalCore + " " + this.enemyCrystalCore + " " + (this.ownMinionsCost0 ? 1 : 0) + "\r\n";
+            data += "crystal: " + this.ownCrystalCore + " " + this.enemyCrystalCore + " " + (this.ownMinionsCost0 ? 1 : 0) + "\r\n";
             data += "enemyhero:"+ "\r\n";
             data += Hrtprozis.heroEnumtoName(this.enemyHeroName) + " " + this.enemyHero.Hp + " " + this.enemyHero.maxHp + " " + this.enemyHero.armor + " " + this.enemyHero.frozen + " " + this.enemyHero.immune + " " + this.enemyHero.entityID+ "\r\n";
             data += "weapon: " + this.enemyWeaponAttack + " " + this.enemyWeaponDurability + " " + this.enemyWeaponName + "\r\n";
@@ -8907,7 +8910,7 @@ namespace HREngine.Bots
             if (m.ownPowerWordGlory >= 1) mini += " ownPWG(" + m.ownPowerWordGlory + ")";
             if (m.enemyPowerWordGlory >= 1) mini += " enemyPWG(" + m.enemyPowerWordGlory + ")";
             if (m.AdaptedCantBeTargetedBySpellsOrHeroPowers >= 1) mini += " AdaptedCantTgt(" + m.AdaptedCantBeTargetedBySpellsOrHeroPowers + ")";
-
+            if (m.crystalcored >= 1) mini += " crystalcored(" + m.crystalcored + ")";
             if (m.explorershat >= 1) mini += " explht(" + m.explorershat + ")";
 
             if (m.ReturnSpellCount >= 1) mini += " ReturnSpellCNT(" + m.ReturnSpellCount + ")";

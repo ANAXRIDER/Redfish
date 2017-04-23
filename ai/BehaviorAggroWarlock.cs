@@ -1307,8 +1307,8 @@
                 if (m.souloftheforest >= 1) retval += 5;
                 if (m.spiritecho >= 1)
                 {
-                    if (m.handcard.card.deathrattle || m.handcard.card.battlecry || m.taunt) retval += 5;
-                    else if (m.handcard.card.isSpecialMinion) retval += 5;
+                    if (m.handcard.card.deathrattle || m.handcard.card.battlecry || m.taunt) retval += m.handcard.card.cost;
+                    else if (m.handcard.card.isSpecialMinion) retval += m.handcard.card.cost;
                     else if (p.owncards.Count <= 2) retval += 5;
                     else retval++;
                 }

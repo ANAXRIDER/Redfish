@@ -26,12 +26,12 @@ namespace HREngine.Bots
         Dictionary<CardDB.cardName, int> enrageDatabase = new Dictionary<CardDB.cardName, int>();
         public Dictionary<CardDB.cardName, int> silenceDatabase = new Dictionary<CardDB.cardName, int>();
 
-        Dictionary<CardDB.cardName, int> heroAttackBuffDatabase = new Dictionary<CardDB.cardName, int>(); //not used
+        public Dictionary<CardDB.cardName, int> heroAttackBuffDatabase = new Dictionary<CardDB.cardName, int>(); //not used
         public Dictionary<CardDB.cardName, int> attackBuffDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> healthBuffDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> tauntBuffDatabase = new Dictionary<CardDB.cardName, int>();
 
-        Dictionary<CardDB.cardName, int> lethalHelpers = new Dictionary<CardDB.cardName, int>();
+        public Dictionary<CardDB.cardName, int> lethalHelpers = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> elementalLastTurnDependentDatabase = new Dictionary<CardDB.cardName, int>();
 
         Dictionary<CardDB.cardName, int> backToHandDatabase = new Dictionary<CardDB.cardName, int>();
@@ -2962,10 +2962,14 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.flare || name == CardDB.cardName.kezanmystic || name == CardDB.cardName.eaterofsecrets)
             {
-                if (p.enemyHeroName != HeroEnum.hunter && p.enemyHeroName != HeroEnum.mage && p.enemyHeroName != HeroEnum.pala) return 0;
+                int ret = 20;
+                if (p.enemyHeroName != HeroEnum.hunter && p.enemyHeroName != HeroEnum.mage && p.enemyHeroName != HeroEnum.pala) ret = 0;
                 //it is a hunter/mage or pala:
-                if (p.enemySecretCount == 0 && p.enemyDeckSize <= 14) return 50;
-                if (p.enemySecretCount >= 1 && p.playactions.Count == 0) return -10;
+                if (p.enemySecretCount == 0 && p.enemyDeckSize >= 14) ret = 50;
+                if (p.enemySecretCount >= 1) ret = 0;
+                if (p.enemySecretCount >= 1 && p.playactions.Count == 0) ret = - 10;
+
+                return ret;
             }
 
             //some effects, which are bad :D

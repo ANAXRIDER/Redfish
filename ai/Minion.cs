@@ -83,6 +83,8 @@
         public int AdaptedCantBeTargetedBySpellsOrHeroPowers;
         public bool cantAttack = false;
 
+        public int crystalcored;
+
         public int Hp;
         public int maxHp;
         public int armor;
@@ -196,6 +198,7 @@
             this.cantBeTargetedBySpellsOrHeroPowers = m.cantBeTargetedBySpellsOrHeroPowers;
             this.AdaptedCantBeTargetedBySpellsOrHeroPowers = m.AdaptedCantBeTargetedBySpellsOrHeroPowers;
             this.cantAttack = m.cantAttack;
+            this.crystalcored = m.crystalcored;
 
             if (m.deathrattles != null)
             {
@@ -255,7 +258,7 @@
             this.enemyPowerWordGlory = m.enemyPowerWordGlory;
             this.spellpower = m.spellpower;
             this.ReturnSpellCount = m.ReturnSpellCount;
-
+            this.crystalcored = m.crystalcored;
             this.Hp = m.Hp;
             this.maxHp = m.maxHp;
             this.armor = m.armor;
@@ -263,6 +266,13 @@
             this.Angr = m.Angr;
             this.AdjacentAngr = m.AdjacentAngr;
             this.tempAttack = m.tempAttack;
+
+            if (m.crystalcored >= 1)
+            {
+                this.Hp = m.crystalcored;
+                this.Angr = m.crystalcored;
+                this.maxHp = m.crystalcored;
+            }
 
             this.Ready = m.Ready;
 
@@ -285,6 +295,7 @@
             this.cantBeTargetedBySpellsOrHeroPowers = m.cantBeTargetedBySpellsOrHeroPowers;
             this.AdaptedCantBeTargetedBySpellsOrHeroPowers = m.AdaptedCantBeTargetedBySpellsOrHeroPowers;
             this.cantAttack = m.cantAttack;
+
 
             if (m.deathrattles != null)
             {
@@ -731,6 +742,21 @@
             maxHp = handcard.card.Health;
             if (Hp > maxHp) Hp = maxHp;
 
+            if (own && p.ownCrystalCore > 0)
+            {
+                Hp = p.ownCrystalCore;
+                Angr = p.ownCrystalCore;
+                maxHp = p.ownCrystalCore;
+            }
+
+            if (!own && p.enemyCrystalCore > 0)
+            {
+                Hp = p.enemyCrystalCore;
+                Angr = p.enemyCrystalCore;
+                maxHp = p.enemyCrystalCore;
+            }
+
+
             if (!silenced)//minion WAS not silenced, deactivate his aura
             {
                 handcard.card.sim_card.onAuraEnds(p, this);
@@ -898,6 +924,9 @@
 
                     //adapt can't target
                     case CardDB.cardIDEnum.UNG_999t5e: this.AdaptedCantBeTargetedBySpellsOrHeroPowers += 1; continue;
+
+                    //crystalize
+                    case CardDB.cardIDEnum.UNG_067t1e2: this.crystalcored = 5; continue;
                 }
             }
 

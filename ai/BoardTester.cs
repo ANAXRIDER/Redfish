@@ -418,7 +418,7 @@ namespace HREngine.Bots
                     Questmanager.Instance.updateQuestStuff(ss[4], Convert.ToInt32(ss[5]), Convert.ToInt32(ss[6]), false);
                 }
 
-                if (s.StartsWith("advanced: "))
+                if (s.StartsWith("crystal: "))
                 {
                     String[] ss = s.Split(' ');
                     this.ownCrystalCore = Convert.ToInt32(ss[1]);
@@ -795,6 +795,9 @@ namespace HREngine.Bots
                         int AdaptedCantBeTargetedBySpellsOrHeroPowers = 0;
                         if (s.Contains(" AdaptedCantTgt(")) AdaptedCantBeTargetedBySpellsOrHeroPowers = Convert.ToInt32(s.Split(new string[] { " AdaptedCantTgt(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
+                        int crystalcored = 0;
+                        if (s.Contains(" crystalcored(")) crystalcored = Convert.ToInt32(s.Split(new string[] { " crystalcored(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
                         tempminion = createNewMinion(new Handmanager.Handcard(CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(minionid))), zp, true);
                         tempminion.own = true;
                         tempminion.entityID = ent;
@@ -843,6 +846,7 @@ namespace HREngine.Bots
                         tempminion.livingspores = livingspores;
                         tempminion.AdaptedCantBeTargetedBySpellsOrHeroPowers = AdaptedCantBeTargetedBySpellsOrHeroPowers;
                         if (AdaptedCantBeTargetedBySpellsOrHeroPowers >= 1) tempminion.cantBeTargetedBySpellsOrHeroPowers = true;
+                        tempminion.crystalcored = crystalcored;
 
                         tempminion.canAttackNormal = false;
                         if (ready == true) tempminion.canAttackNormal = true;
@@ -948,6 +952,9 @@ namespace HREngine.Bots
                         int AdaptedCantBeTargetedBySpellsOrHeroPowers = 0;
                         if (s.Contains(" AdaptedCantTgt(")) AdaptedCantBeTargetedBySpellsOrHeroPowers = Convert.ToInt32(s.Split(new string[] { " AdaptedCantTgt(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
+                        int crystalcored = 0;
+                        if (s.Contains(" crystalcored(")) crystalcored = Convert.ToInt32(s.Split(new string[] { " crystalcored(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
                         tempminion = createNewMinion(new Handmanager.Handcard(CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(minionid))), zp, false);
                         tempminion.own = false;
                         tempminion.entityID = ent;
@@ -996,6 +1003,7 @@ namespace HREngine.Bots
                         tempminion.livingspores = livingspores;
                         tempminion.AdaptedCantBeTargetedBySpellsOrHeroPowers = AdaptedCantBeTargetedBySpellsOrHeroPowers;
                         if (AdaptedCantBeTargetedBySpellsOrHeroPowers >= 1) tempminion.cantBeTargetedBySpellsOrHeroPowers = true;
+                        tempminion.crystalcored = crystalcored;
 
                         if (maxhp > hp) tempminion.wounded = true;
                         tempminion.updateReadyness();

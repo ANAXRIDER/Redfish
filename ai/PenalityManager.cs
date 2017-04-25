@@ -65,6 +65,8 @@ namespace HREngine.Bots
         public Dictionary<CardDB.cardName, int> summonMinionSpellsDatabase = new Dictionary<CardDB.cardName, int>(); // spells/hero powers that summon minions immediately
         Dictionary<CardDB.cardName, int> alsoEquipsWeaponDB = new Dictionary<CardDB.cardName, int>(); //cards that aren't weapons but equip one immediately
 
+        public Dictionary<CardDB.cardName, int> AdaptDatabase = new Dictionary<CardDB.cardName, int>();
+
         public Dictionary<CardDB.cardName, int> NeedSleepBecauseTimingMinionsDB = new Dictionary<CardDB.cardName, int>();
         public float penaltylmanager_penalty = 0;
         private static readonly PenalityManager instance = new PenalityManager();
@@ -109,6 +111,7 @@ namespace HREngine.Bots
             setupAlsoEquipsWeaponDB();
 			anti_aoe();
             setupNeedSleepBecauseTimingMinionsDB();
+            AdaptMinionDB();
         }
 
         public void setCombos()
@@ -701,8 +704,12 @@ namespace HREngine.Bots
 
             retval += getPlayPenalty(name, p, choice);
             retval += card.pen_card.getPlayPenalty(p, hcard, target, choice, lethal);
+
+            retval += getPlayOrder(name, p, choice);
+
             //Helpfunctions.Instance.ErrorLog("retval " + retval);
             penaltylmanager_penalty += retval;
+
             return retval;
         }
 
@@ -2183,7 +2190,7 @@ namespace HREngine.Bots
                     return 10;
                 }
 
-                
+                if (name == CardDB.cardName.theblackknight) return 0;
 
                 if (m.Angr >= 4 || m.Hp >= 4 || priorityDatabase.ContainsKey(m.name))
                 {
@@ -2962,12 +2969,14 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.flare || name == CardDB.cardName.kezanmystic || name == CardDB.cardName.eaterofsecrets)
             {
-                int ret = 20;
-                if (p.enemyHeroName != HeroEnum.hunter && p.enemyHeroName != HeroEnum.mage && p.enemyHeroName != HeroEnum.pala) ret = 0;
-                //it is a hunter/mage or pala:
-                if (p.enemySecretCount == 0 && p.enemyDeckSize >= 14) ret = 50;
-                if (p.enemySecretCount >= 1) ret = 0;
-                if (p.enemySecretCount >= 1 && p.playactions.Count == 0) ret = - 10;
+                int ret = 0;
+                if (p.enemyHeroName == HeroEnum.hunter || p.enemyHeroName == HeroEnum.mage || p.enemyHeroName == HeroEnum.pala)
+                {
+                    if (p.enemySecretCount == 0 && p.enemyDeckSize >= 14) ret = 50;
+                    if (p.enemySecretCount >= 1) ret = 0;
+                    if (p.enemySecretCount >= 1 && p.playactions.Count == 0) ret = -10;
+                }
+
 
                 return ret;
             }
@@ -3087,16 +3096,21 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.theblackknight)
             {
-                if (target == null)
+                float ret = 30;
+
+                if (p.enemyDeckSize <= 12) ret = 5;
+
+                if (target != null)
                 {
-                    return 50;
-                }
+                    ret = 5;
+                }           
 
                 foreach (Minion mnn in p.enemyMinions)
                 {
-                    if (mnn.taunt && (target.Angr >= 3 || target.Hp >= 3)) return 0;
+                    if (mnn.taunt && (target.Angr >= 3 || target.Hp >= 3)) ret = 0;
                 }
-                return 20;
+
+                return ret;
             }
 
             if (name == CardDB.cardName.repentance)
@@ -4725,6 +4739,16 @@ namespace HREngine.Bots
         }
 
 
+        private float getPlayOrder (CardDB.cardName name, Playfield p, int choice)
+        {
+            float ret = 0;
+
+
+            if (AdaptDatabase.ContainsKey(name)) ret += p.playactions.Count * 0.1f;
+
+
+            return ret;
+        }
 
 
 
@@ -6595,6 +6619,24 @@ namespace HREngine.Bots
             NeedSleepBecauseTimingMinionsDB.Add(CardDB.cardName.impgangboss, 2);
 
             //
+        }
+
+        public void AdaptMinionDB()
+        {
+            AdaptDatabase.Add(CardDB.cardName.ravenouspterrordax, 0);
+            AdaptDatabase.Add(CardDB.cardName.elderlongneck, 0);
+            AdaptDatabase.Add(CardDB.cardName.lightfusedstegodon, 0);
+            AdaptDatabase.Add(CardDB.cardName.pterrordaxhatchling, 0);
+            AdaptDatabase.Add(CardDB.cardName.ornerydirehorn, 0);
+            AdaptDatabase.Add(CardDB.cardName.verdantlongneck, 0);
+            AdaptDatabase.Add(CardDB.cardName.ravasaurrunt, 0);
+            AdaptDatabase.Add(CardDB.cardName.gentlemegasaur, 0);
+            AdaptDatabase.Add(CardDB.cardName.adaptation, 0);
+            AdaptDatabase.Add(CardDB.cardName.evolvingspores, 0);
+            AdaptDatabase.Add(CardDB.cardName.thunderlizard, 0);
+            AdaptDatabase.Add(CardDB.cardName.cracklingrazormaw, 0);
+            AdaptDatabase.Add(CardDB.cardName.volcanosaur, 0);
+            //AdaptDatabase.Add(CardDB.cardName.viciousfledgling, 0);//adapt after attacking hero
         }
     }
 }

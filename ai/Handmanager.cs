@@ -18,6 +18,7 @@
             public int extraParam2 = 0;
             public bool extraParam3 = false;
             public int elemPoweredUp = 0;
+            public bool powerup = false;
 
             public Handcard()
             {
@@ -33,6 +34,7 @@
                 this.addHp = hc.addHp;
                 this.isChoiceTemp = hc.isChoiceTemp;
                 this.elemPoweredUp = hc.elemPoweredUp;
+                this.powerup = hc.powerup;
             }
             public Handcard(CardDB.Card c)
             {
@@ -41,6 +43,7 @@
                 this.card = c;
                 this.addattack = 0;
                 this.addHp = 0;
+                this.powerup = false;
             }
             public int getManaCost(Playfield p)
             {

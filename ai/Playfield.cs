@@ -2595,7 +2595,7 @@ namespace HREngine.Bots
             return bestplace + 1;
         }
 
-        public int getBestAdapt(Minion m) //1-angr, 2-hp, 3-taunt, 4-divine, 5-poison
+        public int getBestAdapt(Minion m) //1-angr, 2- 1/1, 3-taunt, 4-divine, 5-poison
         {
             bool ownLethal = this.ownHeroHasDirectLethal();
             bool needTaunt = false;
@@ -2606,18 +2606,18 @@ namespace HREngine.Bots
                 else if (ownLethal) needTaunt = true;
                 else
                 {
-                    if (m.Hp > 3) { this.minionGetBuffed(m, 0, 3); return 2; }
-                    else { m.poisonous = true; return 5; }
+                    if (this.enemyMinions.Find(a => a.Hp >= 5) != null) { m.poisonous = true; return 5;}
+                    else { this.minionGetBuffed(m, 1, 1); return 2; }
                 }
             }
-            else { this.minionGetBuffed(m, 0, 3); return 2; }
+            else { this.minionGetBuffed(m, 1, 1); return 2; }
 
             if (needTaunt)
             {
                 if (!m.taunt) { m.taunt = true; return 3; }
                 else if (!m.divineshild) { m.divineshild = true; return 4; }
                 else if (!m.poisonous) { m.poisonous = true; return 5; }
-                else { this.minionGetBuffed(m, 0, 3);  return 2; }
+                else { this.minionGetBuffed(m, 1, 1);  return 2; }
             }
             return 0;
         }
@@ -3727,12 +3727,12 @@ namespace HREngine.Bots
 
             //trigger poisonous effect of attacker + defender (even if they died due to attacking/defending)
 
-            if (defenderGotDmg && !attacker.silenced && attacker.handcard.card.poisonous && !defender.isHero)
+            if (defenderGotDmg && !attacker.silenced && (attacker.handcard.card.poisonous || attacker.poisonous) && !defender.isHero)
             {
                 minionGetDestroyed(defender);
             }
 
-            if (attackerGotDmg && !defender.silenced && defender.handcard.card.poisonous && !attacker.isHero)
+            if (attackerGotDmg && !defender.silenced && (defender.handcard.card.poisonous || attacker.poisonous) && !attacker.isHero)
             {
                 minionGetDestroyed(attacker);
             }
@@ -4863,6 +4863,7 @@ namespace HREngine.Bots
                     for (int i = 0; i < anz; i++)
                     {
                         this.drawACard(CardDB.cardIDEnum.None, true);
+                        this.evaluatePenality -= 4;
                     }
                 }
 

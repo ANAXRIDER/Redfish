@@ -26,7 +26,7 @@ namespace HREngine.Bots
                     switch (bestAdapt)
                     {
                         case 1: p.minionGetBuffed(m, 3, 0); break;
-                        case 2: p.minionGetBuffed(m, 0, 3); break;
+                        case 2: p.minionGetBuffed(m, 1, 1); break;
                         case 3: m.taunt = true; break;
                         case 4: m.divineshild = true; break;
                         case 5: m.poisonous = true; break;

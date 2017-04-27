@@ -59,7 +59,7 @@ namespace HREngine.Bots
         public Dictionary<CardDB.cardName, int> priorityTargets = new Dictionary<CardDB.cardName, int>(); //enemy minions we want to kill
         public Dictionary<CardDB.cardName, int> specialMinions = new Dictionary<CardDB.cardName, int>(); //minions with cardtext, but no battlecry
 
-        private Dictionary<CardDB.cardName, int> discoverCards = new Dictionary<CardDB.cardName, int>();
+        public  Dictionary<CardDB.cardName, int> discoverCards = new Dictionary<CardDB.cardName, int>();
 
         Dictionary<CardDB.cardName, int> strongInspireEffectMinions = new Dictionary<CardDB.cardName, int>();
         public Dictionary<CardDB.cardName, int> summonMinionSpellsDatabase = new Dictionary<CardDB.cardName, int>(); // spells/hero powers that summon minions immediately
@@ -288,7 +288,7 @@ namespace HREngine.Bots
                 if (m.Angr < target.Hp) pen += 0.05f;
             }
 
-            if (m.tempAttack >= 1 && target.isHero && target.Hp >= 10 && p.enemyMinions.Count >= 1) pen += m.tempAttack;
+            if (m.tempAttack >= 1 && target.isHero && target.Hp >= 10 && p.enemyMinions.Count >= 1 && !m.handcard.card.isSpecialMinion) pen += m.tempAttack;
 
             if (m.enemyBlessingOfWisdom >= 1) pen += 10;
 
@@ -734,19 +734,21 @@ namespace HREngine.Bots
 
             if (!lethal && (card.name == CardDB.cardName.savageroar || card.name == CardDB.cardName.bloodlust))
             {
-                int pen = 0;
+                int pen = 20;
                 int targets = 0;
+
+                if (p.enemySecretCount == 0 && p.ownMinions.Count + p.playactions.Count >= 8) return 550;
+
                 foreach (Minion m in p.ownMinions)
                 {
                     if (m.Ready) targets++;
+                    if (p.enemySecretCount == 0 && m.allreadyAttacked) return 550;
                 }
 
                 if ((p.ownHero.Ready || p.ownHero.numAttacksThisTurn == 0) && card.name == CardDB.cardName.savageroar) targets++;
 
-                if (targets <= 3)
-                {
-                    pen += 20;
-                }
+                pen -= targets * 4;
+                pen = Math.Max(0, pen);
                 return pen;
             }
 
@@ -1408,7 +1410,6 @@ namespace HREngine.Bots
                     {
                         pen += 6;
                         if (target.Angr == 0) pen += 4;
-                        if (p.spellpower + 4 >= target.Hp && target.Hp >= 4 && target.Angr >= 2) pen = 0;
                     }
 
                     if (name == CardDB.cardName.eviscerate)
@@ -3779,7 +3780,7 @@ namespace HREngine.Bots
                 if (target != null)
                 {
                     if (target.own && target.Angr >= 2) pen = 500; // dont use on own minions
-                    if (!target.own && target.Angr <= 2) // only use on strong minions
+                    if (!target.own && (target.Angr <= 1 || target.Angr == 2 && target.Hp <= 2)) // only use on strong minions
                     {
                         return 30;
                     }
@@ -4131,15 +4132,31 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.southseadeckhand)
             {
-                bool hasweaponIndecks = false;
-                foreach (Handmanager.Handcard hc in Hrtprozis.Instance.deckCard)
+                int hasweaponIndecks = 0;
+                CardDB.Card c;
+                foreach (KeyValuePair<CardDB.cardIDEnum, int> cid in Hrtprozis.Instance.turnDeck)
                 {
-                    if (hc.card.type == CardDB.cardtype.WEAPON) hasweaponIndecks = true;
+                    c = CardDB.Instance.getCardDataFromID(cid.Key);
+                    if (c.name == CardDB.cardName.patchesthepirate)
+                    {
+                        return 0;
+                    }
+                    if (c.type == CardDB.cardtype.WEAPON) hasweaponIndecks++;
                 }
-                if (p.ownWeaponAttack <= 0 && hasweaponIndecks)
+         
+                //foreach (Handmanager.Handcard hc in Hrtprozis.Instance.deckCard)
+                //{
+                //    if (hc.card.type == CardDB.cardtype.WEAPON) hasweaponIndecks++;
+                //}
+
+                if (p.ownWeaponAttack <= 0 && hasweaponIndecks >= 1)
                 {
-                    return 6;
+                    if (p.ownDeckSize >= 1)
+                    {
+                        if (100 * hasweaponIndecks / p.ownDeckSize >= 15) return 3; // weapon draw chance 15% small penalty
+                    }
                 }
+                return 0;
             }
 
             if (name == CardDB.cardName.markofyshaarj)
@@ -4253,6 +4270,20 @@ namespace HREngine.Bots
                 if (hasmurloc) penalty -= 4;
                 return penalty;
             }
+
+            if (name == CardDB.cardName.spiritecho)
+            {
+                float ret = 12;
+                foreach (Minion mnn in p.ownMinions)
+                {
+                    if (mnn.handcard.card.isSpecialMinion) ret -= 7;
+                    else if (mnn.handcard.card.battlecry) ret -= 5;
+                    else if (!mnn.handcard.card.isToken) ret -= 4;
+                    else ret--;
+                }
+                return ret;
+            }
+
 
             return pen;
         }
@@ -4744,7 +4775,7 @@ namespace HREngine.Bots
             float ret = 0;
 
 
-            if (AdaptDatabase.ContainsKey(name)) ret += p.playactions.Count * 0.1f;
+            if (AdaptDatabase.ContainsKey(name)) ret += p.playactions.Count * 0.5f;
 
 
             return ret;
@@ -5445,9 +5476,9 @@ namespace HREngine.Bots
             cardDrawBattleCryDatabase.Add(CardDB.cardName.brighteyedscout, 1);
             cardDrawBattleCryDatabase.Add(CardDB.cardName.tolvirwarden, 1); //0-2
             cardDrawBattleCryDatabase.Add(CardDB.cardName.mimicpod, 2);
+            cardDrawBattleCryDatabase.Add(CardDB.cardName.ungoropack, 5);
 
 
-            
 
 
             cardDrawDeathrattleDatabase.Add(CardDB.cardName.bloodmagethalnos, 1);
@@ -5933,6 +5964,7 @@ namespace HREngine.Bots
             buffing1TurnDatabase.Add(CardDB.cardName.darkirondwarf, 0);
             buffing1TurnDatabase.Add(CardDB.cardName.rockbiterweapon, 0);
             buffing1TurnDatabase.Add(CardDB.cardName.poweroverwhelming, 0);
+            buffing1TurnDatabase.Add(CardDB.cardName.bloodlust, 0);
         }
 
         private void setupEnemyTargetPriority()
@@ -5970,7 +6002,7 @@ namespace HREngine.Bots
             priorityTargets.Add(CardDB.cardName.ysera, 10);
             priorityTargets.Add(CardDB.cardName.ragnarosthefirelord, 10);
             priorityTargets.Add(CardDB.cardName.ragingworgen, 5);
-            
+            priorityTargets.Add(CardDB.cardName.southseacaptain, 8);
 
             //warrior cards
             priorityTargets.Add(CardDB.cardName.frothingberserker, 10);
@@ -6471,7 +6503,7 @@ namespace HREngine.Bots
             this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.UNG_917t1, 1); //Dinomancy
         }
 
-        private void setupDiscover()
+        public void setupDiscover()
         {
             discoverCards.Add(CardDB.cardName.tracking, 1);
             discoverCards.Add(CardDB.cardName.jeweledscarab, 1);

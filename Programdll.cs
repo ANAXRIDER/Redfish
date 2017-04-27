@@ -625,11 +625,16 @@ namespace HREngine.Bots
                             default: break;
                         }
 
-                        if (PenalityManager.Instance.cardDrawBattleCryDatabase.ContainsKey(daum.bestmove.card.card.name))
+                        if (PenalityManager.Instance.cardDrawBattleCryDatabase.ContainsKey(daum.bestmove.card.card.name)
+                            || PenalityManager.Instance.AdaptDatabase.ContainsKey(daum.bestmove.card.card.name)
+                            || PenalityManager.Instance.discoverCards.ContainsKey(daum.bestmove.card.card.name))
                         {
                             this.doMultipleThingsAtATime = false;
-                            this.dontmultiactioncount++; break;
+                            this.dontmultiactioncount++; break;                            
                         }
+                        if (PenalityManager.Instance.AdaptDatabase.ContainsKey(daum.bestmove.card.card.name)
+                            || PenalityManager.Instance.discoverCards.ContainsKey(daum.bestmove.card.card.name)) this.POWERFULSINGLEACTION++;
+
 
                         //charge
                         if (daum.bestmove.card.card.Charge)
@@ -824,38 +829,38 @@ namespace HREngine.Bots
                     //    }
                     //}
 
-                    if (moveTodo.card.card.type == CardDB.cardtype.MOB)
-                    {
-                        System.Threading.Thread.Sleep(200);
-                    }
+                    //if (moveTodo.card.card.type == CardDB.cardtype.MOB)
+                    //{
+                    //    System.Threading.Thread.Sleep(200);
+                    //}
 
-                    switch (moveTodo.card.card.name)
-                    {
-                        case CardDB.cardName.defenderofargus:
-                            if (this.EnemySecrets.Count >= 1) System.Threading.Thread.Sleep(1800);
-                            System.Threading.Thread.Sleep(4500); 
-                            break;
-                        case CardDB.cardName.abusivesergeant:
-                            System.Threading.Thread.Sleep(900); break;
-                        case CardDB.cardName.darkirondwarf:
-                            System.Threading.Thread.Sleep(900); break;
-                        case CardDB.cardName.direwolfalpha:
-                            if (this.EnemySecrets.Count >= 1) System.Threading.Thread.Sleep(1200);
-                            System.Threading.Thread.Sleep(2500);
-                            break;
-                        case CardDB.cardName.flametonguetotem:
-                            if (this.EnemySecrets.Count >= 1) System.Threading.Thread.Sleep(1200);
-                            System.Threading.Thread.Sleep(2500);
-                            break;
-                        default:
-                            break;
-                    }
+                    //switch (moveTodo.card.card.name)
+                    //{
+                    //    case CardDB.cardName.defenderofargus:
+                    //        if (this.EnemySecrets.Count >= 1) System.Threading.Thread.Sleep(1800);
+                    //        System.Threading.Thread.Sleep(4500); 
+                    //        break;
+                    //    case CardDB.cardName.abusivesergeant:
+                    //        System.Threading.Thread.Sleep(900); break;
+                    //    case CardDB.cardName.darkirondwarf:
+                    //        System.Threading.Thread.Sleep(900); break;
+                    //    case CardDB.cardName.direwolfalpha:
+                    //        if (this.EnemySecrets.Count >= 1) System.Threading.Thread.Sleep(1200);
+                    //        System.Threading.Thread.Sleep(2500);
+                    //        break;
+                    //    case CardDB.cardName.flametonguetotem:
+                    //        if (this.EnemySecrets.Count >= 1) System.Threading.Thread.Sleep(1200);
+                    //        System.Threading.Thread.Sleep(2500);
+                    //        break;
+                    //    default:
+                    //        break;
+                    //}
 
                     if (ranger_action.Actor == null) return null;  // missing entity likely because new spawned minion
                     break;
                 case actionEnum.attackWithHero:
                     ranger_action.Actor = base.FriendHero;
-                    System.Threading.Thread.Sleep(1100);
+                    //System.Threading.Thread.Sleep(1100);
 
                     foreach (Minion m in Playfield.Instance.ownMinions)
                     {
@@ -1076,32 +1081,40 @@ namespace HREngine.Bots
 
                 if (Handmanager.Instance.getNumberChoices() >= 1)
                 {
+                    Helpfunctions.Instance.ErrorLog("꺠짐1");
                     //detect which choice
-
+                    this.POWERFULSINGLEACTION++;
+                    doMultipleThingsAtATime = false;
                     int trackingchoice = Ai.Instance.bestTracking;
                     if (Ai.Instance.bestTrackingStatus == 3) Helpfunctions.Instance.logg("discovering using user choice..." + trackingchoice);
                     if (Ai.Instance.bestTrackingStatus == 0) Helpfunctions.Instance.logg("discovering using optimal choice..." + trackingchoice);
                     if (Ai.Instance.bestTrackingStatus == 1) Helpfunctions.Instance.logg("discovering using suboptimal choice..." + trackingchoice);
                     if (Ai.Instance.bestTrackingStatus == 2) Helpfunctions.Instance.logg("discovering using random choice..." + trackingchoice);
-
-                    trackingchoice = Silverfish.Instance.choiceCardsEntitys[trackingchoice - 1];
-                    
+                    Helpfunctions.Instance.ErrorLog("꺠짐2");
+                    trackingchoice = Silverfish.Instance.choiceCardsEntitys[Math.Max(trackingchoice - 1,0)];
+                    Helpfunctions.Instance.ErrorLog("꺠짐31");
                     //there is a tracking/discover effect ongoing! (not druid choice)
                     BotAction trackingaction = new HSRangerLib.BotAction();
                     trackingaction.Actor = this.getEntityWithNumber(trackingchoice);
-                    Helpfunctions.Instance.logg("discovering choice entity" + trackingchoice + " card " + trackingaction.Actor.CardId);
-
-                    //DEBUG stuff
-                    Helpfunctions.Instance.logg("actor: cardid " + trackingaction.Actor.CardId + " entity " + trackingaction.Actor.EntityId);
                     
-                    e.action_list.Add(trackingaction);
+                    Helpfunctions.Instance.ErrorLog("꺠짐4");
                     
+                    Helpfunctions.Instance.ErrorLog("꺠짐15");
+                    if (trackingaction.Actor != null)
+                    {
+                        Helpfunctions.Instance.ErrorLog("꺠짐16");
+                        //DEBUG stuff
+                        Helpfunctions.Instance.logg("discovering choice entity" + trackingchoice + " card " + trackingaction.Actor.CardId);
+                        Helpfunctions.Instance.logg("actor: cardid " + trackingaction.Actor.CardId + " entity " + trackingaction.Actor.EntityId);
+                        e.action_list.Add(trackingaction);
+                        return;
+                    }
+                    Helpfunctions.Instance.ErrorLog("꺠짐17");
                     //string filename = "silvererror" + DateTime.Now.ToString("_yyyy-MM-dd_HH-mm-ss") + ".xml";
                     //Helpfunctions.Instance.logg("create errorfile " +  filename);
                     //this.gameState.SaveToXMLFile(filename);
-                    return;
-                }
 
+                }
                 if (!doMultipleThingsAtATime || this.dontmultiactioncount >= 1)
                 {
                     //this is used if you cant queue actions (so ai is just sending one action at a time)
@@ -1139,7 +1152,6 @@ namespace HREngine.Bots
 
                     Helpfunctions.Instance.ErrorLog("play action");
                     moveTodo.print();
-
                     e.action_list.Add(ConvertToRangerAction(moveTodo));
 
                     this.dontmultiactioncount = 0;
@@ -1148,7 +1160,6 @@ namespace HREngine.Bots
                 {//##########################################################################
                     //this is used if you can queue multiple actions
                     //thanks to xytrix
-
                     this.queuedMoveGuesses.Clear();
                     this.queuedMoveGuesses.Add(new Playfield());  // prior to any changes, in case HR fails to execute any actions
                     bool hasMoreActions = false;
@@ -1169,7 +1180,6 @@ namespace HREngine.Bots
                         }
                         else
                         {
-
                             Helpfunctions.Instance.ErrorLog("play action");
                             moveTodo.print();
 
@@ -1199,6 +1209,7 @@ namespace HREngine.Bots
                     sw.WriteLine(Exception.ToString());
                 }
                 Helpfunctions.Instance.logg("\r\nDLL Crashed! " + DateTime.Now.ToString("_yyyy-MM-dd_HH-mm-ss") + "\r\nStackTrace ---" + Exception.ToString() + "\r\n\r\n");
+                Helpfunctions.Instance.ErrorLog("\r\nDLL Crashed! " + DateTime.Now.ToString("_yyyy-MM-dd_HH-mm-ss") + "\r\nStackTrace ---" + Exception.ToString() + "\r\n\r\n");
                 Helpfunctions.Instance.flushLogg();
                 Helpfunctions.Instance.flushErrorLog();
 
@@ -2191,7 +2202,7 @@ namespace HREngine.Bots
                         break;
                 }
             }
-
+            
 
             Helpfunctions.Instance.ErrorLog("updateEverything");
             latestGameState = rangerbot.gameState;
@@ -2239,7 +2250,7 @@ namespace HREngine.Bots
 
             //Hrtprozis.Instance.updateCrystalCore(OwnCrystalCore, EnemyCrystalCore);
             Hrtprozis.Instance.updateOwnMinionsCost0(this.ownMinionsCost0);
-
+            
             //learnmode :D
 
             Playfield p = new Playfield();
@@ -2277,7 +2288,7 @@ namespace HREngine.Bots
 
             }
 
-
+            
             lastpf = p;
             p = new Playfield();//secrets have updated :D
             // calculate stuff
@@ -2311,7 +2322,7 @@ namespace HREngine.Bots
                 //Helpfunctions.Instance.logg("Max Mana: " + p.ownMaxMana + ">" + Ai.Instance.nextMoveGuess.ownMaxMana);
                 //Helpfunctions.Instance.logg("Actions left: " + Ai.Instance.bestActions.Count);
             }
-
+            
             Helpfunctions.Instance.ErrorLog("calculating stuff... " + DateTime.Now.ToString("HH:mm:ss.ffff"));
             if (runExtern)
             {
@@ -2342,7 +2353,7 @@ namespace HREngine.Bots
                 printstuff(p, false);
                 Ai.Instance.dosomethingclever(botbase);
             }
-
+            
             Helpfunctions.Instance.ErrorLog("calculating ended! " + DateTime.Now.ToString("HH:mm:ss.ffff"));
 
             return true;
@@ -3011,6 +3022,16 @@ namespace HREngine.Bots
                     Helpfunctions.Instance.logg("ent.Zone FOUND" + item.Zone + item.EntityId);
                     Helpfunctions.Instance.ErrorLog("ent.Zone FOUND" + item.Zone + item.EntityId);
                 }
+                if (item.HasTagValue((int)HSRangerLib.TAG_ZONE.GRAVEYARD))
+                {
+                    Helpfunctions.Instance.logg("HasTagValue FOUND");
+                    Helpfunctions.Instance.ErrorLog("HasTagValue FOUND");
+                }
+            }
+
+            if (rangerbot.FriendPlayer.HasTagValue((int)HSRangerLib.TAG_ZONE.GRAVEYARD))
+            {
+                Helpfunctions.Instance.ErrorLog("HasTagValue FOUND");
             }
 
             int owncontroler = rangerbot.gameState.LocalControllerId;
@@ -3021,6 +3042,7 @@ namespace HREngine.Bots
 
             foreach (Entity ent in allEntitys.Values)
             {
+                if ((TAG_ZONE)ent.Zone == TAG_ZONE.GRAVEYARD) Helpfunctions.Instance.ErrorLog("ent.Zone" + ent.Zone + "ent.id" + ent.EntityId);
                 //Helpfunctions.Instance.logg("Zone=" + ent.Zone + " id=" + ent.EntityId + ent.CardState);
                 //Helpfunctions.Instance.ErrorLog("Zone=" + ent.Zone + " id=" + ent.EntityId  + ent.CardState );
                 if (ent.Zone == HSRangerLib.TAG_ZONE.SECRET && ent.ControllerId == enemycontroler) continue; // cant know enemy secrets :D

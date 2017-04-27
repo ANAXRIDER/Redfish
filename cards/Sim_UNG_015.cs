@@ -13,18 +13,14 @@ namespace HREngine.Bots
         {
             foreach (Minion minion in p.ownMinions)
             {
-                int angr = 3 - minion.Angr;
-                int hp = 3 - minion.maxHp;
-
-                p.minionGetBuffed(minion, angr, hp);
+                p.minionSetAngrToX(minion, 3);
+                p.minionSetLifetoX(minion, 3);
             }
 
             foreach (Minion minion in p.enemyMinions)
             {
-                int angr = 3 - minion.Angr;
-                int hp = 3 - minion.maxHp;
-
-                p.minionGetBuffed(minion, angr, hp);
+                p.minionSetAngrToX(minion, 3);
+                p.minionSetLifetoX(minion, 3);
             }
         }
     }

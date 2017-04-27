@@ -7528,20 +7528,45 @@ namespace HREngine.Bots
                     }
                     if (temp.Equals("ds1_whelptoken")) c.isToken = true;
                     if (temp.Equals("CS2_mirror")) c.isToken = true;
-                    if (temp.Equals("CS2_050")) c.isToken = true;
+                    if (temp.Equals("CS2_050")) c.isToken = true; //1/1 totem
                     if (temp.Equals("CS2_052")) c.isToken = true;
                     if (temp.Equals("CS2_051")) c.isToken = true;
                     if (temp.Equals("NEW1_009")) c.isToken = true;
                     if (temp.Equals("CS2_152")) c.isToken = true;
-                    if (temp.Equals("CS2_boar")) c.isToken = true;
+                    if (temp.Equals("CS2_boar")) c.isToken = true; // 1/1 boar
                     if (temp.Equals("EX1_tk11")) c.isToken = true;
                     if (temp.Equals("EX1_506a")) c.isToken = true;
                     if (temp.Equals("skele21")) c.isToken = true;
                     if (temp.Equals("EX1_tk9")) c.isToken = true;
                     if (temp.Equals("EX1_finkle")) c.isToken = true;
-                    if (temp.Equals("EX1_598")) c.isToken = true;
+                    if (temp.Equals("EX1_598")) c.isToken = true; // imp
                     if (temp.Equals("EX1_tk34")) c.isToken = true;
                     if (temp.Equals("AT_132_SHAMAN")) c.choice = true; // its a choice card
+
+                    if (temp.Equals("OG_216a")) c.isToken = true; //Infested Wolf deathrattle
+                    if (temp.Equals("CS2_101t")) c.isToken = true; //Silver Hand Recruit
+                    if (temp.Equals("OG_114a")) c.isToken = true; //Forbidden Ritual token
+                    if (temp.Equals("CFM_315t")) c.isToken = true; //Alleycat 
+                    if (temp.Equals("EX1_116t")) c.isToken = true; // Leeroy Jenkins Onyxia
+                    if (temp.Equals("EX1_506a")) c.isToken = true; // Murloc Tidehunter
+                    if (temp.Equals("CFM_310t")) c.isToken = true; //Call in the Finishers 
+                    if (temp.Equals("KAR_044a")) c.isToken = true; //Moroes
+                    if (temp.Equals("EX1_554t")) c.isToken = true; //Snake Trap
+                    if (temp.Equals("CFM_621_m5")) c.isToken = true; // sheep
+                    if (temp.Equals("OG_061t")) c.isToken = true; //On the Hunt
+                    if (temp.Equals("AT_037t")) c.isToken = true; //Living Roots
+                    if (temp.Equals("OG_006a")) c.isToken = true; //Vilefin Inquisitor - changed heropower murloc
+                    if (temp.Equals("UNG_076t1")) c.isToken = true; //Eggnapper
+                    if (temp.Equals("UNG_201")) c.isToken = true; //Primalfin Totem
+                    if (temp.Equals("CFM_316t")) c.isToken = true; //Rat Pack
+                    if (temp.Equals("OG_241a")) c.isToken = true; //Possessed Villager
+                    if (temp.Equals("KAR_010a")) c.isToken = true; //Nightbane Templar
+                    if (temp.Equals("UNG_834t1")) c.isToken = true; //Feeding Time
+
+                    if (temp.Equals("CFM_337t")) c.isToken = true; //Piranha Launcher
+                    if (temp.Equals("FP1_002t")) c.isToken = true; //Haunted Creeper
+                    if (temp.Equals("KAR_010a")) c.isToken = true; //Nightbane Templar
+                    if (temp.Equals("UNG_834t1")) c.isToken = true; //Feeding Time
 
                     //if (c.isToken) Helpfunctions.Instance.ErrorLog(temp +" is token");
 

@@ -326,6 +326,7 @@
             {
                 retval += p.ownWeaponAttack  + p.ownWeaponAttack * (p.ownWeaponDurability - 1) * 0.5f;
                 if (p.ownWeaponName == CardDB.cardName.spiritclaws && p.spellpower >= 1) retval -= 2;
+                if (p.ownWeaponName == CardDB.cardName.truesilverchampion) retval += 4;
             }
 
             if (p.ownWeaponName == CardDB.cardName.atiesh)
@@ -407,7 +408,7 @@
 
 
             retval += (p.anzEnemyCursed) * 5;
-            if (p.enemycarddraw >= 3) retval -= (p.enemycarddraw - 1) * 3; 
+            retval -= p.enemycarddraw * 3; 
 
             foreach (Handmanager.Handcard hcc in p.owncards)
             {
@@ -810,6 +811,7 @@
                     {
                         hasowntaunt++;
                         hasowntaunthp += m.Hp;
+                        if (m.divineshild) hasowntaunthp++;
                     }
                     else
                     {
@@ -1305,16 +1307,11 @@
                 if (abomination && (m.Hp <= 2 && !m.divineshild && !m.hasDeathrattle())) retval -= m.Angr * 2;
 
                 if (m.souloftheforest >= 1) retval += 5;
-                if (m.spiritecho >= 1)
-                {
-                    if (m.handcard.card.deathrattle || m.handcard.card.battlecry || m.taunt) retval += m.handcard.card.cost;
-                    else if (m.handcard.card.isSpecialMinion) retval += m.handcard.card.cost;
-                    else if (p.owncards.Count <= 2) retval += 5;
-                    else retval++;
-                }
 
                 if (m.ancestralspirit >= 1) retval += m.Angr + m.maxHp;
                 if (m.ancestralspirit >= 1 && (m.hasDeathrattle() || m.taunt)) retval += 2;
+
+                if (m.livingspores >= 1) retval += m.livingspores * 8;
 
                 //meta
 
@@ -1360,6 +1357,7 @@
                         if (m.name == CardDB.cardName.darnassusaspirant && (m.Hp <= enemypotentialattacktotal)) retval -= 10;
                         if (m.name == CardDB.cardName.brannbronzebeard && (m.Hp <= enemypotentialattacktotal)) retval -= 5;
                         if (m.name == CardDB.cardName.murlocwarleader && (m.Hp <= enemypotentialattacktotal)) retval -= 5;
+                        if (m.name == CardDB.cardName.cultmaster && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null) retval -= 7;
                     }
                 }
 
@@ -1440,13 +1438,13 @@
 
 
 
-
                 if (!pirateaggrowarrior)
                 {
                     if (p.enemyHeroName == HeroEnum.warrior && Ravaging_Ghoul == 0 && m.Hp == 1) retval -= m.Angr * 0.5f;
                     else if (p.enemyHeroName == HeroEnum.warrior && Execute == 0 && m.wounded && (m.Angr >= 4 || m.Hp >= 5)) retval -= m.Angr * 0.5f;
                 }
 
+                if (m.poisonous) retval += 4;
 
                 if (m.wounded) retval += (m.maxHp - m.Hp) * 0.001f;
 
@@ -1581,11 +1579,16 @@
                 retval += 2;
             }
 
+            if (p.enemyHeroName == HeroEnum.pala)
+            {
+                if ((TAG_RACE)m.handcard.card.race == TAG_RACE.BEAST) retval += 4; //totemic shaman adapt very strong..
+                retval += 2;
+            }
+
             if (p.enemyHeroName == HeroEnum.druid || p.enemyHeroName == HeroEnum.warlock)
             {
                 if (m.divineshild) retval += m.Angr * 2;
-                if (p.enemyHeroName == HeroEnum.warlock) retval += 2; //zoo 
-                retval += 2; // token , zoo
+                retval += 4; // token , zoo
                 if (p.enemyHeroName == HeroEnum.warlock)
                 {
                     if (m.name == CardDB.cardName.malchezaarsimp && !m.silenced) retval += 3;
@@ -1603,6 +1606,14 @@
                 retval += 4;
             }
             
+            if (p.enemyHeroName == HeroEnum.thief)
+            {
+                if (Questmanager.Instance.enemyQuest.Id == CardDB.cardIDEnum.UNG_067)
+                {
+                    if (m.crystalcored == 0) retval += 10; // big value quest rogue before quest active
+                }
+            }
+
             retval += m.Hp * 1;
             if (m.wounded) retval += (m.maxHp - m.Hp) * 0.001f;
             if (m.name == CardDB.cardName.doomsayer && m.Angr == 0 && m.silenced) retval -= m.Hp * 2;
@@ -1632,7 +1643,7 @@
             if (m.divineshild) retval += m.Angr * 3;
             //if (m.divineshild && m.Angr == 1 && p.enemyHeroName == HeroEnum.pala) retval += 5;
             if (m.frozen) retval -= 1; // because its bad for enemy :D
-            if (m.poisonous) retval += 4;
+            if (m.poisonous) retval += 8;
             //retval += m.handcard.card.rarity;
             //
             if (p.enemyHeroName == HeroEnum.hunter && p.ownHero.Hp <= 12) retval += m.Angr;
@@ -1647,7 +1658,7 @@
             if (p.enemyHeroName == HeroEnum.pala && m.name == CardDB.cardName.silverhandrecruit) retval += 0.1f;
             if (p.enemyHeroName == HeroEnum.mage && (TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL) retval += 0.1f;
             if (p.enemyHeroName == HeroEnum.mage && m.name == CardDB.cardName.flamewaker) retval += 5;
-            if (m.handcard.card.deathrattle && !m.silenced) retval += Math.Max(m.handcard.card.cost - 2, 1); //not priority to deathrattle (bad for us)
+            //if (m.handcard.card.deathrattle && !m.silenced) retval += Math.Max(m.handcard.card.cost - 2, 1); //not priority to deathrattle (bad for us)
             //
             if (m.handcard.card.targetPriority >= 1 && !m.silenced)
             {

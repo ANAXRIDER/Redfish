@@ -363,7 +363,7 @@
                     if (hc.canplayCard(p))
                     {
                         List<Minion> trgts = c.getTargetsForCard(p, false, true);
-
+                        float cardplayPenality = 0;
                         if (isLethalCheck && trgts.Count >= 1 && (c.damagesTarget || c.damagesTargetWithSpecial || c.Charge || c.lethalhelper))// only target enemy hero during Lethal check!
                         {
                             if (trgts.Count >= 1 && trgts[0].isHero && !trgts[0].own) // first minion is enemy hero (or he is not in list)
@@ -382,11 +382,20 @@
                                 }
                             }
                         }
+                        else if (isLethalCheck && (c.damagesTarget || c.damagesTargetWithSpecial || c.Charge || c.lethalhelper)) // target count = 0;
+                        {
+                            cardplayPenality = pen.getPlayCardPenality(hc, null, p, 0, isLethalCheck);
+                            for (int placer = 1; placer <= p.ownMinions.Count + 1; placer++)
+                            {
+                                Action a = new Action(actionEnum.playcard, hc, null, placer, null, cardplayPenality, 0);
+                                ret.Add(a);
+                            }
+                        }
 
 
-                        float cardplayPenality = 0;
+                        
 
-                        if (trgts.Count == 0)
+                        else if (trgts.Count == 0)
                         {
 
 
@@ -446,6 +455,11 @@
                                             {
                                                 if (placer == 1 || placer == p.ownMinions.Count + 1) cardplayPenality += 15;
                                                 else cardplayPenality = pen.getPlayCardPenality(hc, null, p, 0, isLethalCheck);
+                                                if (hc.card.name == CardDB.cardName.flametonguetotem || hc.card.name == CardDB.cardName.direwolfalpha)
+                                                {
+                                                    if (p.ownMinions.Find(ab => ab.zonepos == placer - 1 && ab.Ready) != null) cardplayPenality+=2;
+                                                    if (p.ownMinions.Find(ab => ab.zonepos == placer + 1 && ab.Ready) != null) cardplayPenality+=2;
+                                                }
                                                 Action a = new Action(actionEnum.playcard, hc, null, placer, null, cardplayPenality, 0);
                                                 //Helpfunctions.Instance.ErrorLog("place " +hc.card.name + " on pos " + (placer+adding) + " mincount " + p.ownMinions.Count);
                                                 //pf.playCard(hc, hc.position - 1, hc.entity, -1, -1, 0, bestplace, cardplayPenality);
@@ -1026,6 +1040,7 @@
 
                 if (m.souloftheforest >= 1 || m.ancestralspirit >= 1 || m.spikeridgedteed >= 1) spawnMinions = true;
                 if (m.name == CardDB.cardName.frothingberserker && !m.silenced) return true;
+                if (m.name == CardDB.cardName.scavenginghyena && !m.silenced) return true;
                 switch (m.name)
                 {
                     case CardDB.cardName.harvestgolem: spawnMinions = true; break;
@@ -1069,6 +1084,7 @@
             {
                 //if (m.name == CardDB.cardName.knifejuggler && !m.silenced) return true;
                 if (m.name == CardDB.cardName.zealousinitiate && !m.silenced) return true;
+                if (m.name == CardDB.cardName.finjatheflyingstar && !m.silenced) return true;
                 if (!m.silenced && m.name == CardDB.cardName.cultmaster) return true;
                 if (!m.silenced && m.name == CardDB.cardName.knifejuggler && !m.silenced) hasJuggler = true;
                 if (!m.silenced && m.name == CardDB.cardName.darkshirecouncilman) { hasCouncilman = true; return true; }

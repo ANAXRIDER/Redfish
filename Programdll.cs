@@ -95,6 +95,8 @@ namespace HREngine.Bots
         private bool deckChanged = false;
         private bool shouldSendFakeAction = false;
 
+        int discovercounter = 0;
+
         //
         bool isgoingtoconcede = false;
         int wins = 0;
@@ -583,11 +585,9 @@ namespace HREngine.Bots
             Ai daum = Ai.Instance;
 
 
-
             switch (moveTodo.actionType)
             {
                 case actionEnum.endturn:
-                    if (POWERFULSINGLEACTION >= 1) POWERFULSINGLEACTION = 0;
                     break;
                 case actionEnum.playcard:
                     ranger_action.Actor = getCardWithNumber(moveTodo.card.entity);
@@ -604,7 +604,7 @@ namespace HREngine.Bots
                         else this.doMultipleThingsAtATime = true;
 
 
-                        if (daum.bestmove.card.card.name == CardDB.cardName.barnes) POWERFULSINGLEACTION++;
+                        //if (daum.bestmove.card.card.name == CardDB.cardName.barnes) POWERFULSINGLEACTION++;
 
                         switch (daum.bestmove.card.card.name)
                         {
@@ -640,7 +640,6 @@ namespace HREngine.Bots
                         if (daum.bestmove.card.card.Charge)
                         {
                             this.doMultipleThingsAtATime = false;
-                            this.POWERFULSINGLEACTION++;
                             this.dontmultiactioncount++; break;
 
                         }
@@ -653,18 +652,15 @@ namespace HREngine.Bots
                                     if (Playfield.Instance.EnemyCards.Count >= 6)
                                     {
                                         this.doMultipleThingsAtATime = false;
-                                        this.POWERFULSINGLEACTION++;
                                         this.dontmultiactioncount++; break;
                                     }
                                     else break;
                                 case CardDB.cardName.southseadeckhand:
-                                    this.POWERFULSINGLEACTION++;
                                     break;
                                 case CardDB.cardName.spikedhogrider:
                                     if (Playfield.Instance.enemyMinions.Find(a => a.taunt) != null)
                                     {
                                         this.doMultipleThingsAtATime = false;
-                                        this.POWERFULSINGLEACTION++;
                                         this.dontmultiactioncount++; break;
                                     }
                                     else break;
@@ -672,7 +668,6 @@ namespace HREngine.Bots
                                     if (Playfield.Instance.owncards.Find(a => a.card.race == TAG_RACE.DRAGON) != null)
                                     {
                                         this.doMultipleThingsAtATime = false;
-                                        this.POWERFULSINGLEACTION++;
                                         this.dontmultiactioncount++; break;
                                     }
                                     else break;
@@ -680,13 +675,11 @@ namespace HREngine.Bots
                                     if (Playfield.Instance.EnemyCards.Count == 6)
                                     {
                                         this.doMultipleThingsAtATime = false;
-                                        this.POWERFULSINGLEACTION++;
                                         this.dontmultiactioncount++; break;
                                     }
                                     else break;
                                 case CardDB.cardName.armoredwarhorse:
                                     this.doMultipleThingsAtATime = false;
-                                    this.POWERFULSINGLEACTION++;
                                     this.dontmultiactioncount++; break;
                                 default: break;
                             }
@@ -728,9 +721,6 @@ namespace HREngine.Bots
                             {
                                 Hrtprozis.Instance.AddTurnDeck(CardDB.cardIDEnum.CFM_602, 3);
                             }
-
-
-                            this.dontmultiactioncount++;
                             bool hasenemydeathrattle = false;
                             foreach (Entity mnn in EnemyMinion)
                             {
@@ -753,7 +743,7 @@ namespace HREngine.Bots
                                 case CardDB.cardName.spreadingmadness:
                                 case CardDB.cardName.flamecannon: 
                                 case CardDB.cardName.cleave: Random_Spell_But_Can_Kill_Deathrattle_Card = true;
-                                    this.POWERFULSINGLEACTION++;
+                                    this.dontmultiactioncount++;
                                     break;
                                 default: break;
                             }
@@ -789,8 +779,7 @@ namespace HREngine.Bots
                             if ((daum.bestmove.target != null && (hastargetdeathrattle || targethasdamageeffect) || 
                                 ((hasenemydeathrattle || hasdamageeffectminion) && (Random_Spell_But_Can_Kill_Deathrattle_Card || PenalityManager.Instance.DamageAllDatabase.ContainsKey(daum.bestmove.card.card.name) || PenalityManager.Instance.DamageAllEnemysDatabase.ContainsKey(daum.bestmove.card.card.name)))))
                             {
-                                this.POWERFULSINGLEACTION++;
-
+                                this.dontmultiactioncount++;
                             }
 
                             //switch (daum.bestmove.card.card.name)
@@ -808,7 +797,6 @@ namespace HREngine.Bots
                             {
                                 this.doMultipleThingsAtATime = false;
                                 this.dontmultiactioncount++;
-                                this.POWERFULSINGLEACTION++;
                             }
                         }
 
@@ -862,15 +850,14 @@ namespace HREngine.Bots
                     ranger_action.Actor = base.FriendHero;
                     //System.Threading.Thread.Sleep(1100);
 
-                    foreach (Minion m in Playfield.Instance.ownMinions)
-                    {
-                        if (m.name == CardDB.cardName.southseadeckhand && (m.playedThisTurn || m.Ready ))
-                        {
-                            this.doMultipleThingsAtATime = false;
-                            this.dontmultiactioncount++;
-                            this.POWERFULSINGLEACTION++;
-                        }
-                    }
+                    //foreach (Minion m in Playfield.Instance.ownMinions)
+                    //{
+                    //    if (m.name == CardDB.cardName.southseadeckhand && (m.playedThisTurn || m.Ready ))
+                    //    {
+                    //        this.doMultipleThingsAtATime = false;
+                    //        this.dontmultiactioncount++;
+                    //    }
+                    //}
 
                     break;
                 case actionEnum.useHeroPower:
@@ -943,38 +930,213 @@ namespace HREngine.Bots
 
             if (moveTodo.actionType == actionEnum.attackWithMinion)
             {
-
-                if (moveTodo.target != null && 
-                    (!ranger_action.Target.IsHero && 
-                    (ranger_action.Target.HasDeathrattle && !ranger_action.Target.IsSilenced) ||
-                    (ranger_action.Actor.HasDeathrattle && !ranger_action.Actor.IsSilenced)
-                    ))
+                bool hashyena = false;
+                bool cultmaster = false;
+                foreach (Minion mnn in Playfield.Instance.ownMinions)
                 {
-                    this.doMultipleThingsAtATime = false;
-
-                    this.dontmultiactioncount++;
-
-                    //this.POWERFULSINGLEACTION++;
-
-                    //Helpfunctions.Instance.ErrorLog("doMultipleThingsAtATime attackWithMinion " + doMultipleThingsAtATime + " because " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(ranger_action.Target.CardId));
+                    if (mnn.name == CardDB.cardName.scavenginghyena && !mnn.silenced && mnn.Ready)
+                    {
+                        hashyena = true;
+                    }
+                    if (mnn.name == CardDB.cardName.cultmaster && !mnn.silenced) cultmaster = true;
                 }
 
+                if (hashyena && daum.bestmove.own.Hp <= daum.bestmove.target.Angr && !daum.bestmove.target.isHero && (TAG_RACE)daum.bestmove.own.handcard.card.race == TAG_RACE.BEAST)
+                {
+                    this.doMultipleThingsAtATime = false;
+                    this.dontmultiactioncount++;
+                    POWERFULSINGLEACTION++;
+                }
+
+                else if (cultmaster && daum.bestmove.own.Hp <= daum.bestmove.target.Angr && !daum.bestmove.target.isHero)
+                {
+                    this.doMultipleThingsAtATime = false;
+                    this.dontmultiactioncount++;
+                    POWERFULSINGLEACTION++;
+                }
+
+                else if (daum.bestmove.own.Angr >= daum.bestmove.target.Hp && !daum.bestmove.target.divineshild && daum.bestmove.own.name == CardDB.cardName.finjatheflyingstar)
+                {
+                    this.doMultipleThingsAtATime = false;
+                    this.dontmultiactioncount++;
+                }
+
+
+                else if (moveTodo.target != null && !ranger_action.Target.IsHero)
+                {
+                    if (ranger_action.Target.HasDeathrattle && !ranger_action.Target.HasDivineShield) // target deathrattle
+                    {
+                        if ((ranger_action.Target.Health - ranger_action.Target.Damage) <= ranger_action.Actor.ATK || 
+                            ranger_action.Target.IsPoisonous || ranger_action.Actor.IsPoisonous)
+                        {
+                            this.doMultipleThingsAtATime = false;
+                            this.dontmultiactioncount++;
+                        }
+                    }
+                    if (ranger_action.Actor.HasDeathrattle && !ranger_action.Actor.HasDivineShield) // actor deathrattle
+                    {
+                        if ((ranger_action.Actor.Health - ranger_action.Actor.Damage) <= ranger_action.Target.ATK ||
+                            ranger_action.Target.IsPoisonous || ranger_action.Actor.IsPoisonous)
+                        {
+                            this.doMultipleThingsAtATime = false;
+                            this.dontmultiactioncount++;
+                        }
+                    }
+                }
                 else if (POWERFULSINGLEACTION >= 1)
                 {
                     this.doMultipleThingsAtATime = false;
                 }
-                else this.doMultipleThingsAtATime = true;
+                else 
+                {
+                    dontmultiactioncount = 0;
+                    this.doMultipleThingsAtATime = true;
+                }
             }
 
 
             if (this.EnemySecrets.Count >= 1)
             {
-                this.doMultipleThingsAtATime = false;
-                //this.POWERFULSINGLEACTION++;
-                //Helpfunctions.Instance.ErrorLog("찾는거 doMultipleThingsAtATime " + doMultipleThingsAtATime + " because enemy secret");
-                //Helpfunctions.Instance.logg("찾는거 doMultipleThingsAtATime " + doMultipleThingsAtATime + " because enemy secret");
+                if (moveTodo.actionType == actionEnum.attackWithHero)
+                {
+                    foreach (SecretItem si in Probabilitymaker.Instance.enemySecrets)
+                    {
+                        if (si.canBe_noblesacrifice)
+                        {
+                            this.doMultipleThingsAtATime = false;
+                        }
+                        else if (daum.bestmove.target.isHero)
+                        {
+                            if (si.canBe_explosive
+                                //|| si.canBe_icebarrier
+                                || si.canBe_beartrap)
+                            {
+                                this.doMultipleThingsAtATime = false;
+                            }
+                        }
+                        else if (!daum.bestmove.target.isHero)
+                        {
+                            if (si.canBe_snaketrap)
+                            {
+                                this.doMultipleThingsAtATime = false;
+                            }
+                            else if (daum.bestmove.own.Angr >= daum.bestmove.target.Hp)
+                            {
+                                if (si.canBe_iceblock)
+                                {
+                                    this.doMultipleThingsAtATime = false;
+                                }
+                            }
+
+                        }
+                        else if (daum.bestmove.own.Angr >= daum.bestmove.target.Hp && !daum.bestmove.target.isHero)
+                        {
+                            if (si.canBe_effigy
+                                || si.canBe_redemption
+                                || si.canBe_avenge
+                                || si.canBe_duplicate)
+                            {
+                                this.doMultipleThingsAtATime = false;
+                            }
+                        }
+                    }
+                }
+
+                else if (moveTodo.actionType == actionEnum.attackWithMinion)
+                {
+                    foreach (SecretItem si in Probabilitymaker.Instance.enemySecrets)
+                    {
+                        if (si.canBe_noblesacrifice
+                       || si.canBe_freezing)
+                        {
+                            this.doMultipleThingsAtATime = false;
+                        }
+
+                        else if (daum.bestmove.target.isHero)
+                        {
+                            if (si.canBe_explosive
+                                || si.canBe_beartrap
+                                //|| si.canBe_icebarrier
+                                || si.canBe_vaporize)
+                            {
+                                this.doMultipleThingsAtATime = false;
+                            }
+                        }
+                        else if (!daum.bestmove.target.isHero)
+                        {
+                            if (si.canBe_snaketrap)
+                            {
+                                this.doMultipleThingsAtATime = false;
+                            }
+                            else if (daum.bestmove.own.Angr >= daum.bestmove.target.Hp)
+                            {
+                                if (si.canBe_iceblock)
+                                {
+                                    this.doMultipleThingsAtATime = false;
+                                }
+                            }
+                        }
+                        else if (daum.bestmove.own.Angr >= daum.bestmove.target.Hp)
+                        {
+                            if (si.canBe_effigy
+                                || si.canBe_redemption
+                                || si.canBe_avenge
+                                || si.canBe_duplicate)
+                            {
+                                this.doMultipleThingsAtATime = false;
+                            }
+                        }
+                    }
+
+
+                }
+
+                if (moveTodo.actionType == actionEnum.playcard)
+                {
+                    foreach (SecretItem si in Probabilitymaker.Instance.enemySecrets)
+                    {
+                        if (daum.bestmove.card.card.type == CardDB.cardtype.MOB)
+                        {
+                            if (si.canBe_mirrorentity)
+                            {
+                                this.doMultipleThingsAtATime = false;
+                            }
+                            else if ((si.canBe_snipe)
+                                    || (si.canBe_Trial && Playfield.Instance.ownMinions.Count >= 3))
+                            {
+                                this.doMultipleThingsAtATime = false;
+                            }
+                        }
+                        else if (daum.bestmove.card.card.type == CardDB.cardtype.SPELL)
+                        {
+                            if (si.canBe_counterspell
+                                    || (si.canBe_spellbender && daum.bestmove.target != null && !daum.bestmove.target.isHero)
+                                    || si.canBe_cattrick)
+                            {
+                                this.doMultipleThingsAtATime = false;
+                            }
+                            else if (Playfield.Instance.enemyMinions.Count >= 1 &&
+                                (PenalityManager.Instance.DamageAllDatabase.ContainsKey(daum.bestmove.card.card.name)
+                                || PenalityManager.Instance.DamageRandomDatabase.ContainsKey(daum.bestmove.card.card.name)
+                                || PenalityManager.Instance.DamageAllEnemysDatabase.ContainsKey(daum.bestmove.card.card.name)
+                                || PenalityManager.Instance.DamageAllDatabase.ContainsKey(daum.bestmove.card.card.name)
+                                || PenalityManager.Instance.DamageTargetDatabase.ContainsKey(daum.bestmove.card.card.name)
+                                || PenalityManager.Instance.DamageTargetSpecialDatabase.ContainsKey(daum.bestmove.card.card.name)))
+                            {
+                                if (si.canBe_effigy
+                                    || si.canBe_redemption
+                                    || si.canBe_avenge
+                                    || si.canBe_duplicate)
+                                {
+                                    this.doMultipleThingsAtATime = false;
+                                }
+                            }
+                        }
+                    }
+                }
+
             }
-            
+
 
             if (moveTodo.actionType == actionEnum.attackWithMinion && ranger_action.Target.IsHero && this.EnemyMinion.Count == 0)
             {
@@ -1003,6 +1165,8 @@ namespace HREngine.Bots
             //base.HasBestMoveAI = true;
             e.handled = true;
             HSRangerLib.BotAction ranger_action;
+
+            //if (discovercounter == 1) System.Threading.Thread.Sleep(4200);
 
             try
             {
@@ -1071,73 +1235,86 @@ namespace HREngine.Bots
                     return;
                 }
 
-                if (Settings.Instance.enemyConcede) Helpfunctions.Instance.ErrorLog("bestmoveVal:" + Ai.Instance.bestmoveValue);
-                
-                if (Ai.Instance.bestmoveValue <= Settings.Instance.enemyConcedeValue && Settings.Instance.enemyConcede)
-                {
-                    e.action_list.Add(CreateRangerConcedeAction());
-                    return;
-                }
+                //if (Settings.Instance.enemyConcede) Helpfunctions.Instance.ErrorLog("bestmoveVal:" + Ai.Instance.bestmoveValue);
+
+                //if (Ai.Instance.bestmoveValue <= Settings.Instance.enemyConcedeValue && Settings.Instance.enemyConcede)
+                //{
+                //    e.action_list.Add(CreateRangerConcedeAction());
+                //    return;
+                //}
 
                 if (Handmanager.Instance.getNumberChoices() >= 1)
+                //if (Silverfish.Instance.choiceCards.Count >= 1 && e.action_list.Count == 0 && discovercounter == 0)
                 {
-                    Helpfunctions.Instance.ErrorLog("꺠짐1");
                     //detect which choice
-                    this.POWERFULSINGLEACTION++;
                     doMultipleThingsAtATime = false;
+                    this.dontmultiactioncount++;
                     int trackingchoice = Ai.Instance.bestTracking;
-                    if (Ai.Instance.bestTrackingStatus == 3) Helpfunctions.Instance.logg("discovering using user choice..." + trackingchoice);
-                    if (Ai.Instance.bestTrackingStatus == 0) Helpfunctions.Instance.logg("discovering using optimal choice..." + trackingchoice);
-                    if (Ai.Instance.bestTrackingStatus == 1) Helpfunctions.Instance.logg("discovering using suboptimal choice..." + trackingchoice);
-                    if (Ai.Instance.bestTrackingStatus == 2) Helpfunctions.Instance.logg("discovering using random choice..." + trackingchoice);
-                    Helpfunctions.Instance.ErrorLog("꺠짐2");
-                    trackingchoice = Silverfish.Instance.choiceCardsEntitys[Math.Max(trackingchoice - 1,0)];
-                    Helpfunctions.Instance.ErrorLog("꺠짐31");
+                    if (Ai.Instance.bestTrackingStatus == 3) Helpfunctions.Instance.logg("dll discovering using user choice..." + trackingchoice);
+                    if (Ai.Instance.bestTrackingStatus == 0) Helpfunctions.Instance.logg("dll discovering using optimal choice..." + trackingchoice);
+                    if (Ai.Instance.bestTrackingStatus == 1) Helpfunctions.Instance.logg("dll discovering using suboptimal choice..." + trackingchoice);
+                    if (Ai.Instance.bestTrackingStatus == 2) Helpfunctions.Instance.logg("dll discovering using random choice..." + trackingchoice);
+                    if (trackingchoice >= 1) trackingchoice = Silverfish.Instance.choiceCardsEntitys[trackingchoice - 1];
                     //there is a tracking/discover effect ongoing! (not druid choice)
                     BotAction trackingaction = new HSRangerLib.BotAction();
                     trackingaction.Actor = this.getEntityWithNumber(trackingchoice);
-                    
-                    Helpfunctions.Instance.ErrorLog("꺠짐4");
-                    
-                    Helpfunctions.Instance.ErrorLog("꺠짐15");
+
+
+                    foreach (var item in Silverfish.Instance.choiceCards)
+                    {
+                        Helpfunctions.Instance.logg("" + item.ToString() + " " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(item.ToString()));
+                    }
+
+
                     if (trackingaction.Actor != null)
                     {
-                        Helpfunctions.Instance.ErrorLog("꺠짐16");
                         //DEBUG stuff
-                        Helpfunctions.Instance.logg("discovering choice entity" + trackingchoice + " card " + trackingaction.Actor.CardId);
-                        Helpfunctions.Instance.logg("actor: cardid " + trackingaction.Actor.CardId + " entity " + trackingaction.Actor.EntityId);
-                        e.action_list.Add(trackingaction);
-                        return;
+                        Helpfunctions.Instance.logg("discovering choice entity" + trackingchoice + " card " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(trackingaction.Actor.CardId));
+                        //Helpfunctions.Instance.logg("actor: cardid " + trackingaction.Actor.CardId + " entity " + trackingaction.Actor.EntityId);
+
+                        if (trackingaction != null)
+                        {
+                            e.action_list.Add(trackingaction);
+                            return;
+                        }
                     }
-                    Helpfunctions.Instance.ErrorLog("꺠짐17");
                     //string filename = "silvererror" + DateTime.Now.ToString("_yyyy-MM-dd_HH-mm-ss") + ".xml";
                     //Helpfunctions.Instance.logg("create errorfile " +  filename);
                     //this.gameState.SaveToXMLFile(filename);
-
                 }
-                if (!doMultipleThingsAtATime || this.dontmultiactioncount >= 1)
+
+
+                else if (!doMultipleThingsAtATime || this.dontmultiactioncount >= 1)
                 {
+                    discovercounter = 0;
                     //this is used if you cant queue actions (so ai is just sending one action at a time)
                     Action moveTodo = Ai.Instance.bestmove;
-
                     //Helpfunctions.Instance.ErrorLog("dontmultiactioncount " + dontmultiactioncount);
-
                     if (moveTodo == null || moveTodo.actionType == actionEnum.endturn)
                     {
                         //simply clear action list, hearthranger bot will endturn if no action can do.
                         e.action_list.Clear();
+
+                        if (Settings.Instance.enemyConcede) Helpfunctions.Instance.ErrorLog("bestmoveVal:" + Ai.Instance.bestmoveValue);
+
+                        if (Ai.Instance.bestmoveValue <= Settings.Instance.enemyConcedeValue && Settings.Instance.enemyConcede)
+                        {
+                            e.action_list.Add(CreateRangerConcedeAction());
+                            return;
+                        }
+
                         BotAction endturnmove = new HSRangerLib.BotAction();
                         endturnmove.Type = BotActionType.END_TURN;
                         Helpfunctions.Instance.ErrorLog("end turn action");
                         e.action_list.Add(endturnmove);
                         if (POWERFULSINGLEACTION >= 1 || dontmultiactioncount >= 1)
                         {
-                            Helpfunctions.Instance.ErrorLog("찾는거종료1" + POWERFULSINGLEACTION);
-                            Helpfunctions.Instance.logg("찾는거종료1" + POWERFULSINGLEACTION);
-                            Helpfunctions.Instance.ErrorLog("찾는거종료1" + dontmultiactioncount);
-                            Helpfunctions.Instance.logg("찾는거종료1" + dontmultiactioncount);
-                            Helpfunctions.Instance.ErrorLog("찾는거종료1 doMultipleThingsAtATime " + doMultipleThingsAtATime);
-                            Helpfunctions.Instance.logg("찾는거종료1 doMultipleThingsAtATime " + doMultipleThingsAtATime);
+                            //Helpfunctions.Instance.ErrorLog("찾는거종료1" + POWERFULSINGLEACTION);
+                            //Helpfunctions.Instance.logg("찾는거종료1" + POWERFULSINGLEACTION);
+                            //Helpfunctions.Instance.ErrorLog("찾는거종료1" + dontmultiactioncount);
+                            //Helpfunctions.Instance.logg("찾는거종료1" + dontmultiactioncount);
+                            //Helpfunctions.Instance.ErrorLog("찾는거종료1 doMultipleThingsAtATime " + doMultipleThingsAtATime);
+                            //Helpfunctions.Instance.logg("찾는거종료1 doMultipleThingsAtATime " + doMultipleThingsAtATime);
                             POWERFULSINGLEACTION = 0;
                             dontmultiactioncount = 0;
                             doMultipleThingsAtATime = true;
@@ -1150,20 +1327,19 @@ namespace HREngine.Bots
                         shouldSendFakeAction = true;
                     }
 
+
                     Helpfunctions.Instance.ErrorLog("play action");
                     moveTodo.print();
                     e.action_list.Add(ConvertToRangerAction(moveTodo));
-
-                    this.dontmultiactioncount = 0;
                 }
                 else
                 {//##########################################################################
-                    //this is used if you can queue multiple actions
-                    //thanks to xytrix
+                 //this is used if you can queue multiple actions
+                 //thanks to xytrix
+                    discovercounter = 0;
                     this.queuedMoveGuesses.Clear();
                     this.queuedMoveGuesses.Add(new Playfield());  // prior to any changes, in case HR fails to execute any actions
                     bool hasMoreActions = false;
-
                     do
                     {
                         Helpfunctions.Instance.ErrorLog("play action..." + (e.action_list.Count() + 1));
@@ -1171,6 +1347,13 @@ namespace HREngine.Bots
 
                         if (!hasMoreActions && (moveTodo == null || moveTodo.actionType == actionEnum.endturn))
                         {
+                            if (Settings.Instance.enemyConcede) Helpfunctions.Instance.ErrorLog("bestmoveVal:" + Ai.Instance.bestmoveValue);
+
+                            if (Ai.Instance.bestmoveValue <= Settings.Instance.enemyConcedeValue && Settings.Instance.enemyConcede)
+                            {
+                                e.action_list.Add(CreateRangerConcedeAction());
+                                return;
+                            }
                             Helpfunctions.Instance.ErrorLog("enturn");
                             //simply clear action list, hearthranger bot will endturn if no action can do.
                             BotAction endturnmove = new HSRangerLib.BotAction();
@@ -1188,7 +1371,8 @@ namespace HREngine.Bots
 
                             e.action_list.Add(nextMove);
                             this.queuedMoveGuesses.Add(new Playfield(Ai.Instance.nextMoveGuess));
-
+                            if (nextMove.Type == BotActionType.CAST_ABILITY || nextMove.Type == BotActionType.CAST_MINION || nextMove.Type == BotActionType.CAST_SPELL || nextMove.Type == BotActionType.CAST_WEAPON) System.Threading.Thread.Sleep(45); // to avoid misplay
+                            else System.Threading.Thread.Sleep(5);
                             hasMoreActions = canQueueNextActions();
                             if (hasMoreActions) Ai.Instance.doNextCalcedMove();
                         }
@@ -1199,7 +1383,6 @@ namespace HREngine.Bots
                     Helpfunctions.Instance.ErrorLog("sending HR " + numActionsSent + " queued actions");
                     numExecsReceived = 0;
                 }//##########################################################################
-
 
             }
             catch (Exception Exception)
@@ -1519,7 +1702,7 @@ namespace HREngine.Bots
         int enemyCursedCardsInHand = 0;
 
         //LOE stuff###############################################################################################################
-        List<CardDB.cardIDEnum> choiceCards = new List<CardDB.cardIDEnum>(); // here we save all available tracking/discover cards ordered from left to right
+        public List<CardDB.cardIDEnum> choiceCards = new List<CardDB.cardIDEnum>(); // here we save all available tracking/discover cards ordered from left to right
         public List<int> choiceCardsEntitys = new List<int>(); //list of entitys same order as choiceCards
         
         private static HSRangerLib.GameState latestGameState;
@@ -1600,7 +1783,6 @@ namespace HREngine.Bots
             }*/
 
             //string ename = "" + Ai.Instance.bestmove.card.card.name;
-
 
             Ai daum = Ai.Instance;
 
@@ -1831,9 +2013,9 @@ namespace HREngine.Bots
                                     }
 
 
-                                    System.Threading.Thread.Sleep(1500);
-                                    Helpfunctions.Instance.logg("own minion's deathrattle detected sleep 1500ms");
-                                    Helpfunctions.Instance.ErrorLog("own minion's deathrattle detected sleep 1500ms");
+                                    //System.Threading.Thread.Sleep(1500);
+                                    //Helpfunctions.Instance.logg("own minion's deathrattle detected sleep 1500ms");
+                                    //Helpfunctions.Instance.ErrorLog("own minion's deathrattle detected sleep 1500ms");
                                 }
 
                                 //if (daum.bestmove.target.taunt && daum.bestmove.own.Angr >= daum.bestmove.target.Hp && !daum.bestmove.target.isHero)
@@ -1847,12 +2029,14 @@ namespace HREngine.Bots
 
 
                                 bool hashyena = false;
+                                bool cultmaster = false;
                                 foreach (Minion mnn in this.ownMinions)
                                 {
                                     if (mnn.name == CardDB.cardName.scavenginghyena && !mnn.silenced && mnn.Ready)
                                     {
                                         hashyena = true;
                                     }
+                                    if (mnn.name == CardDB.cardName.cultmaster && !mnn.silenced) cultmaster = true;
                                 }
 
                                 if (hashyena && daum.bestmove.own.Hp <= daum.bestmove.target.Angr && !daum.bestmove.target.isHero && (TAG_RACE)daum.bestmove.own.handcard.card.race == TAG_RACE.BEAST)
@@ -1860,7 +2044,10 @@ namespace HREngine.Bots
                                     System.Threading.Thread.Sleep(1500);
                                 }
 
-
+                                if (cultmaster && daum.bestmove.own.Hp <= daum.bestmove.target.Angr && !daum.bestmove.target.isHero)
+                                {
+                                    System.Threading.Thread.Sleep(2200);
+                                }
 
 
 
@@ -1921,7 +2108,7 @@ namespace HREngine.Bots
                                 //            }
                                 //        }
                                 //    }
-                                        
+
 
                                 //}
                             }
@@ -2170,11 +2357,19 @@ namespace HREngine.Bots
                             if (hastrogg && daum.bestmove.card.card.overload >= 1) //overload
                             {
                                 System.Threading.Thread.Sleep(1500);
-                                Helpfunctions.Instance.logg("찾는거 오버로드 " + daum.bestmove.card.card.name);
-                                Helpfunctions.Instance.ErrorLog("찾는거 오버로드 " + daum.bestmove.card.card.name);
                             }
 
 
+                            if (PenalityManager.Instance.cardDrawBattleCryDatabase.ContainsKey(daum.bestmove.card.card.name)) //small sleep drawcards. sometimes just turn end
+                            {
+                                System.Threading.Thread.Sleep(800);
+                            }
+
+                            if (PenalityManager.Instance.AdaptDatabase.ContainsKey(daum.bestmove.card.card.name) || 
+                                PenalityManager.Instance.discoverCards.ContainsKey(daum.bestmove.card.card.name)) //small sleep adapt/discover cards.
+                            {
+                                System.Threading.Thread.Sleep(3600);
+                            }
 
                         }
 
@@ -2202,7 +2397,7 @@ namespace HREngine.Bots
                         break;
                 }
             }
-            
+
 
             Helpfunctions.Instance.ErrorLog("updateEverything");
             latestGameState = rangerbot.gameState;
@@ -2250,7 +2445,7 @@ namespace HREngine.Bots
 
             //Hrtprozis.Instance.updateCrystalCore(OwnCrystalCore, EnemyCrystalCore);
             Hrtprozis.Instance.updateOwnMinionsCost0(this.ownMinionsCost0);
-            
+
             //learnmode :D
 
             Playfield p = new Playfield();
@@ -2268,6 +2463,9 @@ namespace HREngine.Bots
                     //board changed we update secrets!
                     //if(Ai.Instance.nextMoveGuess!=null) Probabilitymaker.Instance.updateSecretList(Ai.Instance.nextMoveGuess.enemySecretList);
                     Probabilitymaker.Instance.updateSecretList(p, lastpf);
+                    Bot.Instance.dontmultiactioncount = 0;
+                    Bot.Instance.POWERFULSINGLEACTION = 0;
+                    Bot.Instance.doMultipleThingsAtATime = true;
                 }
             }
             else
@@ -2288,7 +2486,6 @@ namespace HREngine.Bots
 
             }
 
-            
             lastpf = p;
             p = new Playfield();//secrets have updated :D
             // calculate stuff
@@ -2322,7 +2519,7 @@ namespace HREngine.Bots
                 //Helpfunctions.Instance.logg("Max Mana: " + p.ownMaxMana + ">" + Ai.Instance.nextMoveGuess.ownMaxMana);
                 //Helpfunctions.Instance.logg("Actions left: " + Ai.Instance.bestActions.Count);
             }
-            
+
             Helpfunctions.Instance.ErrorLog("calculating stuff... " + DateTime.Now.ToString("HH:mm:ss.ffff"));
             if (runExtern)
             {
@@ -3324,7 +3521,7 @@ namespace HREngine.Bots
                 }
                 catch
                 {
-                    System.Threading.Thread.Sleep(5);
+                    System.Threading.Thread.Sleep(50);
                 }
             }
             this.waitingForSilver = false;

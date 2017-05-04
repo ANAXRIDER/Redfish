@@ -326,7 +326,7 @@
             {
                 retval += p.ownWeaponAttack  + p.ownWeaponAttack * (p.ownWeaponDurability - 1) * 0.5f;
                 if (p.ownWeaponName == CardDB.cardName.spiritclaws && p.spellpower >= 1) retval -= 2;
-                if (p.ownWeaponName == CardDB.cardName.truesilverchampion) retval += 4;
+                if (p.ownWeaponName == CardDB.cardName.truesilverchampion) retval += 2;
             }
 
             if (p.ownWeaponName == CardDB.cardName.atiesh)
@@ -479,7 +479,7 @@
                    p.ownHeroAblility.card.name == CardDB.cardName.totemicslam ||
                    p.ownHeroAblility.card.name == CardDB.cardName.inferno) && p.ownMinions.Count == 7
                     ) retval -= 20;
-                else retval -= 8;
+                else retval -= 12;
             }
             //if (usecoin && p.mana >= 1) retval -= 20;
 
@@ -663,8 +663,9 @@
                     {
                         retval += 1600 - 200 * p.enemyMinions.Count;
                     }
+                    
                 }
-
+                if (p.enemyHero.immune) retval += 1000;
             }
 
 
@@ -812,6 +813,7 @@
                         hasowntaunt++;
                         hasowntaunthp += m.Hp;
                         if (m.divineshild) hasowntaunthp++;
+                        if (m.spikeridgedteed >= 1) hasowntaunthp += 6 * m.spikeridgedteed;
                     }
                     else
                     {
@@ -996,11 +998,15 @@
                     }
                     if (p.enemyMinions.Count == 0 && p.enemyWeaponAttack >= 1) attack -= p.enemyWeaponAttack;
                 }
+                
+
+                if (p.ownSecretsIDList.Contains(CardDB.cardIDEnum.EX1_130)) //noble sacrifice
+                {
+                    if (p.enemyWeaponAttack >= 1 && !p.enemyHero.frozen) enemyminionsattack.Add(p.enemyHero);
+                    enemyminionsattack.Sort((a, b) => a.Angr.CompareTo(b.Angr));//take the weakest angr
+                    if (enemyminionsattack.Count >= 1) attack -= enemyminionsattack[0].Angr;
+                }
                 //Helpfunctions.Instance.ErrorLog(" attack " + attack);
-
-
-
-
 
                 switch (p.enemyHeroAblility.card.name)
                 {
@@ -1052,6 +1058,7 @@
 
                 if (p.owncarddraw >= 1 || p.ownCardToHandcount >= 1) retval += 4500;
                 if (p.enemyHero.immune) retval += 4800;
+                if (p.enemyHero.immune && p.enemyMinions.Count == 0) retval += -500;
                 retval -= 5000;
 
             }
@@ -1357,8 +1364,10 @@
                         if (m.name == CardDB.cardName.darnassusaspirant && (m.Hp <= enemypotentialattacktotal)) retval -= 10;
                         if (m.name == CardDB.cardName.brannbronzebeard && (m.Hp <= enemypotentialattacktotal)) retval -= 5;
                         if (m.name == CardDB.cardName.murlocwarleader && (m.Hp <= enemypotentialattacktotal)) retval -= 5;
-                        if (m.name == CardDB.cardName.cultmaster && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null) retval -= 7;
+                        if (m.name == CardDB.cardName.primalfintotem && (m.Hp <= enemypotentialattacktotal)) retval -= 3;
+                        if (m.name == CardDB.cardName.cultmaster && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null) retval -= 12;
                     }
+                    if (m.name == CardDB.cardName.primalfintotem && (m.Hp <= enemypotentialattacktotal)) retval -= 3;
                 }
 
                 if (m.name == CardDB.cardName.manatidetotem && !m.silenced && (p.ownMaxMana <= 4 || p.owncards.Count <= 2)) retval += 3;
@@ -1391,7 +1400,16 @@
                             mulroccnt++;
                         }
                     }
-                    if (mulroccnt >= 1 && p.enemyMinions.Find(a => a.Hp <= m.Angr) != null && p.enemyMinions.Find(a => a.taunt) == null) retval += 10;
+                    if (mulroccnt >= 2 && p.enemyMinions.Find(a => a.Hp <= m.Angr) != null && p.enemyMinions.Find(a => a.taunt) == null) retval += 10;
+                    else if (mulroccnt >= 2 && p.enemyMinions.Count == 0) retval += 4;
+                }
+
+                if (m.name == CardDB.cardName.murlocwarleader && (m.Hp <= enemypotentialattacktotal)) //special value for murloc warleader 
+                {
+                    foreach (Minion mnn in p.ownMinions)
+                    {
+                        if (mnn.entityID != m.entityID) retval -= 5; //angr 2 *2 + hp = 5;
+                    }
                 }
 
                 ////attack face when own taunt can control board
@@ -1432,7 +1450,7 @@
                 //retval += m.handcard.card.rarity;
                 retval -= m.AdjacentAngr * 2;
 
-                if (m.Angr == 1 && m.Hp == 1 && !m.divineshild) retval -= 0.5f;
+                //if (m.Angr == 1 && m.Hp == 1 && !m.divineshild) retval -= 0.5f;
 
 
 
@@ -1444,7 +1462,7 @@
                     else if (p.enemyHeroName == HeroEnum.warrior && Execute == 0 && m.wounded && (m.Angr >= 4 || m.Hp >= 5)) retval -= m.Angr * 0.5f;
                 }
 
-                if (m.poisonous) retval += 4;
+                if (m.poisonous) retval += 6;
 
                 if (m.wounded) retval += (m.maxHp - m.Hp) * 0.001f;
 
@@ -1516,7 +1534,7 @@
 
         public override float getEnemyMinionValue(Minion m, Playfield p)
         {
-            float retval = 1;
+            float retval = 1.5f;
 
             if (m.handcard.card.isSpecialMinion && !m.silenced)
             {
@@ -1576,6 +1594,7 @@
             if (p.enemyHeroName == HeroEnum.hunter)
             {
                 if (m.name == CardDB.cardName.tundrarhino) retval += (p.enemyMaxMana) * 3;
+                if ((TAG_RACE)m.handcard.card.race == TAG_RACE.BEAST) retval += 1; //midrange hunter
                 retval += 2;
             }
 
@@ -1627,8 +1646,8 @@
             }
 
             if (m.name == CardDB.cardName.sylvanaswindrunner && !m.silenced) retval += 10;
-            if (m.name == CardDB.cardName.acolyteofpain && !m.silenced && m.Hp >= 2) retval += 12;
-            if (m.name == CardDB.cardName.acolyteofpain && !m.silenced && m.Hp == 1) retval += 15;
+            if (m.name == CardDB.cardName.acolyteofpain && !m.silenced && m.Hp >= 2) retval += 14;
+            if (m.name == CardDB.cardName.acolyteofpain && !m.silenced && m.Hp == 1) retval += 17;
             if (m.name == CardDB.cardName.impgangboss && !m.silenced) retval += 5;
             if (m.name == CardDB.cardName.flamewaker && !m.silenced) retval += 4;
             if (m.name == CardDB.cardName.gadgetzanauctioneer && !m.silenced) retval += 10;

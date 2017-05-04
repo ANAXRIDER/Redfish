@@ -311,10 +311,15 @@ namespace HREngine.Bots
                         mulroccnt++;
                     }
                 }
-                Helpfunctions.Instance.ErrorLog("mulroccnt " + mulroccnt);
+                //Helpfunctions.Instance.ErrorLog("mulroccnt " + mulroccnt);
                 if (mulroccnt >= 1 && target.Hp <= m.Angr) pen -= 10;
             }
 
+
+            if (p.ownMinions.Find (a => a.name == CardDB.cardName.cultmaster && !a.silenced) != null) //cultmaster draw sequence
+            {
+                if (!m.divineshild && m.Hp <= target.Angr || target.poisonous) pen += p.playactions.Count * 0.5f;
+            }
 
             return pen;
         }
@@ -674,7 +679,7 @@ namespace HREngine.Bots
             retval += getSilencePenality(name, target, p, choice, lethal);
             retval += getDamagePenality(name, target, p, choice, lethal);
             retval += getHealPenality(name, target, p, choice, lethal);
-
+            
             retval += getCardDrawPenality(name, target, p, choice, lethal);
             retval += getCardDrawofEffectMinions(card, p);
             retval += getCardDiscardPenality(name, p, lethal);
@@ -1112,6 +1117,23 @@ namespace HREngine.Bots
                 }
 
 
+                if (name == CardDB.cardName.sleepwiththefishes)
+                {
+                    int ret = 12;
+                    int owntargetcnt = 0;
+                    int enemytargetcnt = 0;
+                    foreach (Minion m in p.ownMinions)
+                    {
+                        if (m.wounded) owntargetcnt++;
+                    }
+                    foreach (Minion m in p.enemyMinions)
+                    {
+                        if (m.wounded) enemytargetcnt++;
+                    }
+                    ret = (owntargetcnt - enemytargetcnt) * 4;
+                    return ret;
+                }
+
 
                 if (p.enemyMinions.Count <= 2)
                 {
@@ -1162,6 +1184,7 @@ namespace HREngine.Bots
                 if (name == CardDB.cardName.consecration)
                 {
                     int targets = p.enemyMinions.Count;
+                    if (p.enemyHero.Hp <= p.spellpower + 2) return 0;
                     if (targets <= 2)
                     {
                         return 5 + 20 * (2 - p.enemyMinions.Count);
@@ -2598,6 +2621,15 @@ namespace HREngine.Bots
             if (card.card.type == CardDB.cardtype.MOB) return 0;
             int retval = 0;
 
+            //always use spell when lethal
+            if (DamageAllDatabase.ContainsKey(card.card.name) && DamageAllDatabase[card.card.name] >= p.enemyHero.Hp + p.enemyHero.armor) return 0;
+            else if (DamageAllEnemysDatabase.ContainsKey(card.card.name) && DamageAllEnemysDatabase[card.card.name] >= p.enemyHero.Hp + p.enemyHero.armor) return 0;
+            else if (DamageTargetDatabase.ContainsKey(card.card.name) && DamageTargetDatabase[card.card.name] >= p.enemyHero.Hp + p.enemyHero.armor && target.isHero) return 0;
+            else if (DamageTargetSpecialDatabase.ContainsKey(card.card.name) && DamageTargetSpecialDatabase[card.card.name] >= p.enemyHero.Hp + p.enemyHero.armor && target.isHero) return 0;
+            else if (heroAttackBuffDatabase.ContainsKey(card.card.name) && heroAttackBuffDatabase[card.card.name] + p.ownWeaponAttack >= p.enemyHero.Hp + p.enemyHero.armor && !p.ownHero.frozen) return 0;
+
+
+
             if (p.ownMinions.Find(m => m.name == CardDB.cardName.doomsayer && !m.silenced) != null || p.enemyMinions.Find(m => m.name == CardDB.cardName.doomsayer && !m.silenced) != null)
             {
                 if (card.card.type == CardDB.cardtype.HEROPWR) return 0;
@@ -3734,6 +3766,9 @@ namespace HREngine.Bots
             if (name == CardDB.cardName.equality) // aoe penality
             {
                 if (p.enemyMinions.Find(a => a.name == CardDB.cardName.doomsayer) != null) return 0;
+
+                if (p.mana == card.getManaCost(p, 2)) return 500; //do not use equality last card. to avoid 8mana 3drawcard -> play equality
+
                 int hpdestroyed = 0;
                 foreach (Minion mini in p.enemyMinions)
                 {
@@ -4161,10 +4196,11 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.markofyshaarj)
             {
-                if ((TAG_RACE)target.handcard.card.race != TAG_RACE.BEAST) 
+                if ((TAG_RACE)target.handcard.card.race != TAG_RACE.BEAST)
                 {
                     return 4;
                 }
+                else return -4;
             }
             if (name == CardDB.cardName.livingroots)
             {
@@ -4267,7 +4303,7 @@ namespace HREngine.Bots
                         break;
                     }
                 }
-                if (hasmurloc) penalty -= 4;
+                if (hasmurloc) penalty -= 2;
                 return penalty;
             }
 
@@ -4277,10 +4313,32 @@ namespace HREngine.Bots
                 foreach (Minion mnn in p.ownMinions)
                 {
                     if (mnn.handcard.card.isSpecialMinion) ret -= 7;
-                    else if (mnn.handcard.card.battlecry) ret -= 5;
+                    else if (mnn.handcard.card.battlecry || mnn.handcard.card.deathrattle) ret -= 6;
                     else if (!mnn.handcard.card.isToken) ret -= 4;
-                    else ret--;
+                    else ret -= 2;
                 }
+                return ret;
+            }
+
+            if (name == CardDB.cardName.cultmaster)
+            {
+                float ret = 0;
+                if (p.enemyMinions.Count == 0) ret += 4;
+
+                return ret;
+            }
+
+            if (name == CardDB.cardName.murlocwarleader)
+            {
+                float ret = 0;
+                if (p.ownMinions.Find(a => a.handcard.card.race == TAG_RACE.MURLOC) != null) ret = 3;
+                return ret;
+            }
+
+            if (name == CardDB.cardName.gentlemegasaur)
+            {
+                float ret = 0;
+                if (p.ownMinions.Find(a => a.handcard.card.race == TAG_RACE.MURLOC) != null) ret = 3;
                 return ret;
             }
 
@@ -4612,6 +4670,20 @@ namespace HREngine.Bots
                                 //Helpfunctions.Instance.ErrorLog("pen" + pen);
                             }
                         }
+                        else if(si.canBe_iceblock)
+                        {
+                            if (target.Hp + target.armor <= m.Angr && p.enemyHero.Hp >= 1)
+                            {
+                                switch (target.Hp + target.armor)
+                                {
+                                    case 1: pen -= 30; break;
+                                    case 2: pen -= 20; break;
+                                    case 3: pen -= 15; break;
+                                    case 4: pen -= 5; break;
+                                    default: pen -= 3; break;
+                                }
+                            }
+                        }
                     }
 
                         
@@ -4773,10 +4845,7 @@ namespace HREngine.Bots
         private float getPlayOrder (CardDB.cardName name, Playfield p, int choice)
         {
             float ret = 0;
-
-
-            if (AdaptDatabase.ContainsKey(name)) ret += p.playactions.Count * 0.5f;
-
+            if (AdaptDatabase.ContainsKey(name)) ret += p.playactions.Count * 0.1f;
 
             return ret;
         }

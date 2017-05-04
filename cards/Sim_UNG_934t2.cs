@@ -31,7 +31,7 @@ namespace HREngine.Bots
                         if (hcc.getManaCost(p) <= p.manaTurnEnd && hcc.card.name != CardDB.cardName.dieinsect) playablecardnum++;
                     }
 
-                    if (p.isEnemyHasLethal() && playablecardnum == 0)
+                    if (p.isEnemyHasLethal() <= 0 && playablecardnum == 0)
                     {
                         temp2.Sort((a, b) => b.Angr.CompareTo(a.Angr));//Highest Angr to lowest
                         foreach (Minion mins in temp2)

@@ -25,7 +25,7 @@ namespace HREngine.Bots
                     //    temp2.Reverse();//damage the highest if mine
                     //}
                     
-                    if (p.isEnemyHasLethal())
+                    if (p.isEnemyHasLethal() <= 0)
                     {
                         temp2.Sort((a, b) => b.Angr.CompareTo(a.Angr));//damage the Highest Angr
                         foreach (Minion mins in temp2)

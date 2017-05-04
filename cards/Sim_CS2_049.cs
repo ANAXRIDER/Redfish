@@ -41,7 +41,7 @@ namespace HREngine.Bots
             }
             p.callKid((spawnspellpower) ? kid2 : kid, posi, ownplay);*/
 
-            if (availa.Contains(CardDB.cardIDEnum.CS2_051) && p.isEnemyHasLethal() && (p.ownHero.numAttacksThisTurn == 0 || p.ownMinions.Find(a => a.allreadyAttacked) == null)) // taunt when enemy has lethal
+            if (availa.Contains(CardDB.cardIDEnum.CS2_051) && p.isEnemyHasLethal() <= 0 && (p.ownHero.numAttacksThisTurn == 0 || p.ownMinions.Find(a => a.allreadyAttacked) == null)) // taunt when enemy has lethal
             {
                 p.callKid(kid4taunt, posi, ownplay);
                 return;

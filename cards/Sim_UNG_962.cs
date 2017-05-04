@@ -12,6 +12,7 @@ namespace HREngine.Bots
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
             List<Minion> temp = (own.own) ? p.ownMinions : p.enemyMinions;
+            temp.Sort((a, b) => b.Ready.CompareTo(a.Ready));
             bool first = true;
             int bestAdapt = 0;
             foreach (Minion m in temp)

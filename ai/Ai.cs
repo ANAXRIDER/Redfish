@@ -372,6 +372,7 @@
             {
                 nextMoveGuess.mana = -100;
             }
+            help.logg("set best action done-------------------------------");
         }
 
         public void doNextCalcedMove()

@@ -2602,8 +2602,8 @@ namespace HREngine.Bots
             if (ownLethal) needTaunt = true;
             else if (m.Ready)
             {
-                if (guessEnemyHeroLethalMissing() <= 3) { this.minionGetBuffed(m, 3, 0); return 1; }
-                else if (ownLethal) needTaunt = true;
+                //if (guessEnemyHeroLethalMissing() <= 3) { this.minionGetBuffed(m, 3, 0); return 1; }
+                if (ownLethal) needTaunt = true;
                 else
                 {
                     if (this.enemyMinions.Find(a => a.Hp >= 5) != null) { m.poisonous = true; return 5;}
@@ -6008,6 +6008,7 @@ namespace HREngine.Bots
                             {
                                 sii.canBe_vaporize = false;
                             }
+                            this.evaluatePenality -= 1;
                         }
 
                         if (si.canBe_missdirection)
@@ -6160,7 +6161,7 @@ namespace HREngine.Bots
                             {
                                 sii.canBe_iceblock = false;
                             }
-
+                            this.evaluatePenality -= 5;
                         }
                     }
                 }
@@ -6219,7 +6220,7 @@ namespace HREngine.Bots
                         {
                             sii.canBe_mirrorentity = false;
                         }
-                        //this.evaluatePenality -= triggered * 5;
+                        this.evaluatePenality -= 3;
                     }
 
                     if (si.canBe_repentance)
@@ -6271,7 +6272,11 @@ namespace HREngine.Bots
                     if (si.canBe_cattrick)
                     {
                         triggered++;
-                        CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.KAR_004).sim_card.onSecretPlay(this, false, 0);
+                        if (this.isEnemyHasLethal() >= 6)
+                        {
+                            CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.KAR_004).sim_card.onSecretPlay(this, false, 0);
+                        } //assume trigger when enemy has lethal - to use spells.
+                        
                         secrettrigered = true;
                         si.usedTrigger_SpellIsPlayed(false);
                         foreach (SecretItem sii in this.enemySecretList)
@@ -6410,6 +6415,7 @@ namespace HREngine.Bots
                 {
                     CardDB.cardName getback = m.handcard.card.name;
                     CardToHand(getback, m.own);
+                    this.evaluatePenality--;
                 }
 
                 for (int i = 0; i < m.infest; i++)
@@ -6465,6 +6471,7 @@ namespace HREngine.Bots
                     {
                         CardDB.cardName getback = m.handcard.card.name;
                         CardToHand(getback, m.own);
+                        this.evaluatePenality--;
                     }
 
                     for (int i = 0; i < m.infest; i++)
@@ -6704,6 +6711,19 @@ namespace HREngine.Bots
                     angr += anzOwnWarhorseTrainer;
                 }
 
+                if (m.name == CardDB.cardName.tarcreeper)
+                {
+                    if (this.turnCounter == 1 || this.turnCounter == 3) angr += 2;
+                }
+                if (m.name == CardDB.cardName.tarlord)
+                {
+                    if (this.turnCounter == 1 || this.turnCounter == 3) angr += 4;
+                }
+                if (m.name == CardDB.cardName.tarlurker)
+                {
+                    if (this.turnCounter == 1 || this.turnCounter == 3) angr += 3;
+                }
+
             }
             else
             {
@@ -6738,6 +6758,20 @@ namespace HREngine.Bots
                 {
                     angr += anzEnemyWarhorseTrainer;
                 }
+
+                if (m.name == CardDB.cardName.tarcreeper)
+                {
+                    if (this.turnCounter == 0 || this.turnCounter == 2) angr += 2;
+                }
+                if (m.name == CardDB.cardName.tarlord)
+                {
+                    if (this.turnCounter == 0 || this.turnCounter == 2) angr += 4;
+                }
+                if (m.name == CardDB.cardName.tarlurker)
+                {
+                    if (this.turnCounter == 0 || this.turnCounter == 2) angr += 3;
+                }
+
             }
 
             if (get)
@@ -7363,7 +7397,7 @@ namespace HREngine.Bots
                 Handmanager.Handcard hc = new Handmanager.Handcard { card = plchldr, position = this.owncards.Count + 1, manacost = 1000, entity = this.getNextEntity() };
                 this.owncards.Add(hc);
                 this.triggerCardsChanged(true);
-                this.evaluatePenality -= 0.5f;
+                this.evaluatePenality -= 1;
                 this.ownCardToHandcount++;
             }
             else
@@ -7397,7 +7431,7 @@ namespace HREngine.Bots
         }
 
         
-        public bool isEnemyHasLethal()
+        public int isEnemyHasLethal()
         {
             bool enemyhaslethal = false;
             //do face-attack:
@@ -7628,7 +7662,12 @@ namespace HREngine.Bots
                 }
                 //Helpfunctions.Instance.ErrorLog(" attack " + attack);
 
-
+                if (this.ownSecretsIDList.Contains(CardDB.cardIDEnum.EX1_130)) //noble sacrifice
+                {
+                    if (this.enemyWeaponAttack >= 1 && !this.enemyHero.frozen) enemyminionsattack.Add(this.enemyHero);
+                    enemyminionsattack.Sort((a, b) => a.Angr.CompareTo(b.Angr));//take the weakest angr
+                    if (enemyminionsattack.Count >= 1) attack -= enemyminionsattack[0].Angr;
+                }
 
 
 
@@ -7675,7 +7714,7 @@ namespace HREngine.Bots
             {
                 enemyhaslethal = true;
             }
-            return enemyhaslethal;
+            return concedevalue;
         }
 
         // some helpfunctions 

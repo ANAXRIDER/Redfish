@@ -12,6 +12,7 @@ namespace HREngine.Bots
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             List<Minion> temp = (ownplay) ? p.ownMinions : p.enemyMinions;
+            temp.Sort((a, b) => b.Ready.CompareTo(a.Ready));
             bool first = true;
             int bestAdapt = 0;
             foreach (Minion m in temp)

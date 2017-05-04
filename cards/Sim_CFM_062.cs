@@ -13,7 +13,7 @@ namespace HREngine.Bots
             List<Minion> temp = (m.own) ? p.ownMinions : p.enemyMinions;
             foreach (Minion mnn in temp)
             {
-                if (mnn.zonepos == m.zonepos - 1 || mnn.zonepos == m.zonepos + 1)
+                if (mnn.zonepos == m.zonepos - 1 || mnn.zonepos == m.zonepos)
                 {
                     mnn.divineshild = true;
                 }

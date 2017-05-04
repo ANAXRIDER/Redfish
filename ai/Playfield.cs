@@ -3774,9 +3774,9 @@ namespace HREngine.Bots
                                     {
                                         this.callKid(c, this.ownMinions.Count, true);
                                         count++;
-                                        if (count > 2) break;
+                                        if (count >= 2) break;
                                     }
-                                    if (count > 2) break;
+                                    if (count >= 2) break;
                                 }
                             }
                         }

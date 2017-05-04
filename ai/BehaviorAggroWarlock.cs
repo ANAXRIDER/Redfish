@@ -1336,12 +1336,13 @@
 
                 if (p.ownHeroName == HeroEnum.hunter && (TAG_RACE)m.handcard.card.race == TAG_RACE.BEAST) retval += 0.1f;
                 if (p.ownHeroName == HeroEnum.shaman && (TAG_RACE)m.handcard.card.race == TAG_RACE.TOTEM) retval += 0.2f;
-                if (p.ownHeroName == HeroEnum.pala && m.name == CardDB.cardName.silverhandrecruit) retval += 0.1f; ;
+                if (p.ownHeroName == HeroEnum.pala && m.name == CardDB.cardName.silverhandrecruit) retval += 0.1f;
+                if (p.ownHeroName == HeroEnum.pala && (TAG_RACE)m.handcard.card.race == TAG_RACE.MURLOC) retval += 0.2f;
                 if (p.ownHeroName == HeroEnum.mage && (TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL) retval += 0.1f;
                 if (p.ownHeroName == HeroEnum.mage && m.name == CardDB.cardName.flamewaker) retval += 5;
 
 
-                if (!hasenemytaunt && !p.enemyHero.immune && m.Ready && m.Angr >= 1 && !m.frozen && m.enemyBlessingOfWisdom == 0 && m.enemyPowerWordGlory == 0) retval -= 10 * m.Angr;
+                if (!hasenemytaunt && !p.enemyHero.immune && m.Ready && m.Angr >= 1 && !m.frozen && m.enemyBlessingOfWisdom == 0 && m.enemyPowerWordGlory == 0 && !m.stealth) retval -= 10 * m.Angr;
                 if (m.enemyBlessingOfWisdom >= 1 || m.enemyPowerWordGlory >= 1) retval -= 8;
 
                 //minion each
@@ -1402,6 +1403,10 @@
                     }
                     if (mulroccnt >= 2 && p.enemyMinions.Find(a => a.Hp <= m.Angr) != null && p.enemyMinions.Find(a => a.taunt) == null) retval += 10;
                     else if (mulroccnt >= 2 && p.enemyMinions.Count == 0) retval += 4;
+                }
+                else if (m.name == CardDB.cardName.finjatheflyingstar && (m.Hp <= enemypotentialattacktotal) && !m.stealth) //special value for murloc warleader 
+                {
+                    retval -= 8;
                 }
 
                 if (m.name == CardDB.cardName.murlocwarleader && (m.Hp <= enemypotentialattacktotal)) //special value for murloc warleader 
@@ -1600,7 +1605,7 @@
 
             if (p.enemyHeroName == HeroEnum.pala)
             {
-                if ((TAG_RACE)m.handcard.card.race == TAG_RACE.BEAST) retval += 4; //totemic shaman adapt very strong..
+                if ((TAG_RACE)m.handcard.card.race == TAG_RACE.MURLOC) retval += 1; //murloc adapt very strong..
                 retval += 2;
             }
 
@@ -1639,7 +1644,11 @@
             if (!m.frozen && !(m.name == CardDB.cardName.ancientwatcher && !m.silenced))
             {
                 retval += m.Angr * 2;
-                if (m.windfury) retval += m.Angr * 2;
+                if (m.windfury) 
+                {
+                    retval += m.Angr * 2;
+                    
+                }
                 if (p.enemyHero.immune) retval += m.Angr;
                 //if (m.Angr >= 5) retval += m.Angr - 2;
                 //if (m.Angr >= 7) retval += m.Angr - 2;

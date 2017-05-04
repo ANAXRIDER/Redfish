@@ -285,9 +285,9 @@ namespace HREngine.Bots
 
                 if (p.owncards.Count == 0)
                 {
-                    if (hc.card.cost <= p.mana) bonus += 10 * hc.card.cost;
+                    if (hc.card.cost <= p.mana && p.turnCounter == 0) bonus += 10 * hc.card.cost;
                 }
-                else if (hc.card.cost == p.ownMaxMana + 1)
+                else if (hc.card.cost == p.ownMaxMana + 1 && p.turnCounter == 0)
                 {
                     bonus += 1; //bonus for next turn
                 }

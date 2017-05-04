@@ -1275,6 +1275,7 @@ namespace HREngine.Bots
                         if (trackingaction != null)
                         {
                             e.action_list.Add(trackingaction);
+                            System.Threading.Thread.Sleep(2200);
                             return;
                         }
                     }
@@ -1382,6 +1383,13 @@ namespace HREngine.Bots
                     numActionsSent = e.action_list.Count();
                     Helpfunctions.Instance.ErrorLog("sending HR " + numActionsSent + " queued actions");
                     numExecsReceived = 0;
+                    if (Settings.Instance.enemyConcede) Helpfunctions.Instance.ErrorLog("bestmoveVal:" + Ai.Instance.bestmoveValue);
+
+                    if (Ai.Instance.bestmoveValue <= Settings.Instance.enemyConcedeValue && Settings.Instance.enemyConcede)
+                    {
+                        e.action_list.Add(CreateRangerConcedeAction());
+                        return;
+                    }
                 }//##########################################################################
 
             }
@@ -1613,7 +1621,7 @@ namespace HREngine.Bots
 
     public sealed class Silverfish
     {
-        public string versionnumber = "130.0SE + redfish";
+        public string versionnumber = "130.1SE + Redfish";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;

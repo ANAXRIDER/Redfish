@@ -312,7 +312,7 @@ namespace HREngine.Bots
                     }
                 }
                 //Helpfunctions.Instance.ErrorLog("mulroccnt " + mulroccnt);
-                if (mulroccnt >= 1 && target.Hp <= m.Angr) pen -= 10;
+                //if (mulroccnt >= 1 && target.Hp <= m.Angr) pen -= 10;
             }
 
 

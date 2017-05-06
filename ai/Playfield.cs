@@ -1548,12 +1548,12 @@ namespace HREngine.Bots
                 if (dis.Angr != pis.Angr || dis.Hp != pis.Hp || dis.maxHp != pis.maxHp || dis.numAttacksThisTurn != pis.numAttacksThisTurn) minionbool = false; minion += "attack " + dis.Angr + "to" + pis.Angr;
                 if (dis.Ready != pis.Ready) minionbool = false; // includes frozen, exhaunted
                 if (dis.playedThisTurn != pis.playedThisTurn) minionbool = false;
-                if (dis.silenced != pis.silenced || dis.stealth != pis.stealth || dis.taunt != pis.taunt || dis.windfury != pis.windfury || dis.zonepos != pis.zonepos) minionbool = false;
+                if (dis.silenced != pis.silenced || dis.stealth != pis.stealth || dis.taunt != pis.taunt || dis.windfury != pis.windfury || dis.zonepos != pis.zonepos || dis.poisonous != pis.poisonous) minionbool = false;
                 if (dis.divineshild != pis.divineshild || dis.cantLowerHPbelowONE != pis.cantLowerHPbelowONE || dis.immune != pis.immune) minionbool = false;
                 if (dis.ownBlessingOfWisdom != pis.ownBlessingOfWisdom || dis.enemyBlessingOfWisdom != pis.enemyBlessingOfWisdom) minionbool = false;
                 if (dis.ownPowerWordGlory != pis.ownPowerWordGlory || dis.enemyPowerWordGlory != pis.enemyPowerWordGlory || dis.ReturnSpellCount != pis.ReturnSpellCount) minionbool = false;
                 if (dis.destroyOnEnemyTurnStart != pis.destroyOnEnemyTurnStart || dis.destroyOnEnemyTurnEnd != pis.destroyOnEnemyTurnEnd || dis.destroyOnOwnTurnEnd != pis.destroyOnOwnTurnEnd || dis.destroyOnOwnTurnStart != pis.destroyOnOwnTurnStart) minionbool = false;
-                if (dis.ancestralspirit != pis.ancestralspirit || dis.spikeridgedteed != pis.spikeridgedteed || dis.souloftheforest != pis.souloftheforest || dis.infest != pis.infest || dis.spiritecho != pis.spiritecho || dis.livingspores != pis.livingspores) minionbool = false;
+                if (dis.ancestralspirit != pis.ancestralspirit || dis.spikeridgedteed != pis.spikeridgedteed || dis.souloftheforest != pis.souloftheforest || dis.infest != pis.infest || dis.spiritecho != pis.spiritecho || dis.livingspores != pis.livingspores || dis.AdaptedCantBeTargetedBySpellsOrHeroPowers != pis.AdaptedCantBeTargetedBySpellsOrHeroPowers) minionbool = false;
                 if (dis.charge >= 1 && dis.playedThisTurn) minionbool = false;
             }
             if (minionbool == false)
@@ -1571,12 +1571,12 @@ namespace HREngine.Bots
                 if (dis.Angr != pis.Angr || dis.Hp != pis.Hp || dis.maxHp != pis.maxHp || dis.numAttacksThisTurn != pis.numAttacksThisTurn) minionbool = false;
                 if (dis.Ready != pis.Ready) minionbool = false; // includes frozen, exhaunted
                 if (dis.playedThisTurn != pis.playedThisTurn) minionbool = false;
-                if (dis.silenced != pis.silenced || dis.stealth != pis.stealth || dis.taunt != pis.taunt || dis.windfury != pis.windfury || dis.zonepos != pis.zonepos) minionbool = false;
+                if (dis.silenced != pis.silenced || dis.stealth != pis.stealth || dis.taunt != pis.taunt || dis.windfury != pis.windfury || dis.zonepos != pis.zonepos || dis.poisonous != pis.poisonous) minionbool = false;
                 if (dis.divineshild != pis.divineshild || dis.cantLowerHPbelowONE != pis.cantLowerHPbelowONE || dis.immune != pis.immune) minionbool = false;
                 if (dis.ownBlessingOfWisdom != pis.ownBlessingOfWisdom || dis.enemyBlessingOfWisdom != pis.enemyBlessingOfWisdom) minionbool = false;
                 if (dis.ownPowerWordGlory != pis.ownPowerWordGlory || dis.enemyPowerWordGlory != pis.enemyPowerWordGlory || dis.ReturnSpellCount != pis.ReturnSpellCount) minionbool = false;
                 if (dis.destroyOnEnemyTurnStart != pis.destroyOnEnemyTurnStart || dis.destroyOnEnemyTurnEnd != pis.destroyOnEnemyTurnEnd || dis.destroyOnOwnTurnEnd != pis.destroyOnOwnTurnEnd || dis.destroyOnOwnTurnStart != pis.destroyOnOwnTurnStart) minionbool = false;
-                if (dis.ancestralspirit != pis.ancestralspirit || dis.spikeridgedteed != pis.spikeridgedteed || dis.souloftheforest != pis.souloftheforest || dis.infest != pis.infest || dis.spiritecho != pis.spiritecho || dis.livingspores != pis.livingspores) minionbool = false;
+                if (dis.ancestralspirit != pis.ancestralspirit || dis.spikeridgedteed != pis.spikeridgedteed || dis.souloftheforest != pis.souloftheforest || dis.infest != pis.infest || dis.spiritecho != pis.spiritecho || dis.livingspores != pis.livingspores || dis.AdaptedCantBeTargetedBySpellsOrHeroPowers != pis.AdaptedCantBeTargetedBySpellsOrHeroPowers) minionbool = false;
             }
             if (minionbool == false)
             {
@@ -1655,12 +1655,12 @@ namespace HREngine.Bots
                 if (dis.Angr != pis.Angr || dis.Hp != pis.Hp || dis.maxHp != pis.maxHp || dis.numAttacksThisTurn != pis.numAttacksThisTurn) minionbool = false;
                 if (dis.Ready != pis.Ready) minionbool = false; // includes frozen, exhaunted
                 if (dis.playedThisTurn != pis.playedThisTurn) minionbool = false;
-                if (dis.silenced != pis.silenced || dis.stealth != pis.stealth || dis.taunt != pis.taunt || dis.windfury != pis.windfury || dis.zonepos != pis.zonepos) minionbool = false;
+                if (dis.silenced != pis.silenced || dis.stealth != pis.stealth || dis.taunt != pis.taunt || dis.windfury != pis.windfury || dis.zonepos != pis.zonepos || dis.poisonous != pis.poisonous) minionbool = false;
                 if (dis.divineshild != pis.divineshild || dis.cantLowerHPbelowONE != pis.cantLowerHPbelowONE || dis.immune != pis.immune) minionbool = false;
                 if (dis.ownBlessingOfWisdom != pis.ownBlessingOfWisdom || dis.enemyBlessingOfWisdom != pis.enemyBlessingOfWisdom) minionbool = false;
                 if (dis.ownPowerWordGlory != pis.ownPowerWordGlory || dis.enemyPowerWordGlory != pis.enemyPowerWordGlory || dis.ReturnSpellCount != pis.ReturnSpellCount) minionbool = false;
                 if (dis.destroyOnEnemyTurnStart != pis.destroyOnEnemyTurnStart || dis.destroyOnEnemyTurnEnd != pis.destroyOnEnemyTurnEnd || dis.destroyOnOwnTurnEnd != pis.destroyOnOwnTurnEnd || dis.destroyOnOwnTurnStart != pis.destroyOnOwnTurnStart) minionbool = false;
-                if (dis.ancestralspirit != pis.ancestralspirit || dis.spikeridgedteed != pis.spikeridgedteed || dis.souloftheforest != pis.souloftheforest || dis.infest != pis.infest || dis.spiritecho != pis.spiritecho || dis.livingspores != pis.livingspores) minionbool = false;
+                if (dis.ancestralspirit != pis.ancestralspirit || dis.spikeridgedteed != pis.spikeridgedteed || dis.souloftheforest != pis.souloftheforest || dis.infest != pis.infest || dis.spiritecho != pis.spiritecho || dis.livingspores != pis.livingspores || dis.AdaptedCantBeTargetedBySpellsOrHeroPowers != pis.AdaptedCantBeTargetedBySpellsOrHeroPowers) minionbool = false;
                 if (dis.charge >= 1 && dis.playedThisTurn) minionbool = false;
                 if (minionbool == false) break;
             }
@@ -1679,12 +1679,12 @@ namespace HREngine.Bots
                 if (dis.Angr != pis.Angr || dis.Hp != pis.Hp || dis.maxHp != pis.maxHp || dis.numAttacksThisTurn != pis.numAttacksThisTurn) minionbool = false;
                 if (dis.Ready != pis.Ready) minionbool = false; // includes frozen, exhaunted
                 if (dis.playedThisTurn != pis.playedThisTurn) minionbool = false;
-                if (dis.silenced != pis.silenced || dis.stealth != pis.stealth || dis.taunt != pis.taunt || dis.windfury != pis.windfury || dis.zonepos != pis.zonepos) minionbool = false;
+                if (dis.silenced != pis.silenced || dis.stealth != pis.stealth || dis.taunt != pis.taunt || dis.windfury != pis.windfury || dis.zonepos != pis.zonepos || dis.poisonous != pis.poisonous) minionbool = false;
                 if (dis.divineshild != pis.divineshild || dis.cantLowerHPbelowONE != pis.cantLowerHPbelowONE || dis.immune != pis.immune) minionbool = false;
                 if (dis.ownBlessingOfWisdom != pis.ownBlessingOfWisdom || dis.enemyBlessingOfWisdom != pis.enemyBlessingOfWisdom) minionbool = false;
                 if (dis.ownPowerWordGlory != pis.ownPowerWordGlory || dis.enemyPowerWordGlory != pis.enemyPowerWordGlory || dis.ReturnSpellCount != pis.ReturnSpellCount) minionbool = false;
                 if (dis.destroyOnEnemyTurnStart != pis.destroyOnEnemyTurnStart || dis.destroyOnEnemyTurnEnd != pis.destroyOnEnemyTurnEnd || dis.destroyOnOwnTurnEnd != pis.destroyOnOwnTurnEnd || dis.destroyOnOwnTurnStart != pis.destroyOnOwnTurnStart) minionbool = false;
-                if (dis.ancestralspirit != pis.ancestralspirit || dis.spikeridgedteed != pis.spikeridgedteed || dis.souloftheforest != pis.souloftheforest || dis.infest != pis.infest || dis.spiritecho != pis.spiritecho || dis.livingspores != pis.livingspores) minionbool = false;
+                if (dis.ancestralspirit != pis.ancestralspirit || dis.spikeridgedteed != pis.spikeridgedteed || dis.souloftheforest != pis.souloftheforest || dis.infest != pis.infest || dis.spiritecho != pis.spiritecho || dis.livingspores != pis.livingspores || dis.AdaptedCantBeTargetedBySpellsOrHeroPowers != pis.AdaptedCantBeTargetedBySpellsOrHeroPowers) minionbool = false;
                 if (minionbool == false) break;
             }
             if (minionbool == false)

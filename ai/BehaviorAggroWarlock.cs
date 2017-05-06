@@ -326,7 +326,7 @@
             {
                 retval += p.ownWeaponAttack  + p.ownWeaponAttack * (p.ownWeaponDurability - 1) * 0.5f;
                 if (p.ownWeaponName == CardDB.cardName.spiritclaws && p.spellpower >= 1) retval -= 2;
-                if (p.ownWeaponName == CardDB.cardName.truesilverchampion) retval += 2;
+                //if (p.ownWeaponName == CardDB.cardName.truesilverchampion) retval += 2;
             }
 
             if (p.ownWeaponName == CardDB.cardName.atiesh)
@@ -466,21 +466,35 @@
             }
             
             int heropowermana = p.ownHeroAblility.card.getManaCost(p, 2);
-
+            int hppen = 0;
             if (p.manaTurnEnd >= heropowermana && !useAbili && p.ownAbilityReady)
             {
+                
                 if ((p.ownHeroAblility.card.name == CardDB.cardName.thesilverhand ||
-                   p.ownHeroAblility.card.name == CardDB.cardName.reinforce) && p.ownMinions.Count <= 6) retval -= 10; //didn't use pala heropower
-                else if (p.ownHeroAblility.card.name == CardDB.cardName.lifetap && p.ownHero.Hp >= 12) retval -= 30;
+                   p.ownHeroAblility.card.name == CardDB.cardName.reinforce) && p.ownMinions.Count <= 6) hppen -= 10; //didn't use pala heropower
+                else if (p.ownHeroAblility.card.name == CardDB.cardName.lifetap && p.ownHero.Hp >= 12) hppen -= 30;
                 else if (!(p.ownHeroAblility.card.name == CardDB.cardName.daggermastery && (p.ownWeaponDurability >= 2 || p.ownWeaponAttack >= 2))
                     && !(p.ownHeroAblility.card.name == CardDB.cardName.thesilverhand ||
                    p.ownHeroAblility.card.name == CardDB.cardName.reinforce ||
                    p.ownHeroAblility.card.name == CardDB.cardName.totemiccall ||
                    p.ownHeroAblility.card.name == CardDB.cardName.totemicslam ||
                    p.ownHeroAblility.card.name == CardDB.cardName.inferno) && p.ownMinions.Count == 7
-                    ) retval -= 20;
-                else retval -= 12;
+                    ) hppen -= 20;
+                else hppen -= 12;
+
+                if (p.enemyMinions.Find(a => a.Angr >= 1 && !a.silenced && a.name == CardDB.cardName.finjatheflyingstar) != null) //enemy finja
+                {
+                    if (p.ownHeroAblility.card.name == CardDB.cardName.thesilverhand ||
+                        p.ownHeroAblility.card.name == CardDB.cardName.reinforce ||
+                        p.ownHeroAblility.card.name == CardDB.cardName.thetidalhand)
+                    {
+                        hppen = 0;
+                    }
+                }
+
             }
+            //Helpfunctions.Instance.ErrorLog("hppen: " + hppen);
+            retval += hppen;
             //if (usecoin && p.mana >= 1) retval -= 20;
 
 
@@ -1484,6 +1498,7 @@
                 if (m.taunt)
                 {
                     retval += m.AdjacentAngr * 0.25f;
+                    retval += 0.5f;
                 }
                 if (m.handcard.card.isSpecialMinion && !m.silenced)
                 {
@@ -1663,6 +1678,11 @@
             if (m.name == CardDB.cardName.flametonguetotem && !m.silenced && p.enemyMinions.Count == 1) retval -= 6;
 
             if (m.name == CardDB.cardName.ragnarosthefirelord && !m.silenced && p.ownHero.Hp + p.ownHero.armor <= 8) retval += 30;
+
+            if (m.name == CardDB.cardName.finjatheflyingstar && !m.silenced)
+            {
+                if (p.ownMinions.Find(a => a.Hp <= m.Angr) != null) retval += 12;
+            }
 
 
             if (m.spellpower >= 1) retval += m.spellpower * 5;

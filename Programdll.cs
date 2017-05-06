@@ -633,7 +633,8 @@ namespace HREngine.Bots
                             this.dontmultiactioncount++; break;                            
                         }
                         if (PenalityManager.Instance.AdaptDatabase.ContainsKey(daum.bestmove.card.card.name)
-                            || PenalityManager.Instance.discoverCards.ContainsKey(daum.bestmove.card.card.name)) this.POWERFULSINGLEACTION++;
+                            || PenalityManager.Instance.discoverCards.ContainsKey(daum.bestmove.card.card.name)
+                            || PenalityManager.Instance.randomEffects.ContainsKey(daum.bestmove.card.card.name)) this.POWERFULSINGLEACTION++;
 
 
                         //charge
@@ -959,6 +960,7 @@ namespace HREngine.Bots
                 {
                     this.doMultipleThingsAtATime = false;
                     this.dontmultiactioncount++;
+                    POWERFULSINGLEACTION++;
                 }
 
 
@@ -1391,7 +1393,13 @@ namespace HREngine.Bots
                         return;
                     }
                 }//##########################################################################
+                if (Settings.Instance.enemyConcede) Helpfunctions.Instance.ErrorLog("bestmoveVal:" + Ai.Instance.bestmoveValue);
 
+                if (Ai.Instance.bestmoveValue <= Settings.Instance.enemyConcedeValue && Settings.Instance.enemyConcede)
+                {
+                    e.action_list.Add(CreateRangerConcedeAction());
+                    return;
+                }
             }
             catch (Exception Exception)
             {
@@ -2376,7 +2384,7 @@ namespace HREngine.Bots
                             if (PenalityManager.Instance.AdaptDatabase.ContainsKey(daum.bestmove.card.card.name) || 
                                 PenalityManager.Instance.discoverCards.ContainsKey(daum.bestmove.card.card.name)) //small sleep adapt/discover cards.
                             {
-                                System.Threading.Thread.Sleep(3600);
+                                System.Threading.Thread.Sleep(2800);
                             }
 
                         }
@@ -2490,6 +2498,9 @@ namespace HREngine.Bots
                     //board changed we update secrets!
                     //if(Ai.Instance.nextMoveGuess!=null) Probabilitymaker.Instance.updateSecretList(Ai.Instance.nextMoveGuess.enemySecretList);
                     Probabilitymaker.Instance.updateSecretList(p, lastpf);
+                    Bot.Instance.dontmultiactioncount = 1;
+                    Bot.Instance.POWERFULSINGLEACTION = 0;
+                    Bot.Instance.doMultipleThingsAtATime = false;
                 }
 
             }
@@ -2547,8 +2558,6 @@ namespace HREngine.Bots
                         if (!isCardCreated(card)) Hrtprozis.Instance.removeCardFromTurnDeck(card.card.cardIDenum);
                     }
 
-                    Bot.Instance.dontmultiactioncount = 0;
-                    Bot.Instance.POWERFULSINGLEACTION = 0;
                     printstuff(p, true);
                     readActionFile(passiveWait);
                 }

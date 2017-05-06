@@ -600,6 +600,7 @@ namespace HREngine.Bots
                 if (p.ownHeroAblility.card.name == CardDB.cardName.daggermastery || p.ownHeroAblility.card.name == CardDB.cardName.poisoneddaggers) hasweapon +=2;
                 //if (hasweapon && target.name != CardDB.cardName.doomsayer) retval = -p.ownWeaponAttack - 1; // so he doesnt "lose" the weapon in evaluation :D
                 if (hasweapon <= 1 && target.isHero && p.ownWeaponDurability == 1) retval += p.ownWeaponAttack;
+                else if (hasweapon <= 1 && target.isHero && p.ownWeaponName == CardDB.cardName.truesilverchampion && p.ownWeaponDurability >= 2) retval += p.ownWeaponAttack;
                 if (hasweapon <= 1 && target.isHero && p.ownMaxMana <= 4) retval += p.ownWeaponAttack;
                 if (p.ownWeaponAttack == 1 && hasweapon >= 2)
                 {
@@ -3819,6 +3820,12 @@ namespace HREngine.Bots
                     {
                         return 30;
                     }
+                    if (target.name == CardDB.cardName.tarcreeper && target.Angr == 3 ||
+                        target.name == CardDB.cardName.tarlord && target.Angr == 5 ||
+                        target.name == CardDB.cardName.tarlurker && target.Angr == 4)
+                    {
+                        return 6;
+                    }
                 }
                 else
                 {
@@ -4338,7 +4345,7 @@ namespace HREngine.Bots
             if (name == CardDB.cardName.gentlemegasaur)
             {
                 float ret = 0;
-                if (p.ownMinions.Find(a => a.handcard.card.race == TAG_RACE.MURLOC) != null) ret = 3;
+                if (p.ownMinions.Find(a => a.handcard.card.race == TAG_RACE.MURLOC) == null) ret = 3;
                 return ret;
             }
 
@@ -6214,7 +6221,7 @@ namespace HREngine.Bots
             priorityTargets.Add(CardDB.cardName.selflesshero, 4);
             priorityTargets.Add(CardDB.cardName.grimscaleoracle, 2);
 
-            priorityTargets.Add(CardDB.cardName.finjatheflyingstar, 6);
+            priorityTargets.Add(CardDB.cardName.finjatheflyingstar, 11);
 
             //ungoro
             priorityTargets.Add(CardDB.cardName.radiantelemental, 6);

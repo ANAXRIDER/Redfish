@@ -39,7 +39,7 @@
         public bool canBe_icebarrier = true;
         public bool canBe_iceblock = true;
         public bool canBe_mirrorentity = true;
-        public bool canBe_spellbender = false; //because no one use spellbender
+        public bool canBe_spellbender = true; //because no one use spellbender
         public bool canBe_vaporize = true; //
         public bool canBe_duplicate = true;
 

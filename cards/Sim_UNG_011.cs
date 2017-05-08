@@ -10,7 +10,7 @@ namespace HREngine.Bots
 
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            p.CardToHand(CardDB.cardName.unknown, own.own);
+            p.CardToHand(CardDB.cardName.noblesacrifice, own.own); //assume always pick sacrifice
         }
     }
 }

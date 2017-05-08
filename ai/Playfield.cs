@@ -5999,7 +5999,7 @@ namespace HREngine.Bots
                         if (!attacker.isHero && si.canBe_vaporize)
                         {
                             triggered++;
-                            CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_594).sim_card.onSecretPlay(this, false, attacker, 0);
+                            if (attacker.Angr + attacker.Hp >= 7) CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_594).sim_card.onSecretPlay(this, false, attacker, 0); // to trigger with weak minion
                             doDmgTriggers();
 
                             si.usedTrigger_CharIsAttacked(true, attacker.isHero);
@@ -6037,7 +6037,7 @@ namespace HREngine.Bots
                             {
                                 sii.canBe_icebarrier = false;
                             }
-                            this.evaluatePenality -= triggered * 5;
+                            this.evaluatePenality -= triggered * 8;
                         }
 
                         if (si.canBe_beartrap)

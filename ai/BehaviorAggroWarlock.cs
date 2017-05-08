@@ -1334,6 +1334,9 @@
 
                 if (m.livingspores >= 1) retval += m.livingspores * 8;
 
+                if (m.spikeridgedteed >= 1) retval += m.spikeridgedteed * 15;
+                if (m.spikeridgedteed >= 1 && p.isEnemyHasLethal() <= 5) retval += m.spikeridgedteed * 5;
+
                 //meta
 
                 //switch (p.ownHeroName)
@@ -1379,10 +1382,10 @@
                         if (m.name == CardDB.cardName.darnassusaspirant && (m.Hp <= enemypotentialattacktotal)) retval -= 10;
                         if (m.name == CardDB.cardName.brannbronzebeard && (m.Hp <= enemypotentialattacktotal)) retval -= 5;
                         if (m.name == CardDB.cardName.murlocwarleader && (m.Hp <= enemypotentialattacktotal)) retval -= 5;
-                        if (m.name == CardDB.cardName.primalfintotem && (m.Hp <= enemypotentialattacktotal)) retval -= 3;
+                        if (m.name == CardDB.cardName.primalfintotem && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null) retval -= 3;
                         if (m.name == CardDB.cardName.cultmaster && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null) retval -= 12;
                     }
-                    if (m.name == CardDB.cardName.primalfintotem && (m.Hp <= enemypotentialattacktotal)) retval -= 3;
+                    else if (m.name == CardDB.cardName.primalfintotem && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null) retval -= 3;
                 }
 
                 if (m.name == CardDB.cardName.manatidetotem && !m.silenced && (p.ownMaxMana <= 4 || p.owncards.Count <= 2)) retval += 3;
@@ -1556,6 +1559,12 @@
         {
             float retval = 1.5f;
 
+            // 0 attack minion
+            if (m.name == CardDB.cardName.runicegg && m.Angr == 0 && !m.silenced)
+            {
+                return 0;
+            }
+
             if (m.handcard.card.isSpecialMinion && !m.silenced)
             {
                 retval += 1;
@@ -1683,6 +1692,8 @@
             {
                 if (p.ownMinions.Find(a => a.Hp <= m.Angr) != null) retval += 12;
             }
+
+            
 
 
             if (m.spellpower >= 1) retval += m.spellpower * 5;

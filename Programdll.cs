@@ -963,6 +963,13 @@ namespace HREngine.Bots
                     POWERFULSINGLEACTION++;
                 }
 
+                else if ((daum.bestmove.own.Angr >= daum.bestmove.target.Hp || daum.bestmove.own.poisonous ) && !daum.bestmove.target.divineshild && (daum.bestmove.target.name == CardDB.cardName.murlocwarleader || daum.bestmove.target.name == CardDB.cardName.southseacaptain))
+                {
+                    this.doMultipleThingsAtATime = false;
+                    this.dontmultiactioncount++;
+                    POWERFULSINGLEACTION++;
+                }
+
 
                 else if (moveTodo.target != null && !ranger_action.Target.IsHero)
                 {
@@ -1006,6 +1013,7 @@ namespace HREngine.Bots
                         if (si.canBe_noblesacrifice)
                         {
                             this.doMultipleThingsAtATime = false;
+                            POWERFULSINGLEACTION++;
                         }
                         else if (daum.bestmove.target.isHero)
                         {
@@ -1014,6 +1022,7 @@ namespace HREngine.Bots
                                 || si.canBe_beartrap)
                             {
                                 this.doMultipleThingsAtATime = false;
+                                POWERFULSINGLEACTION++;
                             }
                         }
                         else if (!daum.bestmove.target.isHero)
@@ -1021,12 +1030,14 @@ namespace HREngine.Bots
                             if (si.canBe_snaketrap)
                             {
                                 this.doMultipleThingsAtATime = false;
+                                POWERFULSINGLEACTION++;
                             }
                             else if (daum.bestmove.own.Angr >= daum.bestmove.target.Hp)
                             {
                                 if (si.canBe_iceblock)
                                 {
                                     this.doMultipleThingsAtATime = false;
+                                    POWERFULSINGLEACTION++;
                                 }
                             }
 
@@ -1039,6 +1050,7 @@ namespace HREngine.Bots
                                 || si.canBe_duplicate)
                             {
                                 this.doMultipleThingsAtATime = false;
+                                POWERFULSINGLEACTION++;
                             }
                         }
                     }
@@ -1052,6 +1064,7 @@ namespace HREngine.Bots
                        || si.canBe_freezing)
                         {
                             this.doMultipleThingsAtATime = false;
+                            POWERFULSINGLEACTION++;
                         }
 
                         else if (daum.bestmove.target.isHero)
@@ -1062,6 +1075,7 @@ namespace HREngine.Bots
                                 || si.canBe_vaporize)
                             {
                                 this.doMultipleThingsAtATime = false;
+                                POWERFULSINGLEACTION++;
                             }
                         }
                         else if (!daum.bestmove.target.isHero)
@@ -1069,12 +1083,14 @@ namespace HREngine.Bots
                             if (si.canBe_snaketrap)
                             {
                                 this.doMultipleThingsAtATime = false;
+                                POWERFULSINGLEACTION++;
                             }
                             else if (daum.bestmove.own.Angr >= daum.bestmove.target.Hp)
                             {
                                 if (si.canBe_iceblock)
                                 {
                                     this.doMultipleThingsAtATime = false;
+                                    POWERFULSINGLEACTION++;
                                 }
                             }
                         }
@@ -1086,6 +1102,7 @@ namespace HREngine.Bots
                                 || si.canBe_duplicate)
                             {
                                 this.doMultipleThingsAtATime = false;
+                                POWERFULSINGLEACTION++;
                             }
                         }
                     }
@@ -1102,11 +1119,13 @@ namespace HREngine.Bots
                             if (si.canBe_mirrorentity)
                             {
                                 this.doMultipleThingsAtATime = false;
+                                POWERFULSINGLEACTION++;
                             }
                             else if ((si.canBe_snipe)
                                     || (si.canBe_Trial && Playfield.Instance.ownMinions.Count >= 3))
                             {
                                 this.doMultipleThingsAtATime = false;
+                                POWERFULSINGLEACTION++;
                             }
                         }
                         else if (daum.bestmove.card.card.type == CardDB.cardtype.SPELL)
@@ -1116,6 +1135,7 @@ namespace HREngine.Bots
                                     || si.canBe_cattrick)
                             {
                                 this.doMultipleThingsAtATime = false;
+                                POWERFULSINGLEACTION++;
                             }
                             else if (Playfield.Instance.enemyMinions.Count >= 1 &&
                                 (PenalityManager.Instance.DamageAllDatabase.ContainsKey(daum.bestmove.card.card.name)
@@ -1131,6 +1151,7 @@ namespace HREngine.Bots
                                     || si.canBe_duplicate)
                                 {
                                     this.doMultipleThingsAtATime = false;
+                                    POWERFULSINGLEACTION++;
                                 }
                             }
                         }
@@ -1848,65 +1869,65 @@ namespace HREngine.Bots
                                     //Helpfunctions.Instance.ErrorLog("Target Taunt detected sleep 800ms");
                                 }
 
-                                //if (this.enemySecretCount >= 1)
-                                //{
-                                //    int time = 6000 / this.enemySecretCount;
-                                //    foreach (SecretItem si in Probabilitymaker.Instance.enemySecrets)
-                                //    {
-                                //        if (si.canBe_noblesacrifice)
-                                //        {
-                                //            System.Threading.Thread.Sleep(time);
-                                //            Helpfunctions.Instance.logg("찾는거 덫발견 덫8 time: " + time);
-                                //            Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫8 time: " + time);
-                                //        }
-                                //        else if (daum.bestmove.target.isHero)
-                                //        {
-                                //            if (si.canBe_explosive
-                                //                //|| si.canBe_icebarrier
-                                //                || si.canBe_beartrap)
-                                //            {
-                                //                System.Threading.Thread.Sleep(time);
-                                //                Helpfunctions.Instance.logg("찾는거 덫발견 덫9 time: " + time);
-                                //                Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫9 time: " + time);
-                                //            }
-                                //        }
-                                //        else if (!daum.bestmove.target.isHero)
-                                //        {
-                                //            if (si.canBe_snaketrap)
-                                //            {
-                                //                System.Threading.Thread.Sleep(time);
-                                //                Helpfunctions.Instance.logg("찾는거 덫발견 덫10 time: " + time);
-                                //                Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫10 time: " + time);
-                                //            }
-                                //            else if (daum.bestmove.own.Angr >= daum.bestmove.target.Hp)
-                                //            {
-                                //                if (si.canBe_iceblock)
-                                //                {
-                                //                    System.Threading.Thread.Sleep(time);
-                                //                    Helpfunctions.Instance.logg("찾는거 덫발견 덫13 time: " + time);
-                                //                    Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫13 time: " + time);
-                                //                }
-                                //            }
+                                if (this.enemySecretCount >= 1)
+                                {
+                                    int time = 5000 / this.enemySecretCount;
+                                    foreach (SecretItem si in Probabilitymaker.Instance.enemySecrets)
+                                    {
+                                        if (si.canBe_noblesacrifice)
+                                        {
+                                            System.Threading.Thread.Sleep(time);
+                                            Helpfunctions.Instance.logg("찾는거 덫발견 덫8 time: " + time);
+                                            Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫8 time: " + time);
+                                        }
+                                        else if (daum.bestmove.target.isHero)
+                                        {
+                                            if (si.canBe_explosive
+                                                //|| si.canBe_icebarrier
+                                                || si.canBe_beartrap)
+                                            {
+                                                System.Threading.Thread.Sleep(time);
+                                                Helpfunctions.Instance.logg("찾는거 덫발견 덫9 time: " + time);
+                                                Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫9 time: " + time);
+                                            }
+                                        }
+                                        else if (!daum.bestmove.target.isHero)
+                                        {
+                                            if (si.canBe_snaketrap)
+                                            {
+                                                System.Threading.Thread.Sleep(time);
+                                                Helpfunctions.Instance.logg("찾는거 덫발견 덫10 time: " + time);
+                                                Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫10 time: " + time);
+                                            }
+                                            else if (daum.bestmove.own.Angr >= daum.bestmove.target.Hp)
+                                            {
+                                                if (si.canBe_iceblock)
+                                                {
+                                                    System.Threading.Thread.Sleep(time);
+                                                    Helpfunctions.Instance.logg("찾는거 덫발견 덫13 time: " + time);
+                                                    Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫13 time: " + time);
+                                                }
+                                            }
 
-                                //        }
-                                //        else if (daum.bestmove.own.Angr >= daum.bestmove.target.Hp && !daum.bestmove.target.isHero)
-                                //        {
-                                //            if (si.canBe_effigy
-                                //                || si.canBe_redemption
-                                //                || si.canBe_avenge
-                                //                || si.canBe_duplicate)
-                                //            {
-                                //                System.Threading.Thread.Sleep(time);
-                                //                Helpfunctions.Instance.logg("찾는거 덫발견 덫11 time: " + time);
-                                //                Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫11 time: " + time);
-                                //            }
-                                //        }
-                                //    }
+                                        }
+                                        else if (daum.bestmove.own.Angr >= daum.bestmove.target.Hp && !daum.bestmove.target.isHero)
+                                        {
+                                            if (si.canBe_effigy
+                                                || si.canBe_redemption
+                                                || si.canBe_avenge
+                                                || si.canBe_duplicate)
+                                            {
+                                                System.Threading.Thread.Sleep(time);
+                                                Helpfunctions.Instance.logg("찾는거 덫발견 덫11 time: " + time);
+                                                Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫11 time: " + time);
+                                            }
+                                        }
+                                    }
 
-                                    
-                                //}
 
-                            
+                                }
+
+
 
 
 
@@ -2068,65 +2089,65 @@ namespace HREngine.Bots
 
 
 
-                                //if (this.enemySecretCount >= 1)
-                                //{
-                                //    int time = 6000 / this.enemySecretCount;
-                                //    foreach (SecretItem si in Probabilitymaker.Instance.enemySecrets)
-                                //    {
-                                //        if (si.canBe_noblesacrifice
-                                //       || si.canBe_freezing)
-                                //        {
-                                //            System.Threading.Thread.Sleep(time * 4 / 3);
-                                //            Helpfunctions.Instance.logg("찾는거 덫발견 덫1 슬립 time: " + time * 4 / 3);
-                                //            Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫1 time: " + time * 4 / 3);
-                                //        }
+                                if (this.enemySecretCount >= 1)
+                                {
+                                    int time = 5000 / this.enemySecretCount;
+                                    foreach (SecretItem si in Probabilitymaker.Instance.enemySecrets)
+                                    {
+                                        if (si.canBe_noblesacrifice
+                                       || si.canBe_freezing)
+                                        {
+                                            System.Threading.Thread.Sleep(time * 4 / 3);
+                                            Helpfunctions.Instance.logg("찾는거 덫발견 덫1 슬립 time: " + time * 4 / 3);
+                                            Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫1 time: " + time * 4 / 3);
+                                        }
 
-                                //        else if (daum.bestmove.target.isHero)
-                                //        {
-                                //            if (si.canBe_explosive
-                                //                || si.canBe_beartrap
-                                //                //|| si.canBe_icebarrier
-                                //                || si.canBe_vaporize)
-                                //            {
-                                //                System.Threading.Thread.Sleep(time);
-                                //                Helpfunctions.Instance.logg("찾는거 덫발견 덫2 time: " + time);
-                                //                Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫2 time: " + time);
-                                //            }
-                                //        }
-                                //        else if (!daum.bestmove.target.isHero)
-                                //        {
-                                //            if (si.canBe_snaketrap)
-                                //            {
-                                //                System.Threading.Thread.Sleep(time);
-                                //                Helpfunctions.Instance.logg("찾는거 덫발견 덫3 time: " + time);
-                                //                Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫3 time: " + time);
-                                //            }
-                                //            else if (daum.bestmove.own.Angr >= daum.bestmove.target.Hp)
-                                //            {
-                                //                if (si.canBe_iceblock)
-                                //                {
-                                //                    System.Threading.Thread.Sleep(time);
-                                //                    Helpfunctions.Instance.logg("찾는거 덫발견 덫13 time: " + time);
-                                //                    Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫13 time: " + time);
-                                //                }
-                                //            }
-                                //        }
-                                //        else if (daum.bestmove.own.Angr >= daum.bestmove.target.Hp)
-                                //        {
-                                //            if (si.canBe_effigy
-                                //                || si.canBe_redemption
-                                //                || si.canBe_avenge
-                                //                || si.canBe_duplicate)
-                                //            {
-                                //                System.Threading.Thread.Sleep(time);
-                                //                Helpfunctions.Instance.logg("찾는거 덫발견 덫7 time: " + time);
-                                //                Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫7 time: " + time);
-                                //            }
-                                //        }
-                                //    }
+                                        else if (daum.bestmove.target.isHero)
+                                        {
+                                            if (si.canBe_explosive
+                                                || si.canBe_beartrap
+                                                //|| si.canBe_icebarrier
+                                                || si.canBe_vaporize)
+                                            {
+                                                System.Threading.Thread.Sleep(time);
+                                                Helpfunctions.Instance.logg("찾는거 덫발견 덫2 time: " + time);
+                                                Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫2 time: " + time);
+                                            }
+                                        }
+                                        else if (!daum.bestmove.target.isHero)
+                                        {
+                                            if (si.canBe_snaketrap)
+                                            {
+                                                System.Threading.Thread.Sleep(time);
+                                                Helpfunctions.Instance.logg("찾는거 덫발견 덫3 time: " + time);
+                                                Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫3 time: " + time);
+                                            }
+                                            else if (daum.bestmove.own.Angr >= daum.bestmove.target.Hp)
+                                            {
+                                                if (si.canBe_iceblock)
+                                                {
+                                                    System.Threading.Thread.Sleep(time);
+                                                    Helpfunctions.Instance.logg("찾는거 덫발견 덫13 time: " + time);
+                                                    Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫13 time: " + time);
+                                                }
+                                            }
+                                        }
+                                        else if (daum.bestmove.own.Angr >= daum.bestmove.target.Hp)
+                                        {
+                                            if (si.canBe_effigy
+                                                || si.canBe_redemption
+                                                || si.canBe_avenge
+                                                || si.canBe_duplicate)
+                                            {
+                                                System.Threading.Thread.Sleep(time);
+                                                Helpfunctions.Instance.logg("찾는거 덫발견 덫7 time: " + time);
+                                                Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫7 time: " + time);
+                                            }
+                                        }
+                                    }
 
 
-                                //}
+                                }
                             }
 
                             
@@ -2136,68 +2157,68 @@ namespace HREngine.Bots
 
                         if (rangerbot.gameState.TimerState != TurnTimerState.COUNTDOWN)
                         {
-                            //if (this.enemySecretCount >= 1)
-                            //{
-                            //    int time = 6000 / this.enemySecretCount;
-                            //    foreach (SecretItem si in Probabilitymaker.Instance.enemySecrets)
-                            //    {
-                            //        if (daum.bestmove.card.card.type == CardDB.cardtype.MOB)
-                            //        {
-                            //            if (si.canBe_mirrorentity)
-                            //            {
-                            //                System.Threading.Thread.Sleep(time);
-                            //                Helpfunctions.Instance.logg("찾는거 덫발견 덫4 time: " + time);
-                            //                Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫4 time: " + time);
-                            //            }
-                            //            else if ((si.canBe_snipe)
-                            //                    || (si.canBe_Trial && this.ownMinions.Count >= 3))
-                            //            {
-                            //                System.Threading.Thread.Sleep(time);
-                            //                Helpfunctions.Instance.logg("찾는거 덫발견 덫5 time: " + time);
-                            //                Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫5 time: " + time);
-                            //            }
-                            //            //else if (daum.bestmove.card.card.Charge)
-                            //            //{
-                            //            //    if ((si.canBe_snipe && daum.bestmove.card.card.Health <= 4)
-                            //            //        || (si.canBe_Trial && this.ownMinions.Count >= 3))
-                            //            //    {
-                            //            //        System.Threading.Thread.Sleep(time);
-                            //            //        Helpfunctions.Instance.logg("찾는거 덫발견 덫5 time: " + time);
-                            //            //        Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫5 time: " + time);
-                            //            //    }
-                            //            //}
-                            //        }
-                            //        else if (daum.bestmove.card.card.type == CardDB.cardtype.SPELL)
-                            //        {
-                            //            if (si.canBe_counterspell
-                            //                    || (si.canBe_spellbender && daum.bestmove.target != null && !daum.bestmove.target.isHero)
-                            //                    || si.canBe_cattrick)
-                            //            {
-                            //                System.Threading.Thread.Sleep(time);
-                            //                Helpfunctions.Instance.logg("찾는거 덫발견 덫6 time: " + time);
-                            //                Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫6 time: " + time);
-                            //            }
-                            //            else if (this.enemyMinions.Count >= 1 && 
-                            //                (PenalityManager.Instance.DamageAllDatabase.ContainsKey(daum.bestmove.card.card.name)
-                            //                || PenalityManager.Instance.DamageRandomDatabase.ContainsKey(daum.bestmove.card.card.name)
-                            //                || PenalityManager.Instance.DamageAllEnemysDatabase.ContainsKey(daum.bestmove.card.card.name)
-                            //                || PenalityManager.Instance.DamageAllDatabase.ContainsKey(daum.bestmove.card.card.name)
-                            //                || PenalityManager.Instance.DamageTargetDatabase.ContainsKey(daum.bestmove.card.card.name)
-                            //                || PenalityManager.Instance.DamageTargetSpecialDatabase.ContainsKey(daum.bestmove.card.card.name)))
-                            //            {
-                            //                if (si.canBe_effigy
-                            //                    || si.canBe_redemption
-                            //                    || si.canBe_avenge
-                            //                    || si.canBe_duplicate)
-                            //                {
-                            //                    System.Threading.Thread.Sleep(time);
-                            //                    Helpfunctions.Instance.logg("찾는거 덫발견 덫7 time: " + time);
-                            //                    Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫7 time: " + time);
-                            //                }
-                            //            }
-                            //        }
-                            //    }
-                            //}
+                            if (this.enemySecretCount >= 1)
+                            {
+                                int time = 5000 / this.enemySecretCount;
+                                foreach (SecretItem si in Probabilitymaker.Instance.enemySecrets)
+                                {
+                                    if (daum.bestmove.card.card.type == CardDB.cardtype.MOB)
+                                    {
+                                        if (si.canBe_mirrorentity)
+                                        {
+                                            System.Threading.Thread.Sleep(time);
+                                            Helpfunctions.Instance.logg("찾는거 덫발견 덫4 time: " + time);
+                                            Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫4 time: " + time);
+                                        }
+                                        else if ((si.canBe_snipe)
+                                                || (si.canBe_Trial && this.ownMinions.Count >= 3))
+                                        {
+                                            System.Threading.Thread.Sleep(time);
+                                            Helpfunctions.Instance.logg("찾는거 덫발견 덫5 time: " + time);
+                                            Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫5 time: " + time);
+                                        }
+                                        //else if (daum.bestmove.card.card.Charge)
+                                        //{
+                                        //    if ((si.canBe_snipe && daum.bestmove.card.card.Health <= 4)
+                                        //        || (si.canBe_Trial && this.ownMinions.Count >= 3))
+                                        //    {
+                                        //        System.Threading.Thread.Sleep(time);
+                                        //        Helpfunctions.Instance.logg("찾는거 덫발견 덫5 time: " + time);
+                                        //        Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫5 time: " + time);
+                                        //    }
+                                        //}
+                                    }
+                                    else if (daum.bestmove.card.card.type == CardDB.cardtype.SPELL)
+                                    {
+                                        if (si.canBe_counterspell
+                                                || (si.canBe_spellbender && daum.bestmove.target != null && !daum.bestmove.target.isHero)
+                                                || si.canBe_cattrick)
+                                        {
+                                            System.Threading.Thread.Sleep(time);
+                                            Helpfunctions.Instance.logg("찾는거 덫발견 덫6 time: " + time);
+                                            Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫6 time: " + time);
+                                        }
+                                        else if (this.enemyMinions.Count >= 1 &&
+                                            (PenalityManager.Instance.DamageAllDatabase.ContainsKey(daum.bestmove.card.card.name)
+                                            || PenalityManager.Instance.DamageRandomDatabase.ContainsKey(daum.bestmove.card.card.name)
+                                            || PenalityManager.Instance.DamageAllEnemysDatabase.ContainsKey(daum.bestmove.card.card.name)
+                                            || PenalityManager.Instance.DamageAllDatabase.ContainsKey(daum.bestmove.card.card.name)
+                                            || PenalityManager.Instance.DamageTargetDatabase.ContainsKey(daum.bestmove.card.card.name)
+                                            || PenalityManager.Instance.DamageTargetSpecialDatabase.ContainsKey(daum.bestmove.card.card.name)))
+                                        {
+                                            if (si.canBe_effigy
+                                                || si.canBe_redemption
+                                                || si.canBe_avenge
+                                                || si.canBe_duplicate)
+                                            {
+                                                System.Threading.Thread.Sleep(time);
+                                                Helpfunctions.Instance.logg("찾는거 덫발견 덫7 time: " + time);
+                                                Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫7 time: " + time);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
 
                             if (daum.bestmove.card.card.battlecry)
                             {
@@ -2350,6 +2371,10 @@ namespace HREngine.Bots
                                     System.Threading.Thread.Sleep(2500);
                                 }
                                 if (daum.bestmove.card.card.name == CardDB.cardName.hex)
+                                {
+                                    System.Threading.Thread.Sleep(1500);
+                                }
+                                if (daum.bestmove.card.card.name == CardDB.cardName.bloodlust)
                                 {
                                     System.Threading.Thread.Sleep(1500);
                                 }
@@ -3231,21 +3256,13 @@ namespace HREngine.Bots
             foreach (Entity item in rangerbot.gameState.GameEntityList)
             {
                 allEntitys.Add(item.EntityId, item);
-                if (item.Zone == HSRangerLib.TAG_ZONE.GRAVEYARD)
-                {
-                    Helpfunctions.Instance.logg("ent.Zone FOUND" + item.Zone + item.EntityId);
-                    Helpfunctions.Instance.ErrorLog("ent.Zone FOUND" + item.Zone + item.EntityId);
-                }
-                if (item.HasTagValue((int)HSRangerLib.TAG_ZONE.GRAVEYARD))
-                {
-                    Helpfunctions.Instance.logg("HasTagValue FOUND");
-                    Helpfunctions.Instance.ErrorLog("HasTagValue FOUND");
-                }
             }
 
-            if (rangerbot.FriendPlayer.HasTagValue((int)HSRangerLib.TAG_ZONE.GRAVEYARD))
+            Dictionary<CardDB.cardIDEnum, int> graveyardtest = new Dictionary<CardDB.cardIDEnum, int>();
+
+            foreach (var any in rangerbot.gameState.MyDeckCards)
             {
-                Helpfunctions.Instance.ErrorLog("HasTagValue FOUND");
+                Helpfunctions.Instance.logg("Value " + any.Value + "Key " + any.Key);
             }
 
             int owncontroler = rangerbot.gameState.LocalControllerId;

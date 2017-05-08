@@ -253,32 +253,32 @@ namespace HREngine.Bots
                 //adaptcards
                 switch (hc.card.cardIDenum)
                 {
-                    case CardDB.cardIDEnum.UNG_999t10: break;//stealth
+                    case CardDB.cardIDEnum.UNG_999t3: bonus = 250; break;// 3attack
+                    case CardDB.cardIDEnum.UNG_999t8: bonus = 180; break; //divine shield
                     case CardDB.cardIDEnum.UNG_999t13: //poisonous
                         {
-                            if (p.enemyMinions.Find(a => a.Hp >= 5) != null) bonus += 200;
-                            else bonus += 60;
+                            if (p.enemyMinions.Find(a => a.Hp >= 5) != null) bonus += 100; //very huge
+                            else bonus += 170;
                             break;
                         }
-                    case CardDB.cardIDEnum.UNG_999t14: // +1/+1
-                        bonus = 150; break;
-                    case CardDB.cardIDEnum.UNG_999t2: bonus = 100; break;//deathrattle 2 1/1 plants
-                    case CardDB.cardIDEnum.UNG_999t3: bonus = 250; break;// 3attack
+                    case CardDB.cardIDEnum.UNG_999t14: bonus = 150; break;// +1/+1
                     case CardDB.cardIDEnum.UNG_999t4: bonus = 140; break;// 3hp
-                    case CardDB.cardIDEnum.UNG_999t5: break; //can't be targeted
+                    case CardDB.cardIDEnum.UNG_999t2: bonus = 100; break;//deathrattle 2 1/1 plants
+                                                                  
+                    case CardDB.cardIDEnum.UNG_999t7:
+                        {
+                            bonus = 90;
+                            if (p.guessEnemyHeroLethalMissing() <= 3) bonus += 150;
+                        }//windfury
+                        break;
                     case CardDB.cardIDEnum.UNG_999t6: //taunt
                         {
                             if (Ai.Instance.bestmoveValue <= -400) bonus += 1000;
                             else if (p.ownHero.Hp <= 10) bonus += 205;
                             break;
                         }
-                    case CardDB.cardIDEnum.UNG_999t7:
-                        {
-                            bonus = 50;
-                            if (p.guessEnemyHeroLethalMissing() <= 3) bonus += 170;
-                        }//windfury
-                        break;
-                    case CardDB.cardIDEnum.UNG_999t8: bonus = 180;  break; //divine shield
+                    case CardDB.cardIDEnum.UNG_999t10: bonus += 1; break;//stealth
+                    case CardDB.cardIDEnum.UNG_999t5: break; //can't be targeted
                     default: break;
                 }
 

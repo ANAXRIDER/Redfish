@@ -599,8 +599,11 @@ namespace HREngine.Bots
                 }
                 if (p.ownHeroAblility.card.name == CardDB.cardName.daggermastery || p.ownHeroAblility.card.name == CardDB.cardName.poisoneddaggers) hasweapon +=2;
                 //if (hasweapon && target.name != CardDB.cardName.doomsayer) retval = -p.ownWeaponAttack - 1; // so he doesnt "lose" the weapon in evaluation :D
-                if (hasweapon <= 1 && target.isHero && p.ownWeaponDurability == 1) retval += p.ownWeaponAttack;
+                if (hasweapon <= 1 && target.isHero && p.ownWeaponDurability == 1 && p.ownWeaponAttack >= 2) retval += p.ownWeaponAttack;
                 else if (hasweapon <= 1 && target.isHero && p.ownWeaponName == CardDB.cardName.truesilverchampion && p.ownWeaponDurability >= 2) retval += p.ownWeaponAttack;
+
+                if (hasweapon <= 1 && target.isHero && p.ownWeaponName == CardDB.cardName.truesilverchampion) retval += 4; //another value because heal
+
                 if (hasweapon <= 1 && target.isHero && p.ownMaxMana <= 4) retval += p.ownWeaponAttack;
                 if (p.ownWeaponAttack == 1 && hasweapon >= 2)
                 {
@@ -1186,6 +1189,10 @@ namespace HREngine.Bots
                 {
                     int targets = p.enemyMinions.Count;
                     if (p.enemyHero.Hp <= p.spellpower + 2) return 0;
+                    foreach (Minion m in p.enemyMinions)
+                    {
+                        if (priorityTargets.ContainsKey(m.name) && priorityTargets[m.name] >= 10) return 0;
+                    }
                     if (targets <= 2)
                     {
                         return 5 + 20 * (2 - p.enemyMinions.Count);
@@ -2619,7 +2626,7 @@ namespace HREngine.Bots
 
         private int getPlaySpellPenalty(Handmanager.Handcard card, Minion target, Playfield p, bool lethal)
         {
-            if (card.card.type == CardDB.cardtype.MOB) return 0;
+            if (card.card.type != CardDB.cardtype.SPELL) return 0;
             int retval = 0;
 
             //always use spell when lethal
@@ -2880,7 +2887,7 @@ namespace HREngine.Bots
                     if (hc.card.name == CardDB.cardName.nzothsfirstmate) canplayweapon = true;
                 }
 
-                if (p.playactions.Find(a => a.actionType == actionEnum.attackWithHero) != null) ret = 5;
+                //if (p.playactions.Find(a => a.actionType == actionEnum.attackWithHero) != null) ret = 5;
                 if (p.ownWeaponDurability == 0) ret = 5;
 
                 if (canplayweapon) ret += 5;
@@ -3780,6 +3787,7 @@ namespace HREngine.Bots
                 {
                     return 20;
                 }
+                return 5;
             }
 
             if (name == CardDB.cardName.bloodsailraider && p.ownWeaponDurability == 0)
@@ -4338,7 +4346,7 @@ namespace HREngine.Bots
             if (name == CardDB.cardName.murlocwarleader)
             {
                 float ret = 0;
-                if (p.ownMinions.Find(a => a.handcard.card.race == TAG_RACE.MURLOC) != null) ret = 3;
+                if (p.ownMinions.Find(a => a.handcard.card.race == TAG_RACE.MURLOC && a.Ready) != null) ret = 3;
                 return ret;
             }
 
@@ -5225,7 +5233,9 @@ namespace HREngine.Bots
             DamageTargetSpecialDatabase.Add(CardDB.cardName.soulfire, 4);//delete a card
             DamageTargetSpecialDatabase.Add(CardDB.cardName.quickshot, 3); //draw a card
             DamageTargetSpecialDatabase.Add(CardDB.cardName.bloodtoichor, 1); 
-            DamageTargetSpecialDatabase.Add(CardDB.cardName.baneofdoom, 2); 
+            DamageTargetSpecialDatabase.Add(CardDB.cardName.baneofdoom, 2);
+
+            DamageTargetSpecialDatabase.Add(CardDB.cardName.flamegeyser, 2);
         }
 
         private void setupsilenceDatabase()
@@ -6226,8 +6236,8 @@ namespace HREngine.Bots
             //ungoro
             priorityTargets.Add(CardDB.cardName.radiantelemental, 6);
             priorityTargets.Add(CardDB.cardName.primalfintotem, 8);
-            priorityTargets.Add(CardDB.cardName.lyrathesunshard, 12);
-            priorityTargets.Add(CardDB.cardName.viciousfledgling, 6);
+            priorityTargets.Add(CardDB.cardName.lyrathesunshard, 15);
+            priorityTargets.Add(CardDB.cardName.viciousfledgling, 10);
         }
 
         private void setupLethalHelpMinions()

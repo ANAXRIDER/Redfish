@@ -2491,7 +2491,7 @@ namespace HREngine.Bots
                 return p.playactions.Count * 0.05f;
             }
 
-            if (name == CardDB.cardName.thesilverhand || name == CardDB.cardName.reinforce)
+            if (name == CardDB.cardName.thesilverhand || name == CardDB.cardName.reinforce || name == CardDB.cardName.thetidalhand)
             {
                 return 0;
             }
@@ -3830,7 +3830,8 @@ namespace HREngine.Bots
                     }
                     if (target.name == CardDB.cardName.tarcreeper && target.Angr == 3 ||
                         target.name == CardDB.cardName.tarlord && target.Angr == 5 ||
-                        target.name == CardDB.cardName.tarlurker && target.Angr == 4)
+                        target.name == CardDB.cardName.tarlurker && target.Angr == 4 ||
+                        target.name == CardDB.cardName.lightspawn && !target.silenced) 
                     {
                         return 6;
                     }
@@ -4350,10 +4351,23 @@ namespace HREngine.Bots
                 return ret;
             }
 
-            if (name == CardDB.cardName.gentlemegasaur)
+            if (name == CardDB.cardName.rockpoolhunter)
             {
                 float ret = 0;
-                if (p.ownMinions.Find(a => a.handcard.card.race == TAG_RACE.MURLOC) == null) ret = 3;
+                if (p.ownMinions.Find(a => a.handcard.card.race == TAG_RACE.MURLOC) == null) ret = 2;
+                return ret;
+            }
+
+            if (name == CardDB.cardName.gentlemegasaur)
+            {
+                float ret = 2;
+                if (p.ownMinions.Find(a => a.handcard.card.race == TAG_RACE.MURLOC) == null) ret = 4;
+
+                foreach (Minion mnn in p.ownMinions)
+                {
+                    if (mnn.handcard.card.race == TAG_RACE.MURLOC && (mnn.Ready || mnn.playedThisTurn && mnn.charge >= 1)) ret -= 0.5f;
+                }
+
                 return ret;
             }
 
@@ -4871,7 +4885,7 @@ namespace HREngine.Bots
         {
             int ret = 0;
             ret += 2 * m.Angr + m.Hp;
-            if (m.taunt) ret += 2;
+            if (m.taunt) ret ++;
             //if (this.priorityDatabase.ContainsKey(m.name)) ret += 20 + priorityDatabase[m.name];
             return ret;
         }
@@ -6109,7 +6123,7 @@ namespace HREngine.Bots
             //rogue cards
 
             //priest cards
-            priorityTargets.Add(CardDB.cardName.northshirecleric, 10);
+            priorityTargets.Add(CardDB.cardName.northshirecleric, 8);
             priorityTargets.Add(CardDB.cardName.lightwell, 10);
             priorityTargets.Add(CardDB.cardName.auchenaisoulpriest, 12);
             priorityTargets.Add(CardDB.cardName.prophetvelen, 10);
@@ -6591,9 +6605,11 @@ namespace HREngine.Bots
 
         public void setupDiscover()
         {
+            //original
             discoverCards.Add(CardDB.cardName.tracking, 1);
+
+            //explorer
             discoverCards.Add(CardDB.cardName.jeweledscarab, 1);
-            discoverCards.Add(CardDB.cardName.ancientshade, 1);
             discoverCards.Add(CardDB.cardName.darkpeddler, 1);
             discoverCards.Add(CardDB.cardName.tombspider, 1);
             discoverCards.Add(CardDB.cardName.gorillabota3, 1);  // only if you have a mech
@@ -6601,16 +6617,23 @@ namespace HREngine.Bots
             discoverCards.Add(CardDB.cardName.museumcurator, 1);
             discoverCards.Add(CardDB.cardName.ravenidol, 1);
             discoverCards.Add(CardDB.cardName.archthiefrafaam, 1);
+            discoverCards.Add(CardDB.cardName.sirfinleymrrgglton, 1);
+
+            //old gods
             discoverCards.Add(CardDB.cardName.alightinthedarkness, 1);
             discoverCards.Add(CardDB.cardName.journeybelow, 1);
+
+            //kara
             discoverCards.Add(CardDB.cardName.ivoryknight, 1);
             discoverCards.Add(CardDB.cardName.netherspitehistorian, 1);
+
+            //gadget
+            discoverCards.Add(CardDB.cardName.kabalcourier, 1);
+            discoverCards.Add(CardDB.cardName.lotusagents, 1);
             discoverCards.Add(CardDB.cardName.drakonidoperative, 1);
             discoverCards.Add(CardDB.cardName.finderskeepers, 1);
             discoverCards.Add(CardDB.cardName.iknowaguy, 1);
             discoverCards.Add(CardDB.cardName.grimestreetinformant, 1);
-            discoverCards.Add(CardDB.cardName.kabalcourier, 1);
-            discoverCards.Add(CardDB.cardName.lotusagents, 1);
 
             //ungoro
             discoverCards.Add(CardDB.cardName.chitteringtunneler, 1);

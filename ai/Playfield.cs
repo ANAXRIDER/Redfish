@@ -231,6 +231,8 @@ namespace HREngine.Bots
         public int manaTurnEnd;
         public int numEnemySecretsTurnEnd;
 
+        public CardDB.cardIDEnum LastPlayedCard;
+        public int adaptTargetEntity;
 
 
         public List<CardDB.cardIDEnum> ownSecretsIDList;
@@ -421,6 +423,8 @@ namespace HREngine.Bots
             enemyWeaponName = CardDB.cardName.unknown;
             ownWeaponCard = new CardDB.Card();
             ownWeaponName = CardDB.cardName.unknown;
+            //LastPlayedCard = CardDB.cardIDEnum.None;
+            adaptTargetEntity = 0;
             enemyHeroStartClass = TAG_CLASS.INVALID;
             ownHeroStartClass = TAG_CLASS.INVALID;
             enemyHeroName = HeroEnum.None;
@@ -573,6 +577,8 @@ namespace HREngine.Bots
             this.ownWeaponDurability = prozis.heroWeaponDurability;
             this.ownWeaponAttack = prozis.heroWeaponAttack;
             this.ownWeaponName = prozis.ownHeroWeapon;
+            this.LastPlayedCard = prozis.LastPlayedCard;
+            this.adaptTargetEntity = prozis.AdaptTargetEntity;
             this.owncarddraw = 0;
             this.ownCardToHandcount = 0;
 
@@ -1011,6 +1017,8 @@ namespace HREngine.Bots
             enemyWeaponName = CardDB.cardName.unknown;
             ownWeaponCard = new CardDB.Card();
             ownWeaponName = CardDB.cardName.unknown;
+            //LastPlayedCard = CardDB.cardIDEnum.None;
+            adaptTargetEntity = 0;
             enemyHeroStartClass = TAG_CLASS.INVALID;
             ownHeroStartClass = TAG_CLASS.INVALID;
             enemyHeroName = HeroEnum.None;
@@ -1098,6 +1106,8 @@ namespace HREngine.Bots
             this.ownWeaponDurability = p.ownWeaponDurability;
             this.ownWeaponAttack = p.ownWeaponAttack;
             this.ownWeaponName = p.ownWeaponName;
+            this.LastPlayedCard = p.LastPlayedCard;
+            this.adaptTargetEntity = p.adaptTargetEntity;
 
             this.lostDamage = p.lostDamage;
             this.lostWeaponDamage = p.lostWeaponDamage;
@@ -2595,12 +2605,12 @@ namespace HREngine.Bots
             return bestplace + 1;
         }
 
-        public int getBestAdapt(Minion m) //1-angr, 2- 1/1, 3-taunt, 4-divine, 5-poison
+        public int getBestAdapt(Minion m, bool hasoneofreadyminion = false) //1-angr, 2- 1/1, 3-taunt, 4-divine, 5-poison
         {
             bool ownLethal = this.ownHeroHasDirectLethal();
             bool needTaunt = false;
             if (ownLethal) needTaunt = true;
-            else if (m.Ready)
+            else if (m.Ready || hasoneofreadyminion)
             {
                 //if (guessEnemyHeroLethalMissing() <= 3) { this.minionGetBuffed(m, 3, 0); return 1; }
                 if (ownLethal) needTaunt = true;
@@ -3527,7 +3537,80 @@ namespace HREngine.Bots
                 int codedchoice = a.druidchoice;
                 this.selectedChoice = a.tracking;
 
+                //CardDB.Card lpc1 = CardDB.Instance.getCardDataFromID(Playfield.Instance.LastPlayedCard);
+                //if (lpc1.name == CardDB.cardName.viciousfledgling)
+                //{ 
+                //    List<CardDB.cardIDEnum> adaptcards = BoardTester.Instance.choiceCards;
+                //    for (int i = 1; i <= adaptcards.Count; i++)
+                //    {
+                //        if (a.tracking == i)
+                //        {
+                //            Minion adaptedtarget = new Minion();
+                //            foreach (Minion m in this.ownMinions)
+                //            {
+                //                if (this.adaptTargetEntity >= 1 && this.adaptTargetEntity == m.entityID)
+                //                {
+                //                    adaptedtarget = m;
+                //                    break;
+                //                }
+                //            }
+                //            if (adaptedtarget != null) lpc1.sim_card.onAdaptChoice(this, true, adaptedtarget, adaptcards[i - 1]);
+                //            this.selectedChoice = a.tracking;
+                //        }                            
+                //    }
+                //}
             }
+
+            //CardDB.Card lpc = CardDB.Instance.getCardDataFromID(Playfield.Instance.LastPlayedCard);
+
+            //if (a.tracking >= 1 && PenalityManager.Instance.AdaptDatabase.ContainsKey(lpc.name))
+            //{
+            //    List <CardDB.cardIDEnum> adaptcards = BoardTester.Instance.choiceCards;
+            //    for (int i = 1; i <= adaptcards.Count; i++)
+            //    {
+            //        if (a.tracking == i)
+            //        {
+            //            Minion adaptedtarget = new Minion();
+            //            if (lpc.name == CardDB.cardName.ravenouspterrordax ||
+            //                lpc.name == CardDB.cardName.elderlongneck ||
+            //                lpc.name == CardDB.cardName.pterrordaxhatchling ||
+            //                lpc.name == CardDB.cardName.ornerydirehorn ||
+            //                lpc.name == CardDB.cardName.verdantlongneck ||
+            //                lpc.name == CardDB.cardName.ravasaurrunt ||
+            //                lpc.name == CardDB.cardName.volcanosaur ||
+            //                lpc.name == CardDB.cardName.thunderlizard)
+            //            {
+            //                foreach (Minion m in this.ownMinions)
+            //                {
+            //                    if (m.name == lpc.name && m.playedThisTurn)
+            //                    {
+            //                        adaptedtarget = m;
+            //                        break;
+            //                    }
+            //                }
+            //                if (adaptedtarget != null) lpc.sim_card.onAdaptChoice(this, true, adaptedtarget, adaptcards[i - 1]);
+            //                else lpc.sim_card.onAdaptChoice(this, true, a.target, adaptcards[i - 1]);
+            //            }
+            //            else
+            //            {
+            //                foreach (Minion m in this.ownMinions)
+            //                {
+            //                    if (this.adaptTargetEntity >= 1 && this.adaptTargetEntity == m.entityID)
+            //                    {
+            //                        adaptedtarget = m;
+            //                        break;
+            //                    }
+            //                }
+            //                if (adaptedtarget != null) lpc.sim_card.onAdaptChoice(this, true, adaptedtarget, adaptcards[i - 1]);
+            //                else lpc.sim_card.onAdaptChoice(this, true, a.target, adaptcards[i - 1]);
+            //            }
+            //            this.selectedChoice = a.tracking;
+            //            //Helpfunctions.Instance.ErrorLog("a.tracking = " + selectedChoice);
+            //        }
+            //    }
+            //    //Helpfunctions.Instance.ErrorLog("a.tracking = " + selectedChoice);
+            //}
+
 
             //save the action if its our first turn
             if (this.turnCounter == 0) this.playactions.Add(a);
@@ -3949,7 +4032,7 @@ namespace HREngine.Bots
 
             CardDB.Card c = hc.card;
             this.evaluatePenality += penality;
-            if (this.nextSpellThisTurnCostHealth && hc.card.type == CardDB.cardtype.SPELL)
+            if (this.nextSpellThisTurnCostHealth && hc.card.type == CardDB.cardtype.SPELL && !this.isadapt(c))
             {
                 this.minionGetDamageOrHeal(this.ownHero, hc.card.getManaCost(this, hc.manacost));
                 doDmgTriggers();
@@ -3967,7 +4050,7 @@ namespace HREngine.Bots
 
             this.triggerCardsChanged(true);
 
-            if (c.type == CardDB.cardtype.SPELL)
+            if (c.type == CardDB.cardtype.SPELL && !this.isadapt(c))
             {
                 this.playedPreparation = false;
                 this.ownSpellsPlayedThisGame++;
@@ -3989,7 +4072,7 @@ namespace HREngine.Bots
 
 
             this.triggerACardWillBePlayed(hc, true, target, choice);
-            int newTarget = secretTrigger_SpellIsPlayed(target, c.type == CardDB.cardtype.SPELL);
+            int newTarget = secretTrigger_SpellIsPlayed(target, c.type == CardDB.cardtype.SPELL && !this.isadapt(c));
             if (newTarget >= 1)
             {
                 //search new target!
@@ -4025,7 +4108,7 @@ namespace HREngine.Bots
                     this.doDmgTriggers();
                     //secret trigger? do here
 
-                    if (c.type == CardDB.cardtype.SPELL)
+                    if (c.type == CardDB.cardtype.SPELL && !this.isadapt(c))
                     {
                         if (PenalityManager.Instance.DamageAllDatabase.ContainsKey(c.name) && PenalityManager.Instance.DamageAllDatabase[c.name] + this.spellpower >= 2 ||
                      (PenalityManager.Instance.DamageAllEnemysDatabase.ContainsKey(c.name) && PenalityManager.Instance.DamageAllEnemysDatabase[c.name] + this.spellpower >= 2))
@@ -4036,7 +4119,7 @@ namespace HREngine.Bots
                         
                 }
                 //atm only 2 cards trigger this
-                if (c.type == CardDB.cardtype.SPELL)
+                if (c.type == CardDB.cardtype.SPELL && !this.isadapt(c))
                 {
                     this.triggerACardWasPlayed(c, true);
                     this.doDmgTriggers();
@@ -4057,7 +4140,7 @@ namespace HREngine.Bots
                 else
                 {
 
-                    if (this.lockandload > 0 && c.type == CardDB.cardtype.SPELL)
+                    if (this.lockandload > 0 && c.type == CardDB.cardtype.SPELL && !this.isadapt(c))
                     {
                         for (int i = 1; i <= lockandload; i++)
                         {
@@ -4071,7 +4154,7 @@ namespace HREngine.Bots
                         this.ownWeaponDurability += hc.addHp;
                         this.ownHero.Angr += hc.addattack;
                     }
-                    if (c.type == CardDB.cardtype.SPELL) this.triggerACardWasPlayed(c, true);
+                    if (c.type == CardDB.cardtype.SPELL && !this.isadapt(c)) this.triggerACardWasPlayed(c, true);
                     this.doDmgTriggers();
 
 
@@ -4099,7 +4182,7 @@ namespace HREngine.Bots
             this.triggerACardWillBePlayed(hc, false, target, choice);
             this.triggerCardsChanged(false);
 
-            int newTarget = secretTrigger_SpellIsPlayed(target, c.type == CardDB.cardtype.SPELL);
+            int newTarget = secretTrigger_SpellIsPlayed(target, c.type == CardDB.cardtype.SPELL && !this.isadapt(c));
             if (newTarget >= 1)
             {
                 //search new target!
@@ -4121,7 +4204,7 @@ namespace HREngine.Bots
                 }
                 if (this.ownHero.entityID == newTarget) target = this.ownHero;
                 if (this.enemyHero.entityID == newTarget) target = this.enemyHero;
-                if (this.ownQuest.Id != CardDB.cardIDEnum.None && c.type == CardDB.cardtype.SPELL) this.ownQuest.trigger_SpellWasPlayed(target, hc.entity);
+                if (this.ownQuest.Id != CardDB.cardIDEnum.None && c.type == CardDB.cardtype.SPELL && !this.isadapt(c)) this.ownQuest.trigger_SpellWasPlayed(target, hc.entity);
             }
             if (newTarget != -2) // trigger spell-secrets!
             {
@@ -4142,7 +4225,7 @@ namespace HREngine.Bots
             }
 
             //atm only 2 cards trigger this
-            if (c.type == CardDB.cardtype.SPELL)
+            if (c.type == CardDB.cardtype.SPELL && !this.isadapt(c))
             {
                 this.triggerACardWasPlayed(c, false);
                 this.doDmgTriggers();
@@ -5195,7 +5278,7 @@ namespace HREngine.Bots
                 int burly = 0;
                 int wickedwitchdoctor = 0;
 
-                if (target!=null && target.name == CardDB.cardName.dragonkinsorcerer && target.own == own && hc.card.type == CardDB.cardtype.SPELL)
+                if (target!=null && target.name == CardDB.cardName.dragonkinsorcerer && target.own == own && hc.card.type == CardDB.cardtype.SPELL && !this.isadapt(hc))
                 {
                     this.minionGetBuffed(target, 1, 1);
                 }
@@ -5215,7 +5298,7 @@ namespace HREngine.Bots
 
                     if (m.name == CardDB.cardName.violetteacher)
                     {
-                        if (hc.card.type == CardDB.cardtype.SPELL)
+                        if (hc.card.type == CardDB.cardtype.SPELL && !this.isadapt(hc))
                         {
                             violetteacher++;
                         }
@@ -5223,7 +5306,7 @@ namespace HREngine.Bots
                     }
                     if (m.name == CardDB.cardName.wickedwitchdoctor)
                     {
-                        if (hc.card.type == CardDB.cardtype.SPELL)
+                        if (hc.card.type == CardDB.cardtype.SPELL && !this.isadapt(hc))
                         {
                             wickedwitchdoctor++;
                         }
@@ -5319,7 +5402,7 @@ namespace HREngine.Bots
                 int burly = 0;
                 int wickedwitchdoctor = 0;
 
-                if (target!=null && target.name == CardDB.cardName.dragonkinsorcerer && target.own == own && hc.card.type == CardDB.cardtype.SPELL)
+                if (target!=null && target.name == CardDB.cardName.dragonkinsorcerer && target.own == own && hc.card.type == CardDB.cardtype.SPELL && !this.isadapt(hc))
                 {
                     this.minionGetBuffed(target, 1, 1);
                 }
@@ -5337,7 +5420,7 @@ namespace HREngine.Bots
                     }
                     if (m.name == CardDB.cardName.violetteacher)
                     {
-                        if (hc.card.type == CardDB.cardtype.SPELL)
+                        if (hc.card.type == CardDB.cardtype.SPELL && !this.isadapt(hc))
                         {
                             violetteacher++;
                         }
@@ -5345,7 +5428,7 @@ namespace HREngine.Bots
                     }
                     if (m.name == CardDB.cardName.wickedwitchdoctor)
                     {
-                        if (hc.card.type == CardDB.cardtype.SPELL)
+                        if (hc.card.type == CardDB.cardtype.SPELL && !this.isadapt(hc))
                         {
                             wickedwitchdoctor++;
                         }
@@ -5426,7 +5509,7 @@ namespace HREngine.Bots
             {
                 if (m.silenced || m.Hp <= 0) continue;
 
-                if (own && m.name == CardDB.cardName.flamewaker && c.type == CardDB.cardtype.SPELL)
+                if (own && m.name == CardDB.cardName.flamewaker && c.type == CardDB.cardtype.SPELL && !this.isadapt(c))
                 {
                     m.handcard.card.sim_card.onCardWasPlayed(this, c, own, m);
                 }
@@ -5435,7 +5518,7 @@ namespace HREngine.Bots
                 {
                     this.minionGetBuffed(m, 1, 1);
                 }
-                if (own && m.name == CardDB.cardName.wildpyromancer && c.type == CardDB.cardtype.SPELL)
+                if (own && m.name == CardDB.cardName.wildpyromancer && c.type == CardDB.cardtype.SPELL && !this.isadapt(c))
                 {
                     this.allMinionsGetDamage(1);
                 }
@@ -5449,7 +5532,7 @@ namespace HREngine.Bots
             {
                 if (m.silenced || m.Hp <= 0) continue;
 
-                if (!own && m.name == CardDB.cardName.flamewaker && c.type == CardDB.cardtype.SPELL)
+                if (!own && m.name == CardDB.cardName.flamewaker && c.type == CardDB.cardtype.SPELL && !this.isadapt(c))
                 {
                     m.handcard.card.sim_card.onCardWasPlayed(this, c, own, m);
                 }
@@ -5458,7 +5541,7 @@ namespace HREngine.Bots
                 {
                     this.minionGetBuffed(m, 1, 1);
                 }
-                if (!own && m.name == CardDB.cardName.wildpyromancer && c.type == CardDB.cardtype.SPELL)
+                if (!own && m.name == CardDB.cardName.wildpyromancer && c.type == CardDB.cardtype.SPELL && !this.isadapt(c))
                 {
                     this.allMinionsGetDamage(1);
                 }
@@ -5999,7 +6082,14 @@ namespace HREngine.Bots
                         if (!attacker.isHero && si.canBe_vaporize)
                         {
                             triggered++;
-                            if (attacker.Angr + attacker.Hp >= 7) CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_594).sim_card.onSecretPlay(this, false, attacker, 0); // to trigger with weak minion
+
+                            bool attackerislowestvalue = true;
+                            foreach (Minion m in this.ownMinions)
+                            {
+                                if (attacker.Angr * 2 + attacker.Hp > m.Angr * 2 + m.Hp) attackerislowestvalue = false;
+                            }
+
+                            if (attackerislowestvalue) CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_594).sim_card.onSecretPlay(this, false, attacker, 0); // to trigger with weak minion
                             doDmgTriggers();
 
                             si.usedTrigger_CharIsAttacked(true, attacker.isHero);
@@ -8589,6 +8679,7 @@ namespace HREngine.Bots
                 //if (PenalityManager.Instance.penaltylmanager_penalty != 0) Helpfunctions.Instance.logg("penaltymanager _ penalty :   " + PenalityManager.Instance.penaltylmanager_penalty);
 
                 if (this.selectedChoice >= 1) Helpfunctions.Instance.logg("tracking " + this.selectedChoice);
+                if (this.selectedChoice >= 1) Helpfunctions.Instance.logg("lastplayedcard " + this.LastPlayedCard);
                 Helpfunctions.Instance.logg("mana " + this.mana + "/" + this.ownMaxMana + " turnEndMana " + this.manaTurnEnd);
                 Helpfunctions.Instance.logg("cardsplayed: " + this.cardsPlayedThisTurn + " handsize: " + this.owncards.Count + " vs " + this.enemyAnzCards);
 
@@ -8818,7 +8909,9 @@ namespace HREngine.Bots
             String data = "#######################################################################"+"\r\n";
             data += "start calculations, current time: " + time + " V" + version + " " + settings + "\r\n";
             data += "#######################################################################" + "\r\n";
-            if (choice != "") data += choice + "\r\n"; 
+            if (choice != "") data += choice + "\r\n";
+            if (choice != "") data += "lastplayedcard: " + this.LastPlayedCard + "\r\n";
+            if (choice != "") data += "lastplayedcardtarget: " + this.adaptTargetEntity + "\r\n";
             data +="mana " + this.mana + "/" + this.ownMaxMana+"\r\n";
             data +="emana " + this.enemyMaxMana+"\r\n";
             data +="own secretsCount: " + this.ownSecretsIDList.Count+"\r\n";
@@ -9076,8 +9169,45 @@ namespace HREngine.Bots
              Minion m = this.searchRandomMinionForDamage((ownPlay ? this.enemyMinions : this.ownMinions), dmg, ownPlay, targetHero);
              if (m != null) this.minionGetDamageOrHeal(m, dmg);
 
-            }
+        }
         
+        public bool isadapt(CardDB.Card hc)
+        {
+            switch(hc.cardIDenum)
+            {
+                case CardDB.cardIDEnum.UNG_999t10:
+                case CardDB.cardIDEnum.UNG_999t13:
+                case CardDB.cardIDEnum.UNG_999t14:
+                case CardDB.cardIDEnum.UNG_999t2:
+                case CardDB.cardIDEnum.UNG_999t3:
+                case CardDB.cardIDEnum.UNG_999t4:
+                case CardDB.cardIDEnum.UNG_999t5:
+                case CardDB.cardIDEnum.UNG_999t6:
+                case CardDB.cardIDEnum.UNG_999t7:
+                case CardDB.cardIDEnum.UNG_999t8: return true;
+                default: break;
+            }
+            return false;
+        }
+        public bool isadapt(Handmanager.Handcard hc)
+        {
+            switch (hc.card.cardIDenum)
+            {
+                case CardDB.cardIDEnum.UNG_999t10:
+                case CardDB.cardIDEnum.UNG_999t13:
+                case CardDB.cardIDEnum.UNG_999t14:
+                case CardDB.cardIDEnum.UNG_999t2:
+                case CardDB.cardIDEnum.UNG_999t3:
+                case CardDB.cardIDEnum.UNG_999t4:
+                case CardDB.cardIDEnum.UNG_999t5:
+                case CardDB.cardIDEnum.UNG_999t6:
+                case CardDB.cardIDEnum.UNG_999t7:
+                case CardDB.cardIDEnum.UNG_999t8: return true;
+                default: break;
+            }
+            return false;
+        }
+
     }
 
    

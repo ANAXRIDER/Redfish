@@ -127,6 +127,11 @@
             return;
         }
 
+        public virtual void onAdaptChoice(Playfield p, bool ownplay, Minion target, CardDB.cardIDEnum choice)
+        {
+            return;
+        }
+
     }
 
 }

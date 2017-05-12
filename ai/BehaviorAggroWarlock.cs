@@ -227,6 +227,7 @@
                             retval -= enemypotentialattacktotal;
                             //Helpfunctions.Instance.ErrorLog("enemypotentialattack * 50 : " + enemypotentialattacktotal * 50);
                         }
+                        if (p.enemyMaxMana >= 9 && p.ownHero.Hp + p.ownHero.armor <= 10) retval -= 50;
                         break;
                     }
                 case HeroEnum.shaman:
@@ -306,6 +307,7 @@
             //if (p.owncards.Count <= 2) retval += -3* (p.enemyHero.Hp + p.enemyHero.armor);
 
             //Helpfunctions.Instance.ErrorLog("enemyherohpvalue : " + enemyherohpvalue);
+            enemyherohpvalue = enemyherohpvalue * Settings.Instance.enemyherovaluemultiply / 100;
             retval += enemyherohpvalue;
 
             if (p.turnCounter == 0)
@@ -1354,6 +1356,7 @@
                 if (p.ownHeroName == HeroEnum.hunter && (TAG_RACE)m.handcard.card.race == TAG_RACE.BEAST) retval += 0.1f;
                 if (p.ownHeroName == HeroEnum.shaman && (TAG_RACE)m.handcard.card.race == TAG_RACE.TOTEM) retval += 0.2f;
                 if (p.ownHeroName == HeroEnum.pala && m.name == CardDB.cardName.silverhandrecruit) retval += 0.1f;
+                if (p.ownHeroName == HeroEnum.pala && m.name == CardDB.cardName.silverhandmurloc) retval += 0.1f;
                 if (p.ownHeroName == HeroEnum.pala && (TAG_RACE)m.handcard.card.race == TAG_RACE.MURLOC) retval += 0.2f;
                 if (p.ownHeroName == HeroEnum.mage && (TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL) retval += 0.1f;
                 if (p.ownHeroName == HeroEnum.mage && m.name == CardDB.cardName.flamewaker) retval += 5;
@@ -1386,10 +1389,16 @@
                         if (m.name == CardDB.cardName.cultmaster && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null) retval -= 12;
                     }
                     else if (m.name == CardDB.cardName.primalfintotem && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null) retval -= 3;
+                    else if (m.name == CardDB.cardName.ravenouspterrordax && (m.Hp <= enemypotentialattacktotal) && p.ownMinions.Find(a => a.taunt) == null) retval -= 6;
                 }
 
                 if (m.name == CardDB.cardName.manatidetotem && !m.silenced && (p.ownMaxMana <= 4 || p.owncards.Count <= 2)) retval += 3;
 
+                if (m.name == CardDB.cardName.ravenouspterrordax) 
+                {
+                    if (m.stealth) retval += m.Angr;
+                    retval += m.Hp;
+                }
                 if (m.name == CardDB.cardName.scavenginghyena && !m.silenced)
                 {
                     if (m.Angr == 2) retval -= 5; // penalty 2/2 hyena
@@ -1426,11 +1435,11 @@
                     retval -= 8;
                 }
 
-                if (m.name == CardDB.cardName.murlocwarleader && (m.Hp <= enemypotentialattacktotal)) //special value for murloc warleader 
+                if (m.name == CardDB.cardName.murlocwarleader && (m.Hp <= enemypotentialattacktotal) && !m.silenced) //special value for murloc warleader 
                 {
                     foreach (Minion mnn in p.ownMinions)
                     {
-                        if (mnn.entityID != m.entityID) retval -= 5; //angr 2 *2 + hp = 5;
+                        if (m.entityID != mnn.entityID && mnn.handcard.card.race == TAG_RACE.MURLOC) retval -= 4; //angr 2 *2 + hp = 5;
                     }
                 }
 
@@ -1484,7 +1493,7 @@
                     else if (p.enemyHeroName == HeroEnum.warrior && Execute == 0 && m.wounded && (m.Angr >= 4 || m.Hp >= 5)) retval -= m.Angr * 0.5f;
                 }
 
-                if (m.poisonous) retval += 6;
+                if (m.poisonous) retval += 4;
 
                 if (m.wounded) retval += (m.maxHp - m.Hp) * 0.001f;
 

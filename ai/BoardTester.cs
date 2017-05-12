@@ -82,7 +82,7 @@ namespace HREngine.Bots
         int enemySecretAmount;
         public List<SecretItem> enemySecrets = new List<SecretItem>();
 
-        List<CardDB.cardIDEnum> choiceCards = new List<CardDB.cardIDEnum>();
+        public List<CardDB.cardIDEnum> choiceCards = new List<CardDB.cardIDEnum>();
 
         bool ownHeroFrozen;
 
@@ -116,6 +116,8 @@ namespace HREngine.Bots
         bool stalaggdead;
         public bool datareaded;
 
+        CardDB.cardIDEnum lastplayedcard;
+        public int adapttargetentity;
 
         private static BoardTester instance;
         public static BoardTester Instance
@@ -217,6 +219,20 @@ namespace HREngine.Bots
                         //Console.WriteLine("choice "+choi);
                         choiceCards.Add(CardDB.Instance.cardIdstringToEnum(choi));
                     }
+                    continue;
+                }
+
+                if (s.StartsWith("lastplayedcard: "))
+                {
+                    string LPC = s.Replace("lastplayedcard: ", "");
+                    lastplayedcard = CardDB.Instance.cardIdstringToEnum(LPC);
+                    continue;
+                }
+
+                if (s.StartsWith("lastplayedcardtarget: "))
+                {
+                    string LPCT = s.Replace("lastplayedcardtarget: ", "");
+                    adapttargetentity = Convert.ToInt32(LPCT);
                     continue;
                 }
 
@@ -1143,6 +1159,8 @@ namespace HREngine.Bots
             Hrtprozis.Instance.updateMinions(this.ownminions, this.enemyminions);
 
             Hrtprozis.Instance.updateFatigueStats(this.ownDecksize, this.ownFatigue, this.enemyDecksize, this.enemyFatigue);
+
+            Hrtprozis.Instance.updateLastPlayedCard(this.lastplayedcard, this.adapttargetentity);
 
             Handmanager.Instance.setHandcards(this.handcards, this.handcards.Count, enemyNumberHand, this.choiceCards);
 

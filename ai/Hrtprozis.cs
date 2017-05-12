@@ -90,6 +90,7 @@
         public int heroWeaponDurability;
         public int heroWeaponAttack;
         public CardDB.cardName ownHeroWeapon = CardDB.cardName.unknown;
+        public CardDB.cardIDEnum LastPlayedCard;// = CardDB.cardIDEnum.None;
 
         public bool heroImmuneToDamageWhileAttacking;
         public bool heroImmune;
@@ -100,6 +101,8 @@
         public List<Minion> enemyMinions = new List<Minion>();
         public Minion ownHero = new Minion();
         public Minion enemyHero = new Minion();
+
+        public int AdaptTargetEntity;
 
         public int anzOgOwnCThunHpBonus;
         public int anzOgOwnCThunAngrBonus;
@@ -181,6 +184,7 @@
             ownCurrentRecall = 0;
             this.ownHeroWeapon = CardDB.cardName.unknown;
             this.enemyHeroWeapon = CardDB.cardName.unknown;
+            //this.LastPlayedCard = CardDB.cardIDEnum.None;
             noDuplicates = true;
             anzOwnElementalsLastTurn = 0;
         }
@@ -646,7 +650,12 @@
             
         }
 
-
+        public void updateLastPlayedCard(CardDB.cardIDEnum lastplayedcard, int targetentity)
+        {
+            LastPlayedCard = lastplayedcard;
+            AdaptTargetEntity = targetentity;
+        }
+        
     }
 
 }

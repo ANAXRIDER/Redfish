@@ -14,7 +14,7 @@ namespace HREngine.Bots
             {
                 int heal = (turnEndOfOwner) ? p.getMinionHeal(8) : p.getEnemyMinionHeal(8);
                 List<Minion> temp = (turnEndOfOwner) ? p.ownMinions : p.enemyMinions;
-                if (temp.Count >= 1 && p.isEnemyHasLethal() >= 10)
+                if (temp.Count >= 1 && p.isEnemyHasLethal() >= 11)
                 {
                     bool healed = false;
                     foreach (Minion m in temp)

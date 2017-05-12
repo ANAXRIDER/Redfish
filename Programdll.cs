@@ -97,6 +97,9 @@ namespace HREngine.Bots
 
         int discovercounter = 0;
 
+        CardDB.cardIDEnum lastplayedcard = CardDB.cardIDEnum.None;
+        int targetentity = 0;
+
         //
         bool isgoingtoconcede = false;
         int wins = 0;
@@ -583,14 +586,20 @@ namespace HREngine.Bots
         {
             HSRangerLib.BotAction ranger_action = new HSRangerLib.BotAction();
             Ai daum = Ai.Instance;
-
-
+            
             switch (moveTodo.actionType)
             {
                 case actionEnum.endturn:
                     break;
                 case actionEnum.playcard:
                     ranger_action.Actor = getCardWithNumber(moveTodo.card.entity);
+
+                    lastplayedcard = CardDB.Instance.cardIdstringToEnum(ranger_action.Actor.CardId);
+                    if (daum.bestmove.target != null) targetentity = daum.bestmove.target.entityID;
+                    Helpfunctions.Instance.ErrorLog("lastplayedcard " + lastplayedcard.ToString());
+                    if (targetentity >= 1) Helpfunctions.Instance.ErrorLog("lastplayedcardtarget " + targetentity);
+                    Hrtprozis.Instance.updateLastPlayedCard(lastplayedcard, targetentity);
+                    Ai.Instance.playedlastcard = lastplayedcard;
 
                     if (daum.bestmove.actionType == actionEnum.playcard && daum.bestmove != null)
                     {
@@ -866,6 +875,16 @@ namespace HREngine.Bots
                     break;
                 case actionEnum.attackWithMinion:
                     ranger_action.Actor = getEntityWithNumber(moveTodo.own.entityID);
+
+                    if (daum.bestmove.own.name == CardDB.cardName.viciousfledgling && daum.bestmove.target.isHero && !daum.bestmove.target.own)
+                    {
+                        lastplayedcard = CardDB.Instance.cardIdstringToEnum(ranger_action.Actor.CardId);
+                        if (daum.bestmove.target != null) targetentity = daum.bestmove.own.entityID;
+                        Helpfunctions.Instance.ErrorLog("lastplayedcard " + lastplayedcard.ToString());
+                        if (targetentity >= 1) Helpfunctions.Instance.ErrorLog("lastplayedcardtarget " + targetentity);
+                        Hrtprozis.Instance.updateLastPlayedCard(lastplayedcard, targetentity);
+                        Ai.Instance.playedlastcard = lastplayedcard;
+                    }
 
                     //foreach (Minion m in Playfield.Instance.ownMinions)
                     //{
@@ -1272,7 +1291,13 @@ namespace HREngine.Bots
                     //detect which choice
                     doMultipleThingsAtATime = false;
                     this.dontmultiactioncount++;
+
+                    //Hrtprozis.Instance.updateLastPlayedCard(lastplayedcard, targetentity);
+                    Ai.Instance.playedlastcard = Playfield.Instance.LastPlayedCard;
+
                     int trackingchoice = Ai.Instance.bestTracking;
+                    //int trackingchoice = Ai.Instance.bestTracking;
+                    if (Ai.Instance.bestTrackingStatus == 4) Helpfunctions.Instance.logg("dll discovering adapt best choice" + trackingchoice);
                     if (Ai.Instance.bestTrackingStatus == 3) Helpfunctions.Instance.logg("dll discovering using user choice..." + trackingchoice);
                     if (Ai.Instance.bestTrackingStatus == 0) Helpfunctions.Instance.logg("dll discovering using optimal choice..." + trackingchoice);
                     if (Ai.Instance.bestTrackingStatus == 1) Helpfunctions.Instance.logg("dll discovering using suboptimal choice..." + trackingchoice);
@@ -1298,7 +1323,7 @@ namespace HREngine.Bots
                         if (trackingaction != null)
                         {
                             e.action_list.Add(trackingaction);
-                            System.Threading.Thread.Sleep(2200);
+                            System.Threading.Thread.Sleep(3200);
                             return;
                         }
                     }
@@ -1399,6 +1424,15 @@ namespace HREngine.Bots
                             else System.Threading.Thread.Sleep(5);
                             hasMoreActions = canQueueNextActions();
                             if (hasMoreActions) Ai.Instance.doNextCalcedMove();
+
+                            if (Settings.Instance.enemyConcede) Helpfunctions.Instance.ErrorLog("bestmoveVal:" + Ai.Instance.bestmoveValue);
+
+                            if (Ai.Instance.bestmoveValue <= Settings.Instance.enemyConcedeValue && Settings.Instance.enemyConcede)
+                            {
+                                e.action_list.Add(CreateRangerConcedeAction());
+                                return;
+                            }
+
                         }
                     }
                     while (hasMoreActions);
@@ -1650,7 +1684,7 @@ namespace HREngine.Bots
 
     public sealed class Silverfish
     {
-        public string versionnumber = "130.1SE + Redfish";
+        public string versionnumber = "131.0SE + Redfish";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1997,8 +2031,8 @@ namespace HREngine.Bots
                                 if (hastargetdeathrattle && daum.bestmove.own.Angr >= daum.bestmove.target.Hp && !daum.bestmove.target.isHero)
                                 {
                                     System.Threading.Thread.Sleep(3500);
-                                    Helpfunctions.Instance.logg("Target deathrattle detected sleep 3500ms");
-                                    Helpfunctions.Instance.ErrorLog("Target deathrattle detected sleep 3500ms");
+                                    //Helpfunctions.Instance.logg("Target deathrattle detected sleep 3500ms");
+                                    //Helpfunctions.Instance.ErrorLog("Target deathrattle detected sleep 3500ms");
                                 }
 
                                 if (hasowndeathrattle && daum.bestmove.own.Hp <= daum.bestmove.target.Angr && !daum.bestmove.target.isHero)
@@ -2038,14 +2072,14 @@ namespace HREngine.Bots
                                         if (mnn.name == CardDB.cardName.knifejuggler && !mnn.silenced && spawnMinions)
                                         {
                                             System.Threading.Thread.Sleep(1500);
-                                            Helpfunctions.Instance.logg("저글러 own minion's deathrattle detected sleep 1500ms");
-                                            Helpfunctions.Instance.ErrorLog("저글러 own minion's deathrattle detected sleep 1500ms");
+                                            //Helpfunctions.Instance.logg("저글러 own minion's deathrattle detected sleep 1500ms");
+                                            //Helpfunctions.Instance.ErrorLog("저글러 own minion's deathrattle detected sleep 1500ms");
                                         }
                                         if (mnn.name == CardDB.cardName.tundrarhino && !mnn.silenced && hasDeathrattleBeast)
                                         {
                                             System.Threading.Thread.Sleep(500);
-                                            Helpfunctions.Instance.logg("라이노 own minion's deathrattle detected sleep 500ms");
-                                            Helpfunctions.Instance.ErrorLog("라이노 own minion's deathrattle detected sleep 500ms");
+                                            //Helpfunctions.Instance.logg("라이노 own minion's deathrattle detected sleep 500ms");
+                                            //Helpfunctions.Instance.ErrorLog("라이노 own minion's deathrattle detected sleep 500ms");
                                         }
                                     }
 
@@ -2409,7 +2443,7 @@ namespace HREngine.Bots
                             if (PenalityManager.Instance.AdaptDatabase.ContainsKey(daum.bestmove.card.card.name) || 
                                 PenalityManager.Instance.discoverCards.ContainsKey(daum.bestmove.card.card.name)) //small sleep adapt/discover cards.
                             {
-                                System.Threading.Thread.Sleep(2800);
+                                System.Threading.Thread.Sleep(1200);
                             }
 
                         }
@@ -3520,7 +3554,7 @@ namespace HREngine.Bots
                             {
                                 if (passiveWaiting)
                                 {
-                                    System.Threading.Thread.Sleep(50);
+                                    System.Threading.Thread.Sleep(10);
                                     return false;
                                 }
                                 continue;
@@ -3555,7 +3589,7 @@ namespace HREngine.Bots
                 }
                 catch
                 {
-                    System.Threading.Thread.Sleep(50);
+                    System.Threading.Thread.Sleep(10);
                 }
             }
             this.waitingForSilver = false;

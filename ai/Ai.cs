@@ -52,6 +52,7 @@
         public int bestTracking = -1;
         public int bestTrackingStatus;//0=optimal, 1= suboptimal 2=random
 
+        public CardDB.cardIDEnum playedlastcard = CardDB.cardIDEnum.None;
 
         private static Ai instance;
 
@@ -272,10 +273,11 @@
             }
         }
 
-        private void selectBestTracking()
+        public void selectBestTracking()
         {
             int trackingchoice = 0;
             int trackingstatus = 0;
+
             //which choice-card to draw?
             int choice = Discovery.Instance.getChoice(mainTurnSimulator.bestboard);
             if (choice >= 1)
@@ -293,7 +295,6 @@
             }
 
             //TODO: select card based on mana + usefulness?
-
             if (trackingchoice == 0)
             {
                 //search other non-optimal boards for a choice:
@@ -314,6 +315,20 @@
                 //if (trackingchoice >= 1) Helpfunctions.Instance.ErrorLog("discovering using random choice..." + trackingchoice);
                 trackingstatus = 2;//use random card
             }
+
+
+            ////adapt
+            //CardDB.Card c = CardDB.Instance.getCardDataFromID(Hrtprozis.Instance.LastPlayedCard);
+            //Helpfunctions.Instance.ErrorLog("c.name..." + c.name);
+            //Helpfunctions.Instance.logg("c.name..." + c.name);
+            //if (PenalityManager.Instance.AdaptDatabase.ContainsKey(c.name) || c.name == CardDB.cardName.viciousfledgling || Hrtprozis.Instance.LastPlayedCard == CardDB.cardIDEnum.UNG_075)
+            //{
+            //    trackingchoice = mainTurnSimulator.bestboard.selectedChoice;
+            //    trackingstatus = 4;
+            //    Helpfunctions.Instance.ErrorLog("trackingchoice..." + trackingchoice);
+            //    Helpfunctions.Instance.logg("trackingchoice..." + trackingchoice);
+            //}
+
 
             this.bestTracking = trackingchoice;
             this.bestTrackingStatus = trackingstatus;

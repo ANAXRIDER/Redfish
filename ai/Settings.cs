@@ -51,7 +51,7 @@ namespace HREngine.Bots
             this.logBuffer = 100; // max log messages to buffer before writing to disk
 
             this.SecretStandard = true;
-
+            this.enemyherovaluemultiply = 100;
             //###########################################################
 
             applySettings();
@@ -130,6 +130,7 @@ namespace HREngine.Bots
         public int logBuffer = 100;
 
         public bool SecretStandard = true;
+        public int enemyherovaluemultiply = 100;
 
         public string path = "";
         public string logpath = "";
@@ -677,6 +678,20 @@ namespace HREngine.Bots
                     try
                     {
                         this.SecretStandard = Convert.ToBoolean(a);
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.ErrorLog(ignoring + searchword);
+                    }
+                }
+
+                searchword = "enemyherovaluemultiply=";
+                if (s.StartsWith(searchword))
+                {
+                    string a = s.Replace(searchword, "");
+                    try
+                    {
+                        this.enemyherovaluemultiply = Convert.ToInt32(a);
                     }
                     catch
                     {

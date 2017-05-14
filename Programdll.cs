@@ -599,12 +599,15 @@ namespace HREngine.Bots
                 case actionEnum.playcard:
                     ranger_action.Actor = getCardWithNumber(moveTodo.card.entity);
 
+                    lastplayedcard = CardDB.cardIDEnum.None;
+                    targetentity = 0;
+
                     lastplayedcard = CardDB.Instance.cardIdstringToEnum(ranger_action.Actor.CardId);
                     if (daum.bestmove.target != null) targetentity = daum.bestmove.target.entityID;
                     Helpfunctions.Instance.ErrorLog("lastplayedcard " + lastplayedcard.ToString());
                     if (targetentity >= 1) Helpfunctions.Instance.ErrorLog("lastplayedcardtarget " + targetentity);
-                    Hrtprozis.Instance.updateLastPlayedCard(lastplayedcard, targetentity);
-                    Ai.Instance.playedlastcard = lastplayedcard;
+                    if (lastplayedcard != CardDB.cardIDEnum.None) Hrtprozis.Instance.updateLastPlayedCard(lastplayedcard, targetentity);
+                    if (lastplayedcard != CardDB.cardIDEnum.None) Ai.Instance.playedlastcard = lastplayedcard;
 
                     if (daum.bestmove.actionType == actionEnum.playcard && daum.bestmove != null)
                     {
@@ -883,12 +886,15 @@ namespace HREngine.Bots
 
                     if (daum.bestmove.own.name == CardDB.cardName.viciousfledgling && daum.bestmove.target.isHero && !daum.bestmove.target.own)
                     {
+                        lastplayedcard = CardDB.cardIDEnum.None;
+                        targetentity = 0;
+
                         lastplayedcard = CardDB.Instance.cardIdstringToEnum(ranger_action.Actor.CardId);
                         if (daum.bestmove.target != null) targetentity = daum.bestmove.own.entityID;
                         Helpfunctions.Instance.ErrorLog("lastplayedcard " + lastplayedcard.ToString());
                         if (targetentity >= 1) Helpfunctions.Instance.ErrorLog("lastplayedcardtarget " + targetentity);
-                        Hrtprozis.Instance.updateLastPlayedCard(lastplayedcard, targetentity);
-                        Ai.Instance.playedlastcard = lastplayedcard;
+                        if (lastplayedcard != CardDB.cardIDEnum.None) Hrtprozis.Instance.updateLastPlayedCard(lastplayedcard, targetentity);
+                        if (lastplayedcard != CardDB.cardIDEnum.None) Ai.Instance.playedlastcard = lastplayedcard;
                     }
 
                     //foreach (Minion m in Playfield.Instance.ownMinions)

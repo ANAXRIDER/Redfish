@@ -473,14 +473,16 @@
             {
                 
                 if ((p.ownHeroAblility.card.name == CardDB.cardName.thesilverhand ||
-                   p.ownHeroAblility.card.name == CardDB.cardName.reinforce) && p.ownMinions.Count <= 6) hppen -= 10; //didn't use pala heropower
+                   p.ownHeroAblility.card.name == CardDB.cardName.reinforce ||
+                   p.ownHeroAblility.card.name == CardDB.cardName.thetidalhand) && p.ownMinions.Count <= 6) hppen -= 10; //didn't use pala heropower
                 else if (p.ownHeroAblility.card.name == CardDB.cardName.lifetap && p.ownHero.Hp >= 12) hppen -= 30;
                 else if (!(p.ownHeroAblility.card.name == CardDB.cardName.daggermastery && (p.ownWeaponDurability >= 2 || p.ownWeaponAttack >= 2))
                     && !(p.ownHeroAblility.card.name == CardDB.cardName.thesilverhand ||
                    p.ownHeroAblility.card.name == CardDB.cardName.reinforce ||
                    p.ownHeroAblility.card.name == CardDB.cardName.totemiccall ||
                    p.ownHeroAblility.card.name == CardDB.cardName.totemicslam ||
-                   p.ownHeroAblility.card.name == CardDB.cardName.inferno) && p.ownMinions.Count == 7
+                   p.ownHeroAblility.card.name == CardDB.cardName.inferno ||
+                   p.ownHeroAblility.card.name == CardDB.cardName.thetidalhand) && p.ownMinions.Count == 7
                     ) hppen -= 20;
                 else hppen -= 12;
 
@@ -1435,11 +1437,11 @@
                     retval -= 8;
                 }
 
-                if (m.name == CardDB.cardName.murlocwarleader && (m.Hp <= enemypotentialattacktotal) && !m.silenced) //special value for murloc warleader 
+                if (m.name == CardDB.cardName.murlocwarleader && (m.Hp <= enemypotentialattacktotal) && !m.silenced && p.turnCounter == 0) //special value for murloc warleader 
                 {
                     foreach (Minion mnn in p.ownMinions)
                     {
-                        if (m.entityID != mnn.entityID && mnn.handcard.card.race == TAG_RACE.MURLOC) retval -= 4; //angr 2 *2 + hp = 5;
+                        if (m.entityID != mnn.entityID && mnn.handcard.card.race == TAG_RACE.MURLOC) retval -= 3; //angr 2 *2 + hp = 3;
                     }
                 }
 

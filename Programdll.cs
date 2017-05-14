@@ -586,7 +586,12 @@ namespace HREngine.Bots
         {
             HSRangerLib.BotAction ranger_action = new HSRangerLib.BotAction();
             Ai daum = Ai.Instance;
-            
+
+            //reset when play another moves
+            this.doMultipleThingsAtATime = true;
+            this.dontmultiactioncount = 0;
+            POWERFULSINGLEACTION = 0;
+
             switch (moveTodo.actionType)
             {
                 case actionEnum.endturn:
@@ -1277,13 +1282,15 @@ namespace HREngine.Bots
                     return;
                 }
 
-                //if (Settings.Instance.enemyConcede) Helpfunctions.Instance.ErrorLog("bestmoveVal:" + Ai.Instance.bestmoveValue);
+                if (Settings.Instance.enemyConcede) Helpfunctions.Instance.ErrorLog("bestmoveVal:" + Ai.Instance.bestmoveValue);
 
-                //if (Ai.Instance.bestmoveValue <= Settings.Instance.enemyConcedeValue && Settings.Instance.enemyConcede)
-                //{
-                //    e.action_list.Add(CreateRangerConcedeAction());
-                //    return;
-                //}
+                if (Ai.Instance.bestmoveValue <= Settings.Instance.enemyConcedeValue && Settings.Instance.enemyConcede)
+                {
+                    Helpfunctions.Instance.ErrorLog("concede! because value: " + Ai.Instance.bestmoveValue);
+                    Helpfunctions.Instance.logg("concede! because value: " + Ai.Instance.bestmoveValue);
+                    e.action_list.Add(CreateRangerConcedeAction());
+                    return;
+                }
 
                 if (Handmanager.Instance.getNumberChoices() >= 1)
                 //if (Silverfish.Instance.choiceCards.Count >= 1 && e.action_list.Count == 0 && discovercounter == 0)
@@ -1344,14 +1351,6 @@ namespace HREngine.Bots
                         //simply clear action list, hearthranger bot will endturn if no action can do.
                         e.action_list.Clear();
 
-                        if (Settings.Instance.enemyConcede) Helpfunctions.Instance.ErrorLog("bestmoveVal:" + Ai.Instance.bestmoveValue);
-
-                        if (Ai.Instance.bestmoveValue <= Settings.Instance.enemyConcedeValue && Settings.Instance.enemyConcede)
-                        {
-                            e.action_list.Add(CreateRangerConcedeAction());
-                            return;
-                        }
-
                         BotAction endturnmove = new HSRangerLib.BotAction();
                         endturnmove.Type = BotActionType.END_TURN;
                         Helpfunctions.Instance.ErrorLog("end turn action");
@@ -1396,13 +1395,6 @@ namespace HREngine.Bots
 
                         if (!hasMoreActions && (moveTodo == null || moveTodo.actionType == actionEnum.endturn))
                         {
-                            if (Settings.Instance.enemyConcede) Helpfunctions.Instance.ErrorLog("bestmoveVal:" + Ai.Instance.bestmoveValue);
-
-                            if (Ai.Instance.bestmoveValue <= Settings.Instance.enemyConcedeValue && Settings.Instance.enemyConcede)
-                            {
-                                e.action_list.Add(CreateRangerConcedeAction());
-                                return;
-                            }
                             Helpfunctions.Instance.ErrorLog("enturn");
                             //simply clear action list, hearthranger bot will endturn if no action can do.
                             BotAction endturnmove = new HSRangerLib.BotAction();
@@ -1425,13 +1417,6 @@ namespace HREngine.Bots
                             hasMoreActions = canQueueNextActions();
                             if (hasMoreActions) Ai.Instance.doNextCalcedMove();
 
-                            if (Settings.Instance.enemyConcede) Helpfunctions.Instance.ErrorLog("bestmoveVal:" + Ai.Instance.bestmoveValue);
-
-                            if (Ai.Instance.bestmoveValue <= Settings.Instance.enemyConcedeValue && Settings.Instance.enemyConcede)
-                            {
-                                e.action_list.Add(CreateRangerConcedeAction());
-                                return;
-                            }
 
                         }
                     }
@@ -1440,21 +1425,7 @@ namespace HREngine.Bots
                     numActionsSent = e.action_list.Count();
                     Helpfunctions.Instance.ErrorLog("sending HR " + numActionsSent + " queued actions");
                     numExecsReceived = 0;
-                    if (Settings.Instance.enemyConcede) Helpfunctions.Instance.ErrorLog("bestmoveVal:" + Ai.Instance.bestmoveValue);
-
-                    if (Ai.Instance.bestmoveValue <= Settings.Instance.enemyConcedeValue && Settings.Instance.enemyConcede)
-                    {
-                        e.action_list.Add(CreateRangerConcedeAction());
-                        return;
-                    }
                 }//##########################################################################
-                if (Settings.Instance.enemyConcede) Helpfunctions.Instance.ErrorLog("bestmoveVal:" + Ai.Instance.bestmoveValue);
-
-                if (Ai.Instance.bestmoveValue <= Settings.Instance.enemyConcedeValue && Settings.Instance.enemyConcede)
-                {
-                    e.action_list.Add(CreateRangerConcedeAction());
-                    return;
-                }
             }
             catch (Exception Exception)
             {
@@ -1502,6 +1473,10 @@ namespace HREngine.Bots
         private bool canQueueNextActions()
         {
             if (!Ai.Instance.canQueueNextMoves()) return false;
+
+            if (POWERFULSINGLEACTION >= 1 ||
+            dontmultiactioncount >= 1 ||
+            doMultipleThingsAtATime == false) return false;
 
             // HearthRanger will re-query bestmove after a targeted minion buff. So even though we can queue moves after,
             // there's no point because we'll just print error messages when HearthRanger ignores them.
@@ -1911,8 +1886,8 @@ namespace HREngine.Bots
                                         if (si.canBe_noblesacrifice)
                                         {
                                             System.Threading.Thread.Sleep(time);
-                                            Helpfunctions.Instance.logg("찾는거 덫발견 덫8 time: " + time);
-                                            Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫8 time: " + time);
+                                            //Helpfunctions.Instance.logg("찾는거 덫발견 덫8 time: " + time);
+                                            //Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫8 time: " + time);
                                         }
                                         else if (daum.bestmove.target.isHero)
                                         {
@@ -1921,8 +1896,8 @@ namespace HREngine.Bots
                                                 || si.canBe_beartrap)
                                             {
                                                 System.Threading.Thread.Sleep(time);
-                                                Helpfunctions.Instance.logg("찾는거 덫발견 덫9 time: " + time);
-                                                Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫9 time: " + time);
+                                                //Helpfunctions.Instance.logg("찾는거 덫발견 덫9 time: " + time);
+                                                //Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫9 time: " + time);
                                             }
                                         }
                                         else if (!daum.bestmove.target.isHero)
@@ -1930,16 +1905,16 @@ namespace HREngine.Bots
                                             if (si.canBe_snaketrap)
                                             {
                                                 System.Threading.Thread.Sleep(time);
-                                                Helpfunctions.Instance.logg("찾는거 덫발견 덫10 time: " + time);
-                                                Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫10 time: " + time);
+                                                //Helpfunctions.Instance.logg("찾는거 덫발견 덫10 time: " + time);
+                                                //Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫10 time: " + time);
                                             }
                                             else if (daum.bestmove.own.Angr >= daum.bestmove.target.Hp)
                                             {
                                                 if (si.canBe_iceblock)
                                                 {
                                                     System.Threading.Thread.Sleep(time);
-                                                    Helpfunctions.Instance.logg("찾는거 덫발견 덫13 time: " + time);
-                                                    Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫13 time: " + time);
+                                                    //Helpfunctions.Instance.logg("찾는거 덫발견 덫13 time: " + time);
+                                                    //Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫13 time: " + time);
                                                 }
                                             }
 
@@ -1952,8 +1927,8 @@ namespace HREngine.Bots
                                                 || si.canBe_duplicate)
                                             {
                                                 System.Threading.Thread.Sleep(time);
-                                                Helpfunctions.Instance.logg("찾는거 덫발견 덫11 time: " + time);
-                                                Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫11 time: " + time);
+                                                //Helpfunctions.Instance.logg("찾는거 덫발견 덫11 time: " + time);
+                                                //Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫11 time: " + time);
                                             }
                                         }
                                     }
@@ -2132,8 +2107,8 @@ namespace HREngine.Bots
                                        || si.canBe_freezing)
                                         {
                                             System.Threading.Thread.Sleep(time * 4 / 3);
-                                            Helpfunctions.Instance.logg("찾는거 덫발견 덫1 슬립 time: " + time * 4 / 3);
-                                            Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫1 time: " + time * 4 / 3);
+                                            //Helpfunctions.Instance.logg("찾는거 덫발견 덫1 슬립 time: " + time * 4 / 3);
+                                            //Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫1 time: " + time * 4 / 3);
                                         }
 
                                         else if (daum.bestmove.target.isHero)
@@ -2144,8 +2119,8 @@ namespace HREngine.Bots
                                                 || si.canBe_vaporize)
                                             {
                                                 System.Threading.Thread.Sleep(time);
-                                                Helpfunctions.Instance.logg("찾는거 덫발견 덫2 time: " + time);
-                                                Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫2 time: " + time);
+                                                //Helpfunctions.Instance.logg("찾는거 덫발견 덫2 time: " + time);
+                                                //Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫2 time: " + time);
                                             }
                                         }
                                         else if (!daum.bestmove.target.isHero)
@@ -2153,16 +2128,16 @@ namespace HREngine.Bots
                                             if (si.canBe_snaketrap)
                                             {
                                                 System.Threading.Thread.Sleep(time);
-                                                Helpfunctions.Instance.logg("찾는거 덫발견 덫3 time: " + time);
-                                                Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫3 time: " + time);
+                                                //Helpfunctions.Instance.logg("찾는거 덫발견 덫3 time: " + time);
+                                                //Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫3 time: " + time);
                                             }
                                             else if (daum.bestmove.own.Angr >= daum.bestmove.target.Hp)
                                             {
                                                 if (si.canBe_iceblock)
                                                 {
                                                     System.Threading.Thread.Sleep(time);
-                                                    Helpfunctions.Instance.logg("찾는거 덫발견 덫13 time: " + time);
-                                                    Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫13 time: " + time);
+                                                    //Helpfunctions.Instance.logg("찾는거 덫발견 덫13 time: " + time);
+                                                    //Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫13 time: " + time);
                                                 }
                                             }
                                         }
@@ -2174,8 +2149,8 @@ namespace HREngine.Bots
                                                 || si.canBe_duplicate)
                                             {
                                                 System.Threading.Thread.Sleep(time);
-                                                Helpfunctions.Instance.logg("찾는거 덫발견 덫7 time: " + time);
-                                                Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫7 time: " + time);
+                                                //Helpfunctions.Instance.logg("찾는거 덫발견 덫7 time: " + time);
+                                                //Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫7 time: " + time);
                                             }
                                         }
                                     }
@@ -2201,15 +2176,15 @@ namespace HREngine.Bots
                                         if (si.canBe_mirrorentity)
                                         {
                                             System.Threading.Thread.Sleep(time);
-                                            Helpfunctions.Instance.logg("찾는거 덫발견 덫4 time: " + time);
-                                            Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫4 time: " + time);
+                                            //Helpfunctions.Instance.logg("찾는거 덫발견 덫4 time: " + time);
+                                            //Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫4 time: " + time);
                                         }
                                         else if ((si.canBe_snipe)
                                                 || (si.canBe_Trial && this.ownMinions.Count >= 3))
                                         {
                                             System.Threading.Thread.Sleep(time);
-                                            Helpfunctions.Instance.logg("찾는거 덫발견 덫5 time: " + time);
-                                            Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫5 time: " + time);
+                                            //Helpfunctions.Instance.logg("찾는거 덫발견 덫5 time: " + time);
+                                            //Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫5 time: " + time);
                                         }
                                         //else if (daum.bestmove.card.card.Charge)
                                         //{
@@ -2229,8 +2204,8 @@ namespace HREngine.Bots
                                                 || si.canBe_cattrick)
                                         {
                                             System.Threading.Thread.Sleep(time);
-                                            Helpfunctions.Instance.logg("찾는거 덫발견 덫6 time: " + time);
-                                            Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫6 time: " + time);
+                                            //Helpfunctions.Instance.logg("찾는거 덫발견 덫6 time: " + time);
+                                            //Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫6 time: " + time);
                                         }
                                         else if (this.enemyMinions.Count >= 1 &&
                                             (PenalityManager.Instance.DamageAllDatabase.ContainsKey(daum.bestmove.card.card.name)
@@ -2246,8 +2221,8 @@ namespace HREngine.Bots
                                                 || si.canBe_duplicate)
                                             {
                                                 System.Threading.Thread.Sleep(time);
-                                                Helpfunctions.Instance.logg("찾는거 덫발견 덫7 time: " + time);
-                                                Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫7 time: " + time);
+                                                //Helpfunctions.Instance.logg("찾는거 덫발견 덫7 time: " + time);
+                                                //Helpfunctions.Instance.ErrorLog("찾는거 덫발견 덫7 time: " + time);
                                             }
                                         }
                                     }
@@ -2328,10 +2303,10 @@ namespace HREngine.Bots
                                     {
                                         time = time * daum.bestmove.card.card.Summon_Spell_Minion_Count;
                                         System.Threading.Thread.Sleep(time);
-                                        Helpfunctions.Instance.logg("darkshirecouncilman or knifejuggler effect detected sleep " + time + "ms" + daum.bestmove.card.card.Summon_Spell_Minion_Count + "enemy minions");
-                                        Helpfunctions.Instance.logg("darkshirecouncilman or knifejuggler effect detected sleep " + time + "ms" + daum.bestmove.card.card.Summon_Spell_Minion_Count + "enemy minions");
-                                        Helpfunctions.Instance.ErrorLog("darkshirecouncilman or knifejuggler effect detected sleep " + time + "ms" + daum.bestmove.card.card.Summon_Spell_Minion_Count + "enemy minions");
-                                        Helpfunctions.Instance.ErrorLog("darkshirecouncilman or knifejuggler effect detected sleep " + time + "ms" + daum.bestmove.card.card.Summon_Spell_Minion_Count + "enemy minions");
+                                        //Helpfunctions.Instance.logg("darkshirecouncilman or knifejuggler effect detected sleep " + time + "ms" + daum.bestmove.card.card.Summon_Spell_Minion_Count + "enemy minions");
+                                        //Helpfunctions.Instance.logg("darkshirecouncilman or knifejuggler effect detected sleep " + time + "ms" + daum.bestmove.card.card.Summon_Spell_Minion_Count + "enemy minions");
+                                        //Helpfunctions.Instance.ErrorLog("darkshirecouncilman or knifejuggler effect detected sleep " + time + "ms" + daum.bestmove.card.card.Summon_Spell_Minion_Count + "enemy minions");
+                                        //Helpfunctions.Instance.ErrorLog("darkshirecouncilman or knifejuggler effect detected sleep " + time + "ms" + daum.bestmove.card.card.Summon_Spell_Minion_Count + "enemy minions");
                                     }
                                     else
                                     {
@@ -2443,7 +2418,7 @@ namespace HREngine.Bots
                             if (PenalityManager.Instance.AdaptDatabase.ContainsKey(daum.bestmove.card.card.name) || 
                                 PenalityManager.Instance.discoverCards.ContainsKey(daum.bestmove.card.card.name)) //small sleep adapt/discover cards.
                             {
-                                System.Threading.Thread.Sleep(1200);
+                                System.Threading.Thread.Sleep(2800);
                             }
 
                         }
